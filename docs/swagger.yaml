@@ -1,0 +1,113 @@
+basePath: /
+definitions:
+  account.UpsertUserRequest:
+    properties:
+      divisions:
+        items:
+          type: integer
+        type: array
+      email:
+        description: Insert only
+        type: string
+      external_id:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      market_codes:
+        items:
+          type: string
+        type: array
+      middle_name:
+        type: string
+      role_ids:
+        items:
+          type: string
+        type: array
+      status:
+        type: integer
+    type: object
+  common.Error:
+    properties:
+      code:
+        type: integer
+      details:
+        additionalProperties:
+          type: string
+        type: object
+      exception:
+        type: string
+      message:
+        type: string
+    type: object
+  common.NoContentResponse:
+    properties:
+      error:
+        $ref: '#/definitions/common.Error'
+      success:
+        type: boolean
+    type: object
+  model.ErrorResponse:
+    properties:
+      error_code:
+        type: string
+      error_description:
+        type: string
+      errors:
+        additionalProperties:
+          type: string
+        type: object
+      exception:
+        type: string
+    type: object
+info:
+  contact:
+    email: hoanggg2110@gmail.com.vn
+    name: 'Developer: Hoang Ngo'
+  description: This is a documents for Rental System REST API.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: MHMarket REST API
+  version: "1.0"
+paths:
+  /api/v2/users:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/account.UpsertUserRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NoContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Create User
+      tags:
+      - User
+schemes:
+- https
+securityDefinitions:
+  Bearer Token:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
