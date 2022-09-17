@@ -25,7 +25,9 @@ func (server *Server) InitializeRoutes() {
 		log.Fatal("cannot dial server: ", err)
 	}
 	userClient := client.NewUserClient(accountCC)
+	cloudinaryClient := client.NewCloudinaryClient()
 	userController := controller.NewUserController(userClient)
+	fileController := controller.NewFileController(cloudinaryClient)
 	middlewares := middleware.NewMiddleware()
 
 	user := server.router.Group("/api/v2/users")
@@ -33,6 +35,15 @@ func (server *Server) InitializeRoutes() {
 	{
 		user.POST("", userController.CreateUser)
 	}
+
+	file := server.router.Group("/api/v2/files")
+	file.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
+	{
+		file.POST("/upload", fileController.UploadAttachment)
+	}
+	//server.router.GET("/static", fileController.GetStaticFile)
+	//server.router.GET("/assets/images/:path", fileController.GetFile)
+
 	server.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 }
