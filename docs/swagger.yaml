@@ -1,5 +1,38 @@
 basePath: /
 definitions:
+  account.AuthResponse:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+      user_id:
+        type: string
+      username:
+        type: string
+    type: object
+  account.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  account.LoginResponse_Data:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+      user:
+        $ref: '#/definitions/account.AuthResponse'
+    type: object
   account.UpsertUserRequest:
     properties:
       divisions:
@@ -61,6 +94,22 @@ definitions:
       exception:
         type: string
     type: object
+  model.FileResponse:
+    properties:
+      access_id:
+        type: string
+      content:
+        type: string
+      pre_signed_url:
+        type: string
+    type: object
+  model.RentalAttachmentRequest:
+    properties:
+      attachment:
+        items:
+          type: integer
+        type: array
+    type: object
 info:
   contact:
     email: hoanggg2110@gmail.com.vn
@@ -72,6 +121,83 @@ info:
   title: MHMarket REST API
   version: "1.0"
 paths:
+  /api/v2/files/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Body
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/model.RentalAttachmentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.FileResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Upload attachment
+      tags:
+      - File
+  /api/v2/login:
+    post:
+      consumes:
+      - application/json
+      description: Get Access Token and Refresh Token
+      parameters:
+      - description: Login Information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/account.LoginRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/account.LoginResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Login
+      tags:
+      - Auth
+  /api/v2/logout:
+    post:
+      consumes:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Logout
+      tags:
+      - Auth
   /api/v2/users:
     post:
       consumes:

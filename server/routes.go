@@ -24,11 +24,22 @@ func (server *Server) InitializeRoutes() {
 	if err != nil {
 		log.Fatal("cannot dial server: ", err)
 	}
+	authClient := client.NewAuthClient(accountCC)
+
 	userClient := client.NewUserClient(accountCC)
+
 	cloudinaryClient := client.NewCloudinaryClient()
+
+	authController := controller.NewAuthController(authClient)
+
 	userController := controller.NewUserController(userClient)
+
 	fileController := controller.NewFileController(cloudinaryClient)
+
 	middlewares := middleware.NewMiddleware()
+
+	auth := server.router.Group("/api/v2")
+	auth.POST("/login", authController.Login)
 
 	user := server.router.Group("/api/v2/users")
 	user.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
