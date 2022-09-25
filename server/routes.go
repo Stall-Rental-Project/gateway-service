@@ -2,12 +2,14 @@ package server
 
 import (
 	"gateway-service/client"
+	"gateway-service/common"
+	"gateway-service/common/constants"
 	"gateway-service/config"
 	"gateway-service/controller"
 	_ "gateway-service/docs"
 	"gateway-service/middleware"
+	swaggerFiles "github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
@@ -25,6 +27,7 @@ func (server *Server) InitializeRoutes() {
 		log.Fatal("cannot dial server: ", err)
 	}
 	authClient := client.NewAuthClient(accountCC)
+	permissionClient := client.NewPermissionClient(accountCC)
 
 	userClient := client.NewUserClient(accountCC)
 
@@ -36,7 +39,7 @@ func (server *Server) InitializeRoutes() {
 
 	fileController := controller.NewFileController(cloudinaryClient)
 
-	middlewares := middleware.NewMiddleware()
+	middlewares := middleware.NewMiddleware(permissionClient)
 
 	auth := server.router.Group("/api/v2")
 	auth.POST("/login", authController.Login)
@@ -44,7 +47,9 @@ func (server *Server) InitializeRoutes() {
 	user := server.router.Group("/api/v2/users")
 	user.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
 	{
-		user.POST("", userController.CreateUser)
+		user.POST("", common.HasAnyPermission([]string{
+			constants.UserManagement,
+		}), userController.CreateUser)
 	}
 
 	file := server.router.Group("/api/v2/files")

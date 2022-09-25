@@ -35,26 +35,17 @@ definitions:
     type: object
   account.UpsertUserRequest:
     properties:
-      divisions:
-        items:
-          type: integer
-        type: array
       email:
         description: Insert only
-        type: string
-      external_id:
         type: string
       first_name:
         type: string
       last_name:
         type: string
-      market_codes:
-        items:
-          type: string
-        type: array
       middle_name:
         type: string
       role_ids:
+        description: repeated string market_codes = 13;
         items:
           type: string
         type: array

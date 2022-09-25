@@ -246,17 +246,8 @@ const docTemplate = `{
         "account.UpsertUserRequest": {
             "type": "object",
             "properties": {
-                "divisions": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                },
                 "email": {
                     "description": "Insert only",
-                    "type": "string"
-                },
-                "external_id": {
                     "type": "string"
                 },
                 "first_name": {
@@ -265,16 +256,11 @@ const docTemplate = `{
                 "last_name": {
                     "type": "string"
                 },
-                "market_codes": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
                 "middle_name": {
                     "type": "string"
                 },
                 "role_ids": {
+                    "description": "repeated string market_codes = 13;",
                     "type": "array",
                     "items": {
                         "type": "string"

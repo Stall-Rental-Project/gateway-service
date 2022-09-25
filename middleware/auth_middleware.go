@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"errors"
+	grpc "gateway-service/client/common"
 	"gateway-service/common"
 	"gateway-service/common/constants"
 	"gateway-service/model"
@@ -40,64 +42,48 @@ func (middleware *Middleware) AuthMiddleware(ctx *gin.Context) {
 	principal := common.ParseToken(tokenString)
 
 	md := make(model.CacheableMetadata)
-	if cached, err := middleware.redisClient.Get(constants.RedisPrincipalPrefix+principal.ExternalId, ctx); err != nil {
-		authResp, authErr := middleware.obtainUserPermissions(principal)
-		if authErr != nil {
-			abort(ctx, authErr.Error())
-			return
-		}
-
-		principal.Permissions = authResp.Permissions
-		principal.RoleIds = authResp.RoleIds
-
-		grpcToken, genErr := common.GenerateJwtToken(jwt.SigningMethodHS256, principal, constants.GrpcJwtSecret)
-		if genErr != nil {
-			abort(ctx, genErr.Error())
-			return
-		}
-
-		md.Put("Authorization", constants.GrpcJwtHeaderPrefix+grpcToken)
-
-		cacheErr := middleware.cachePrincipal(principal, md, ctx)
-		if cacheErr != nil {
-			abort(ctx, cacheErr.Error())
-			return
-		}
-	} else {
-		if cacheErr := json.Unmarshal([]byte(cached), &md); cacheErr != nil {
-			log.Println("Failed when unmarshalling metadata", cacheErr)
-			abort(ctx, "Unmarshalling error "+cacheErr.Error())
-		}
+	authResp, authErr := middleware.obtainUserPermissions(principal)
+	if authErr != nil {
+		abort(ctx, authErr.Error())
+		return
 	}
+	principal.Permissions = authResp.Permissions
+	principal.RoleIds = authResp.RoleIds
+
+	grpcToken, genErr := common.GenerateJwtToken(jwt.SigningMethodHS256, principal, constants.GrpcJwtSecret)
+	if genErr != nil {
+		abort(ctx, genErr.Error())
+		return
+	}
+	md.Put("Authorization", constants.GrpcJwtHeaderPrefix+grpcToken)
 
 	ctx.Set("md", md.AsGrpcMetadata())
 	ctx.Next()
 }
 
-//func (middleware *Middleware) obtainUserPermissions(principal *model.GrpcPrincipal) (*AdditionalClaims, error) {
-//	resp, err := middleware.permissionClient.ListUserPermissions(&grpc.FindByIdRequest{
-//		Id: principal.UserId,
-//	})
-//
-//	if err != nil {
-//		log.Println("Failed when retrieving user permission")
-//		return nil, err
-//	} else if !resp.Success {
-//		log.Println("Failed when retrieving user permission")
-//		return nil, errors.New(resp.GetError().GetMessage())
-//	}
-//
-//	var permissions []string
-//	for _, value := range resp.GetData().GetRolePermission().GetPermissions() {
-//		permissions = append(permissions, value.Code)
-//	}
-//
-//	return &AdditionalClaims{
-//		Permissions: permissions,
-//		RoleIds:     resp.GetData().GetRolePermission().GetRoleIds(),
-//	}, nil
-//}
-//
+func (middleware *Middleware) obtainUserPermissions(principal *model.GrpcPrincipal) (*AdditionalClaims, error) {
+	resp, err := middleware.permissionClient.ListUserPermissions(&grpc.FindByIdRequest{
+		Id: principal.UserId,
+	})
+
+	if err != nil {
+		log.Println("Failed when retrieving user permission")
+		return nil, err
+	} else if !resp.Success {
+		log.Println("Failed when retrieving user permission")
+		return nil, errors.New(resp.GetError().GetMessage())
+	}
+
+	var permissions []string
+	for _, value := range resp.GetData().GetRolePermission().GetPermissions() {
+		permissions = append(permissions, value.Code)
+	}
+
+	return &AdditionalClaims{
+		Permissions: permissions,
+		RoleIds:     resp.GetData().GetRolePermission().GetRoleIds(),
+	}, nil
+}
 
 func isInvalidToken(tokenString string) bool {
 	if tokenString == "" || tokenString == "null" {
