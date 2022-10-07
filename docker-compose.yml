@@ -15,8 +15,7 @@ services:
             UPLOAD_MAX_SIZE: 2
         ports:
             - "8000:8000"
-        volumes:
-            - /opt/emarket/uat/assets/images:/go/src/apps/assets/images
+        restart: unless-stopped
         dns:
             - 192.168.200.4
             - 8.8.8.8
