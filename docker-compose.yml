@@ -4,8 +4,7 @@ services:
         image: mhmarket/gateway:latest
         container_name: gateway-service-dev
         environment:
-            PORT: 8080
-            HOST: https://api-uat-emarket.banvien.com.vn
+            HOST: https://103.162.20.141
             ACCOUNT_CLIENT_URL: 103.162.20.141:6565
             MARKET_CLIENT_URL: 103.162.20.141:6566
             CLOUDINARY_CLOUD_NAME: ban-vien
