@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+    gateway-service-dev:
+        image: mhmarket/gateway:latest
+        container_name: gateway-service-dev
+        environment:
+            PORT: 8080
+            HOST: https://api-uat-emarket.banvien.com.vn
+            ACCOUNT_CLIENT_URL: 103.162.20.141:6565
+            MARKET_CLIENT_URL: 103.162.20.141:6566
+            CLOUDINARY_CLOUD_NAME: ban-vien
+            CLOUDINARY_API_KEY: 117784362653246
+            CLOUDINARY_API_SECRET: XfcUsfz7LK7cdjj7Q5rf6BrxCEo
+            CLOUDINARY_UPLOAD_FOLDER: mhmarket
+            UPLOAD_MAX_SIZE: 2
+        ports:
+            - "8000:8000"
+        volumes:
+            - /opt/emarket/uat/assets/images:/go/src/apps/assets/images
+        dns:
+            - 192.168.200.4
+            - 8.8.8.8
