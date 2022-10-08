@@ -5,7 +5,7 @@ services:
     container_name: gateway-service-dev
     environment:
       PORT: 8000
-      HOST: https://103.162.20.141:8000
+      HOST: http://103.162.20.141:8000
       ACCOUNT_CLIENT_URL: 103.162.20.141:9565
       MARKET_CLIENT_URL: 103.162.20.141:9566
       CLOUDINARY_CLOUD_NAME: ban-vien
