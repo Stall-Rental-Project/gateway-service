@@ -26,6 +26,6 @@ func (service *AuthClient) Login(req *account.LoginRequest) (res *account.LoginR
 	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
 	defer cancel()
 	res, err = service.authClient.Login(ctx, req)
-	log.Println("Failed when retrieving user permission")
+	log.Println("Failed when retrieving user permission", err.Error())
 	return
 }
