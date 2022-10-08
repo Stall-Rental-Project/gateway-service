@@ -18,6 +18,8 @@ services:
     restart: unless-stopped
     networks:
       - mh-network
+    volumes:
+      - /opt/emarket/uat/assets/images:/go/src/apps/assets/images
     dns:
       - 192.168.200.4
       - 8.8.8.8
