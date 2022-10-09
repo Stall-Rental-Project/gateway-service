@@ -6,7 +6,6 @@ import (
 	"gateway-service/common"
 	"gateway-service/model"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 )
 
@@ -49,7 +48,6 @@ func (controller *AuthController) Login(ctx *gin.Context) {
 		common.ReturnErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
-	log.Println("Login Request Info", req)
 	if res, err := controller.authClient.Login(req); err != nil {
 		common.ReturnErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
