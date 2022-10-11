@@ -12,6 +12,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -24,15 +25,14 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*common.PageResponse, error)
-	ListUsersByExternalIds(ctx context.Context, in *common.FindByCodesRequest, opts ...grpc.CallOption) (*common.ListResponse, error)
 	ListUsersByEmail(ctx context.Context, in *common.FindByCodeRequest, opts ...grpc.CallOption) (*common.ListResponse, error)
 	//*
 	// This API returns list of active users that can be used as notification recipient
-	ListUserRecipients(ctx context.Context, in *ListUserRecipientsRequest, opts ...grpc.CallOption) (*common.PageResponse, error)
 	GetUser(ctx context.Context, in *common.FindByCodeRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	CreateUser(ctx context.Context, in *UpsertUserRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error)
 	UpdateUser(ctx context.Context, in *UpsertUserRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error)
 	DeleteUser(ctx context.Context, in *common.FindByCodeRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error)
+	GetCurrentUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetCurrentUserResponse, error)
 }
 
 type userServiceClient struct {
@@ -52,27 +52,9 @@ func (c *userServiceClient) ListUsers(ctx context.Context, in *ListUsersRequest,
 	return out, nil
 }
 
-func (c *userServiceClient) ListUsersByExternalIds(ctx context.Context, in *common.FindByCodesRequest, opts ...grpc.CallOption) (*common.ListResponse, error) {
-	out := new(common.ListResponse)
-	err := c.cc.Invoke(ctx, "/account.UserService/ListUsersByExternalIds", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userServiceClient) ListUsersByEmail(ctx context.Context, in *common.FindByCodeRequest, opts ...grpc.CallOption) (*common.ListResponse, error) {
 	out := new(common.ListResponse)
 	err := c.cc.Invoke(ctx, "/account.UserService/ListUsersByEmail", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) ListUserRecipients(ctx context.Context, in *ListUserRecipientsRequest, opts ...grpc.CallOption) (*common.PageResponse, error) {
-	out := new(common.PageResponse)
-	err := c.cc.Invoke(ctx, "/account.UserService/ListUserRecipients", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -115,20 +97,28 @@ func (c *userServiceClient) DeleteUser(ctx context.Context, in *common.FindByCod
 	return out, nil
 }
 
+func (c *userServiceClient) GetCurrentUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetCurrentUserResponse, error) {
+	out := new(GetCurrentUserResponse)
+	err := c.cc.Invoke(ctx, "/account.UserService/GetCurrentUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
 	ListUsers(context.Context, *ListUsersRequest) (*common.PageResponse, error)
-	ListUsersByExternalIds(context.Context, *common.FindByCodesRequest) (*common.ListResponse, error)
 	ListUsersByEmail(context.Context, *common.FindByCodeRequest) (*common.ListResponse, error)
 	//*
 	// This API returns list of active users that can be used as notification recipient
-	ListUserRecipients(context.Context, *ListUserRecipientsRequest) (*common.PageResponse, error)
 	GetUser(context.Context, *common.FindByCodeRequest) (*GetUserResponse, error)
 	CreateUser(context.Context, *UpsertUserRequest) (*common.NoContentResponse, error)
 	UpdateUser(context.Context, *UpsertUserRequest) (*common.NoContentResponse, error)
 	DeleteUser(context.Context, *common.FindByCodeRequest) (*common.NoContentResponse, error)
+	GetCurrentUser(context.Context, *emptypb.Empty) (*GetCurrentUserResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -139,14 +129,8 @@ type UnimplementedUserServiceServer struct {
 func (UnimplementedUserServiceServer) ListUsers(context.Context, *ListUsersRequest) (*common.PageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUsers not implemented")
 }
-func (UnimplementedUserServiceServer) ListUsersByExternalIds(context.Context, *common.FindByCodesRequest) (*common.ListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUsersByExternalIds not implemented")
-}
 func (UnimplementedUserServiceServer) ListUsersByEmail(context.Context, *common.FindByCodeRequest) (*common.ListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUsersByEmail not implemented")
-}
-func (UnimplementedUserServiceServer) ListUserRecipients(context.Context, *ListUserRecipientsRequest) (*common.PageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUserRecipients not implemented")
 }
 func (UnimplementedUserServiceServer) GetUser(context.Context, *common.FindByCodeRequest) (*GetUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
@@ -159,6 +143,9 @@ func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpsertUserReq
 }
 func (UnimplementedUserServiceServer) DeleteUser(context.Context, *common.FindByCodeRequest) (*common.NoContentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
+}
+func (UnimplementedUserServiceServer) GetCurrentUser(context.Context, *emptypb.Empty) (*GetCurrentUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCurrentUser not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -191,24 +178,6 @@ func _UserService_ListUsers_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_ListUsersByExternalIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(common.FindByCodesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).ListUsersByExternalIds(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/account.UserService/ListUsersByExternalIds",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ListUsersByExternalIds(ctx, req.(*common.FindByCodesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _UserService_ListUsersByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(common.FindByCodeRequest)
 	if err := dec(in); err != nil {
@@ -223,24 +192,6 @@ func _UserService_ListUsersByEmail_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).ListUsersByEmail(ctx, req.(*common.FindByCodeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_ListUserRecipients_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUserRecipientsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).ListUserRecipients(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/account.UserService/ListUserRecipients",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ListUserRecipients(ctx, req.(*ListUserRecipientsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -317,6 +268,24 @@ func _UserService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetCurrentUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetCurrentUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/account.UserService/GetCurrentUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetCurrentUser(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -329,16 +298,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_ListUsers_Handler,
 		},
 		{
-			MethodName: "ListUsersByExternalIds",
-			Handler:    _UserService_ListUsersByExternalIds_Handler,
-		},
-		{
 			MethodName: "ListUsersByEmail",
 			Handler:    _UserService_ListUsersByEmail_Handler,
-		},
-		{
-			MethodName: "ListUserRecipients",
-			Handler:    _UserService_ListUserRecipients_Handler,
 		},
 		{
 			MethodName: "GetUser",
@@ -355,6 +316,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteUser",
 			Handler:    _UserService_DeleteUser_Handler,
+		},
+		{
+			MethodName: "GetCurrentUser",
+			Handler:    _UserService_GetCurrentUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

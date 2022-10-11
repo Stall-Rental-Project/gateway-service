@@ -7,21 +7,18 @@ import (
 )
 
 type User struct {
-	UserId      string              `json:"user_id"`
-	FirstName   string              `json:"first_name"`
-	MiddleName  string              `json:"middle_name"`
-	LastName    string              `json:"last_name"`
-	Email       string              `json:"email"`
-	Status      grpc.Status         `json:"status"`
-	ExternalId  string              `json:"external_id"`
-	Markets     []UserMarket        `json:"markets"`
-	Roles       []string            `json:"roles"`
-	RoleIds     []string            `json:"role_ids"`
-	RoleCodes   []string            `json:"role_codes"`
-	Permissions []string            `json:"permissions"`
-	Divisions   []market.MarketType `json:"divisions"`
-	Preference  UserPreference      `json:"preference"`
-	MarketCodes []string            `json:"market_codes"`
+	UserId      string       `json:"user_id"`
+	FirstName   string       `json:"first_name"`
+	MiddleName  string       `json:"middle_name"`
+	LastName    string       `json:"last_name"`
+	Email       string       `json:"email"`
+	Status      grpc.Status  `json:"status"`
+	Markets     []UserMarket `json:"markets"`
+	Roles       []string     `json:"roles"`
+	RoleIds     []string     `json:"role_ids"`
+	RoleCodes   []string     `json:"role_codes"`
+	Permissions []string     `json:"permissions"`
+	MarketCodes []string     `json:"market_codes"`
 }
 
 func (s User) MarshalBinary() ([]byte, error) {

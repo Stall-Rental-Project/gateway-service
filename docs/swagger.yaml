@@ -33,6 +33,41 @@ definitions:
       user:
         $ref: '#/definitions/account.AuthResponse'
     type: object
+  account.Role:
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      permission_ids:
+        items:
+          type: string
+        type: array
+      role_id:
+        type: string
+      status:
+        type: integer
+    type: object
+  account.UpsertRoleRequest:
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      permission_ids:
+        items:
+          type: string
+        type: array
+      role_id:
+        description: only set when update
+        type: string
+      status:
+        type: integer
+    type: object
   account.UpsertUserRequest:
     properties:
       email:
@@ -42,15 +77,55 @@ definitions:
         type: string
       last_name:
         type: string
+      market_codes:
+        items:
+          type: string
+        type: array
       middle_name:
         type: string
       role_ids:
-        description: repeated string market_codes = 13;
         items:
           type: string
         type: array
       status:
         type: integer
+      user_id:
+        type: string
+    type: object
+  account.User:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      market_codes:
+        items:
+          type: string
+        type: array
+      middle_name:
+        type: string
+      permissions:
+        items:
+          type: string
+        type: array
+      role_codes:
+        items:
+          type: string
+        type: array
+      role_ids:
+        items:
+          type: string
+        type: array
+      roles:
+        items:
+          type: string
+        type: array
+      status:
+        type: integer
+      user_id:
+        type: string
     type: object
   common.Error:
     properties:
@@ -71,6 +146,63 @@ definitions:
         $ref: '#/definitions/common.Error'
       success:
         type: boolean
+    type: object
+  controller.ListUsers:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/account.User'
+        type: array
+      total_elements:
+        type: integer
+    type: object
+  controller.PageRoles:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/account.Role'
+        type: array
+      page:
+        type: integer
+      size:
+        type: integer
+      total_elements:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  controller.PageUsers:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/account.User'
+        type: array
+      page:
+        type: integer
+      size:
+        type: integer
+      total_elements:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  controller.Permission:
+    properties:
+      category:
+        type: string
+      code:
+        type: string
+      name:
+        type: string
+      permission_id:
+        type: string
+    type: object
+  controller.Permissions:
+    properties:
+      permissions:
+        items:
+          $ref: '#/definitions/controller.Permission'
+        type: array
     type: object
   model.ErrorResponse:
     properties:
@@ -94,12 +226,80 @@ definitions:
       pre_signed_url:
         type: string
     type: object
+  model.PageResponse:
+    properties:
+      items: {}
+      page:
+        type: integer
+      size:
+        type: integer
+      total_elements:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
   model.RentalAttachmentRequest:
     properties:
       attachment:
         items:
           type: integer
         type: array
+    type: object
+  model.SuccessResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+  model.User:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      market_codes:
+        items:
+          type: string
+        type: array
+      markets:
+        items:
+          $ref: '#/definitions/model.UserMarket'
+        type: array
+      middle_name:
+        type: string
+      permissions:
+        items:
+          type: string
+        type: array
+      role_codes:
+        items:
+          type: string
+        type: array
+      role_ids:
+        items:
+          type: string
+        type: array
+      roles:
+        items:
+          type: string
+        type: array
+      status:
+        type: integer
+      user_id:
+        type: string
+    type: object
+  model.UserMarket:
+    properties:
+      code:
+        type: string
+      market_id:
+        type: string
+      name:
+        type: string
+      type:
+        type: integer
     type: object
 info:
   contact:
@@ -189,7 +389,299 @@ paths:
       summary: Logout
       tags:
       - Auth
+  /api/v2/permissions:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Filter by roles. Accepts a comma-separated string.
+        in: query
+        name: roles
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.Permissions'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List all permissions
+      tags:
+      - Permissions
+  /api/v2/permissions/categories:
+    get:
+      consumes:
+      - application/json
+      description: Get permission categories
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List Permission Category
+      tags:
+      - Role
+  /api/v2/roles:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Page size
+        in: query
+        name: size
+        type: integer
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Sort field
+        in: query
+        name: sort
+        type: string
+      - description: Sort direction
+        in: query
+        name: direction
+        type: string
+      - description: Search By Name
+        in: query
+        name: name
+        type: string
+      - description: Filter by status
+        in: query
+        name: status
+        type: string
+      - description: Should include public user role or not. Default to false
+        in: query
+        name: include_public
+        type: boolean
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.PageRoles'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List Role
+      tags:
+      - Role
+    post:
+      consumes:
+      - application/json
+      description: Create new role
+      parameters:
+      - description: Role Information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/account.UpsertRoleRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NoContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Create Role
+      tags:
+      - Role
+  /api/v2/roles/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a role
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Delete Role
+      tags:
+      - Role
+    get:
+      consumes:
+      - application/json
+      description: Get a role
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/account.Role'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get Role
+      tags:
+      - Role
+    put:
+      consumes:
+      - application/json
+      description: Update a role
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Role Information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/account.UpsertRoleRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NoContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Update Role
+      tags:
+      - Role
   /api/v2/users:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Page size. Default to 20
+        in: query
+        name: size
+        type: integer
+      - description: Page number. Default to 1
+        in: query
+        name: page
+        type: integer
+      - description: 'Sort field. Accepts: [id, email, status, username]. Default
+          to id.'
+        in: query
+        name: sort
+        type: string
+      - description: 'Sort direction. Accepts: [asc, desc]. Default to asc'
+        in: query
+        name: direction
+        type: string
+      - description: Filter by external id or email or first name or last name
+        in: query
+        name: search_term
+        type: string
+      - description: Filter by email only. Ignored if search_term not given
+        in: query
+        name: search_email_only
+        type: string
+      - description: Include public users in response. Default to false
+        in: query
+        name: include_public
+        type: string
+      - description: Filter by status
+        in: query
+        name: status
+        type: string
+      - description: Filter by roles. Accepts a comma-separated UUIDs.
+        in: query
+        name: roles
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.PageUsers'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List Users
+      tags:
+      - User
     post:
       consumes:
       - application/json
@@ -218,6 +710,154 @@ paths:
           schema:
             $ref: '#/definitions/model.ErrorResponse'
       summary: Create User
+      tags:
+      - User
+  /api/v2/users/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: User generated ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NoContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Delete User
+      tags:
+      - User
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: User external ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get User
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: User external ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User Information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/account.UpsertUserRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NoContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Update User
+      tags:
+      - User
+  /api/v2/users/current:
+    get:
+      consumes:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get current User profile
+      tags:
+      - User
+  /api/v2/users/public:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: User email
+        in: query
+        name: email
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ListUsers'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List Public Users by email
       tags:
       - User
 schemes:

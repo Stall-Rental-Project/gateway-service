@@ -27,15 +27,17 @@ func (server *Server) InitializeRoutes() {
 		log.Fatal("cannot dial server: ", err)
 	}
 	authClient := client.NewAuthClient(accountCC)
+	roleClient := client.NewRoleClient(accountCC)
 	permissionClient := client.NewPermissionClient(accountCC)
-
 	userClient := client.NewUserClient(accountCC)
 
 	cloudinaryClient := client.NewCloudinaryClient()
 
+	//controller
 	authController := controller.NewAuthController(authClient)
-
+	roleController := controller.NewRoleController(roleClient)
 	userController := controller.NewUserController(userClient)
+	permissionController := controller.NewPermissionController(permissionClient)
 
 	fileController := controller.NewFileController(cloudinaryClient)
 
@@ -47,9 +49,51 @@ func (server *Server) InitializeRoutes() {
 	user := server.router.Group("/api/v2/users")
 	user.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
 	{
-		user.POST("", common.HasAnyPermission([]string{
+		user.GET("", common.HasAnyPermission([]string{
+			constants.UserManagement,
+		}), userController.ListUsers)
+		user.GET("/:id", common.HasAnyPermission([]string{
+			constants.UserManagement,
+		}), userController.GetUser)
+		user.POST("/:id", common.HasAnyPermission([]string{
 			constants.UserManagement,
 		}), userController.CreateUser)
+		user.GET("/current", userController.GetCurrentUser)
+		user.GET("/public", userController.ListPublicUsersByEmail)
+
+		user.PUT("/:id", common.HasAnyPermission([]string{
+			constants.UserManagement,
+		}), userController.UpdateUser)
+		user.DELETE("/:id", common.HasAllPermissions([]string{
+			constants.UserManagement,
+		}), userController.DeleteUser)
+	}
+
+	role := server.router.Group("/api/v2/roles")
+	role.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
+	{
+		role.POST("", common.HasAnyPermission([]string{
+			constants.RoleManagement,
+		}), roleController.CreateRole)
+		role.DELETE("/:id", common.HasAllPermissions([]string{
+			constants.RoleManagement,
+		}), roleController.DeleteRole)
+		role.PUT("/:id", common.HasAnyPermission([]string{
+			constants.RoleManagement,
+		}), roleController.UpdateRole)
+		role.GET("", common.HasAnyPermission([]string{
+			constants.RoleManagement,
+		}), roleController.ListRoles)
+		role.GET("/:id", common.HasAnyPermission([]string{
+			constants.RoleManagement,
+		}), roleController.GetRole)
+	}
+
+	permission := server.router.Group("/api/v2/permissions")
+	permission.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
+	{
+		permission.GET("", permissionController.ListPermissions)
+		permission.GET("/categories", permissionController.ListPermissionCategory)
 	}
 
 	file := server.router.Group("/api/v2/files")
