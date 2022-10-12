@@ -197,7 +197,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Role"
+                    "Permissions"
                 ],
                 "summary": "List Permission Category",
                 "responses": {

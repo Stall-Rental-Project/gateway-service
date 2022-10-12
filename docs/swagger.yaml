@@ -444,7 +444,7 @@ paths:
             $ref: '#/definitions/model.ErrorResponse'
       summary: List Permission Category
       tags:
-      - Role
+      - Permissions
   /api/v2/roles:
     get:
       consumes:

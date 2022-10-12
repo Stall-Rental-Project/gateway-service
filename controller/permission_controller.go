@@ -72,7 +72,7 @@ type ListPermissionCategories struct {
 // ListPermissionCategory
 // @Summary List Permission Category
 // @Description Get permission categories
-// @Tags Role
+// @Tags Permissions
 // @Accept json
 // @Success 200 {object} model.PageResponse
 // @Failure 401,400,500 {object} model.ErrorResponse
