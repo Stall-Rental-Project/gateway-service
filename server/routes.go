@@ -55,7 +55,7 @@ func (server *Server) InitializeRoutes() {
 		user.GET("/:id", common.HasAnyPermission([]string{
 			constants.UserManagement,
 		}), userController.GetUser)
-		user.POST("/:id", common.HasAnyPermission([]string{
+		user.POST("", common.HasAnyPermission([]string{
 			constants.UserManagement,
 		}), userController.CreateUser)
 		user.GET("/current", userController.GetCurrentUser)
