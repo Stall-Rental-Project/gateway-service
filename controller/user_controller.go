@@ -38,8 +38,7 @@ type PageUsers struct {
 // @Param page query integer false "Page number. Default to 1"
 // @Param sort query string false "Sort field. Accepts: [id, email, status, username]. Default to id."
 // @Param direction query string false "Sort direction. Accepts: [asc, desc]. Default to asc"
-// @Param search_term query string false "Filter by external id or email or first name or last name"
-// @Param search_email_only query string false "Filter by email only. Ignored if search_term not given"
+// @Param search_term query string false "Filter by user id or email or first name or last name"
 // @Param include_public query string false "Include public users in response. Default to false"
 // @Param status query string false "Filter by status"
 // @Param roles query string false "Filter by roles. Accepts a comma-separated UUIDs."
@@ -76,10 +75,6 @@ func (controller *UserController) ListUsers(ctx *gin.Context) {
 		grpcReq.IncludePublic = true
 	} else {
 		grpcReq.IncludePublic = false
-	}
-
-	if ctx.Query("search_email_only") == "true" {
-		grpcReq.SearchEmailOnly = true
 	}
 
 	if roles != "" {

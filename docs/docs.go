@@ -529,14 +529,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Filter by external id or email or first name or last name",
+                        "description": "Filter by user id or email or first name or last name",
                         "name": "search_term",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by email only. Ignored if search_term not given",
-                        "name": "search_email_only",
                         "in": "query"
                     },
                     {
