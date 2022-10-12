@@ -1,10 +1,7 @@
 package config
 
 import (
-	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
-	"log"
-	"os"
 )
 
 type Configuration struct {
@@ -46,36 +43,4 @@ func (config *Configuration) LoadConfig(path string) (err error) {
 
 	err = viper.Unmarshal(config)
 	return
-}
-
-func EnvCloudName() string {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	return Config.CloudinaryCloudName
-}
-
-func EnvCloudAPIKey() string {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	return Config.CloudinaryApiKey
-}
-
-func EnvCloudAPISecret() string {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	return Config.CloudinaryApiSecret
-}
-
-func EnvCloudUploadFolder() string {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	return os.Getenv("CLOUDINARY_UPLOAD_FOLDER")
 }
