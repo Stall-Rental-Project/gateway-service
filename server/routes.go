@@ -23,6 +23,8 @@ func (server *Server) InitializeRoutes() {
 	// Init gRPC clients
 	transportOption := grpc.WithTransportCredentials(insecure.NewCredentials())
 	accountCC, err := grpc.Dial(config.Config.AccountClientUrl, transportOption)
+	rentalCC, err := grpc.Dial(config.Config.RentalClientUrl, transportOption)
+
 	if err != nil {
 		log.Fatal("cannot dial server: ", err)
 	}
@@ -32,12 +34,15 @@ func (server *Server) InitializeRoutes() {
 	userClient := client.NewUserClient(accountCC)
 
 	cloudinaryClient := client.NewCloudinaryClient()
+	rateClient := client.NewRateClient(rentalCC)
 
 	//controller
 	authController := controller.NewAuthController(authClient)
 	roleController := controller.NewRoleController(roleClient)
 	userController := controller.NewUserController(userClient)
 	permissionController := controller.NewPermissionController(permissionClient)
+
+	rateController := controller.NewRateController(rateClient)
 
 	fileController := controller.NewFileController(cloudinaryClient)
 
@@ -94,6 +99,23 @@ func (server *Server) InitializeRoutes() {
 	{
 		permission.GET("", permissionController.ListPermissions)
 		permission.GET("/categories", permissionController.ListPermissionCategory)
+	}
+
+	rate := server.router.Group("/api/v2/rates")
+	rate.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
+	{
+		rate.GET("", common.HasAnyPermission([]string{
+			constants.RateManagement,
+		}), rateController.ListRates)
+		rate.GET("/:id", common.HasAnyPermission([]string{
+			constants.RateManagement,
+		}), rateController.GetRate)
+		rate.POST("", common.HasAnyPermission([]string{
+			constants.RateManagement,
+		}), rateController.CreateRate)
+		rate.PUT("/:id", common.HasAnyPermission([]string{
+			constants.RateManagement,
+		}), rateController.UpdateRate)
 	}
 
 	file := server.router.Group("/api/v2/files")

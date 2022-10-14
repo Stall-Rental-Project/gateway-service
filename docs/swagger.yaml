@@ -147,6 +147,11 @@ definitions:
       success:
         type: boolean
     type: object
+  common.OnlyCodeResponse_Data:
+    properties:
+      code:
+        type: string
+    type: object
   controller.ListUsers:
     properties:
       items:
@@ -154,6 +159,21 @@ definitions:
           $ref: '#/definitions/account.User'
         type: array
       total_elements:
+        type: integer
+    type: object
+  controller.PageRates:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/rental.Rate'
+        type: array
+      page:
+        type: integer
+      size:
+        type: integer
+      total_elements:
+        type: integer
+      total_pages:
         type: integer
     type: object
   controller.PageRoles:
@@ -203,6 +223,25 @@ definitions:
         items:
           $ref: '#/definitions/controller.Permission'
         type: array
+    type: object
+  controller.Rate:
+    properties:
+      other_rate:
+        $ref: '#/definitions/rental.OtherRate'
+      rate_code:
+        type: string
+      rate_id:
+        type: string
+      rental_rate:
+        $ref: '#/definitions/rental.StallRentalRate'
+      rights_rate:
+        $ref: '#/definitions/rental.StallRightsRate'
+      security_bond:
+        $ref: '#/definitions/rental.StallSecurityBond'
+      status:
+        type: integer
+      type:
+        type: integer
     type: object
   model.ErrorResponse:
     properties:
@@ -298,6 +337,80 @@ definitions:
         type: string
       name:
         type: string
+      type:
+        type: integer
+    type: object
+  rental.ClassAmountRate:
+    properties:
+      amount:
+        type: number
+      clazz:
+        type: integer
+    type: object
+  rental.OtherRate:
+    properties:
+      amount:
+        type: number
+      detail:
+        type: integer
+    type: object
+  rental.Rate:
+    properties:
+      other_rate:
+        $ref: '#/definitions/rental.OtherRate'
+        description: only one of six next fields should be set
+      rate_code:
+        type: string
+      rate_id:
+        type: string
+      rental_rate:
+        $ref: '#/definitions/rental.StallRentalRate'
+      rights_rate:
+        $ref: '#/definitions/rental.StallRightsRate'
+      security_bond:
+        $ref: '#/definitions/rental.StallSecurityBond'
+      status:
+        type: integer
+      type:
+        type: integer
+    type: object
+  rental.StallRentalRate:
+    properties:
+      class_rental_amounts:
+        items:
+          $ref: '#/definitions/rental.ClassAmountRate'
+        type: array
+    type: object
+  rental.StallRightsRate:
+    properties:
+      class_rights_amounts:
+        items:
+          $ref: '#/definitions/rental.ClassAmountRate'
+        type: array
+    type: object
+  rental.StallSecurityBond:
+    properties:
+      amount:
+        type: number
+      rental_fee:
+        type: number
+    type: object
+  rental.UpsertRateRequest:
+    properties:
+      other_rate:
+        $ref: '#/definitions/rental.OtherRate'
+        description: only one of six next fields should be set
+      rate_code:
+        description: applied for update operation only
+        type: string
+      rental_rate:
+        $ref: '#/definitions/rental.StallRentalRate'
+      rights_rate:
+        $ref: '#/definitions/rental.StallRightsRate'
+      security_bond:
+        $ref: '#/definitions/rental.StallSecurityBond'
+      status:
+        type: integer
       type:
         type: integer
     type: object
@@ -445,6 +558,150 @@ paths:
       summary: List Permission Category
       tags:
       - Permissions
+  /api/v2/rates:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Page size. Default to 20
+        in: query
+        name: size
+        type: integer
+      - description: Page number. Default to 1
+        in: query
+        name: page
+        type: integer
+      - description: 'Sort field. Accepts: [id, type, detail]. Default to id.'
+        in: query
+        name: sort
+        type: string
+      - description: 'Sort direction. Accepts: [asc, desc]. Default to asc'
+        in: query
+        name: direction
+        type: string
+      - description: Filter by types. Accept comma-separated numeric string
+        in: query
+        name: types
+        type: string
+      - description: Filter by details. Accept comma-separated numeric string
+        in: query
+        name: details
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.PageRates'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List Rates
+      tags:
+      - Rate
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Rate Information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/rental.UpsertRateRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.OnlyCodeResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Create Rate
+      tags:
+      - Rate
+  /api/v2/rates/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Rate generated ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.Rate'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get Rate
+      tags:
+      - Rate
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Rate generated ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Rate Information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/rental.UpsertRateRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.OnlyCodeResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Update Rate
+      tags:
+      - Rate
   /api/v2/roles:
     get:
       consumes:

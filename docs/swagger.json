@@ -223,6 +223,226 @@
                 }
             }
         },
+        "/api/v2/rates": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rate"
+                ],
+                "summary": "List Rates",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page size. Default to 20",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number. Default to 1",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort field. Accepts: [id, type, detail]. Default to id.",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort direction. Accepts: [asc, desc]. Default to asc",
+                        "name": "direction",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by types. Accept comma-separated numeric string",
+                        "name": "types",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by details. Accept comma-separated numeric string",
+                        "name": "details",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.PageRates"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rate"
+                ],
+                "summary": "Create Rate",
+                "parameters": [
+                    {
+                        "description": "Rate Information",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rental.UpsertRateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.OnlyCodeResponse_Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/rates/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rate"
+                ],
+                "summary": "Get Rate",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Rate generated ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.Rate"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rate"
+                ],
+                "summary": "Update Rate",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Rate generated ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Rate Information",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rental.UpsertRateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.OnlyCodeResponse_Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v2/roles": {
             "get": {
                 "consumes": [
@@ -1073,6 +1293,14 @@
                 }
             }
         },
+        "common.OnlyCodeResponse_Data": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                }
+            }
+        },
         "controller.ListUsers": {
             "type": "object",
             "properties": {
@@ -1083,6 +1311,29 @@
                     }
                 },
                 "total_elements": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controller.PageRates": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/rental.Rate"
+                    }
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "total_elements": {
+                    "type": "integer"
+                },
+                "total_pages": {
                     "type": "integer"
                 }
             }
@@ -1158,6 +1409,35 @@
                     "items": {
                         "$ref": "#/definitions/controller.Permission"
                     }
+                }
+            }
+        },
+        "controller.Rate": {
+            "type": "object",
+            "properties": {
+                "other_rate": {
+                    "$ref": "#/definitions/rental.OtherRate"
+                },
+                "rate_code": {
+                    "type": "string"
+                },
+                "rate_id": {
+                    "type": "string"
+                },
+                "rental_rate": {
+                    "$ref": "#/definitions/rental.StallRentalRate"
+                },
+                "rights_rate": {
+                    "$ref": "#/definitions/rental.StallRightsRate"
+                },
+                "security_bond": {
+                    "$ref": "#/definitions/rental.StallSecurityBond"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "integer"
                 }
             }
         },
@@ -1303,6 +1583,119 @@
                 },
                 "name": {
                     "type": "string"
+                },
+                "type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "rental.ClassAmountRate": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "clazz": {
+                    "type": "integer"
+                }
+            }
+        },
+        "rental.OtherRate": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "detail": {
+                    "type": "integer"
+                }
+            }
+        },
+        "rental.Rate": {
+            "type": "object",
+            "properties": {
+                "other_rate": {
+                    "description": "only one of six next fields should be set",
+                    "$ref": "#/definitions/rental.OtherRate"
+                },
+                "rate_code": {
+                    "type": "string"
+                },
+                "rate_id": {
+                    "type": "string"
+                },
+                "rental_rate": {
+                    "$ref": "#/definitions/rental.StallRentalRate"
+                },
+                "rights_rate": {
+                    "$ref": "#/definitions/rental.StallRightsRate"
+                },
+                "security_bond": {
+                    "$ref": "#/definitions/rental.StallSecurityBond"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "rental.StallRentalRate": {
+            "type": "object",
+            "properties": {
+                "class_rental_amounts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/rental.ClassAmountRate"
+                    }
+                }
+            }
+        },
+        "rental.StallRightsRate": {
+            "type": "object",
+            "properties": {
+                "class_rights_amounts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/rental.ClassAmountRate"
+                    }
+                }
+            }
+        },
+        "rental.StallSecurityBond": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "rental_fee": {
+                    "type": "number"
+                }
+            }
+        },
+        "rental.UpsertRateRequest": {
+            "type": "object",
+            "properties": {
+                "other_rate": {
+                    "description": "only one of six next fields should be set",
+                    "$ref": "#/definitions/rental.OtherRate"
+                },
+                "rate_code": {
+                    "description": "applied for update operation only",
+                    "type": "string"
+                },
+                "rental_rate": {
+                    "$ref": "#/definitions/rental.StallRentalRate"
+                },
+                "rights_rate": {
+                    "$ref": "#/definitions/rental.StallRightsRate"
+                },
+                "security_bond": {
+                    "$ref": "#/definitions/rental.StallSecurityBond"
+                },
+                "status": {
+                    "type": "integer"
                 },
                 "type": {
                     "type": "integer"
