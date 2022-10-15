@@ -24,23 +24,28 @@ func (server *Server) InitializeRoutes() {
 	transportOption := grpc.WithTransportCredentials(insecure.NewCredentials())
 	accountCC, err := grpc.Dial(config.Config.AccountClientUrl, transportOption)
 	rentalCC, err := grpc.Dial(config.Config.RentalClientUrl, transportOption)
+	marketCC, err := grpc.Dial(config.Config.MarketClientUrl, transportOption)
 
 	if err != nil {
 		log.Fatal("cannot dial server: ", err)
 	}
+
 	authClient := client.NewAuthClient(accountCC)
 	roleClient := client.NewRoleClient(accountCC)
 	permissionClient := client.NewPermissionClient(accountCC)
 	userClient := client.NewUserClient(accountCC)
 
 	cloudinaryClient := client.NewCloudinaryClient()
-	rateClient := client.NewRateClient(rentalCC)
 
+	rateClient := client.NewRateClient(rentalCC)
+	locationClient := client.NewLocationClient(marketCC)
 	//controller
 	authController := controller.NewAuthController(authClient)
 	roleController := controller.NewRoleController(roleClient)
 	userController := controller.NewUserController(userClient)
 	permissionController := controller.NewPermissionController(permissionClient)
+
+	locationController := controller.NewLocationController(locationClient)
 
 	rateController := controller.NewRateController(rateClient)
 
@@ -116,6 +121,15 @@ func (server *Server) InitializeRoutes() {
 		rate.PUT("/:id", common.HasAnyPermission([]string{
 			constants.RateManagement,
 		}), rateController.UpdateRate)
+	}
+
+	location := server.router.Group("/api/v2/locations")
+	location.Use(middlewares.GinMiddleware)
+	{
+		location.GET("/provinces", locationController.ListProvinces)
+		location.GET("/cities", locationController.ListCities)
+		location.GET("/wards", locationController.ListWards)
+		location.GET("/query", locationController.GetLocation)
 	}
 
 	file := server.router.Group("/api/v2/files")

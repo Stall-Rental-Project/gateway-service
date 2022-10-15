@@ -243,6 +243,49 @@ definitions:
       type:
         type: integer
     type: object
+  market.GetLocationResponse_Data:
+    properties:
+      location:
+        $ref: '#/definitions/market.Location'
+    type: object
+  market.ListCityResponse_Data:
+    properties:
+      cities:
+        items:
+          type: string
+        type: array
+    type: object
+  market.ListProvinceResponse_Data:
+    properties:
+      provinces:
+        items:
+          type: string
+        type: array
+    type: object
+  market.ListWardResponse_Data:
+    properties:
+      wards:
+        items:
+          type: string
+        type: array
+    type: object
+  market.Location:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      district:
+        type: string
+      location_id:
+        type: string
+      province:
+        type: string
+      ward:
+        type: string
+      zipcode:
+        type: string
+    type: object
   model.ErrorResponse:
     properties:
       error_code:
@@ -458,6 +501,160 @@ paths:
       summary: Upload attachment
       tags:
       - File
+  /api/v2/locations/cities:
+    get:
+      consumes:
+      - application/json
+      description: List provinces
+      parameters:
+      - description: province that cities belong to
+        in: query
+        name: province
+        required: true
+        type: string
+      - description: search by name
+        in: query
+        name: search_term
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.ListCityResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List provinces
+      tags:
+      - Location
+  /api/v2/locations/provinces:
+    get:
+      consumes:
+      - application/json
+      description: List provinces
+      parameters:
+      - description: search by name
+        in: query
+        name: search_term
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.ListProvinceResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List provinces
+      tags:
+      - Location
+  /api/v2/locations/query:
+    get:
+      consumes:
+      - application/json
+      description: Query location by province, city & ward
+      parameters:
+      - description: province that wards belong to
+        in: query
+        name: province
+        required: true
+        type: string
+      - description: city that wards belong to
+        in: query
+        name: city
+        required: true
+        type: string
+      - description: ward specified
+        in: query
+        name: ward
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.GetLocationResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get specified location data
+      tags:
+      - Location
+  /api/v2/locations/wards:
+    get:
+      consumes:
+      - application/json
+      description: List wards
+      parameters:
+      - description: province that wards belong to
+        in: query
+        name: province
+        required: true
+        type: string
+      - description: city that wards belong to
+        in: query
+        name: city
+        required: true
+        type: string
+      - description: search by name
+        in: query
+        name: search_term
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.ListWardResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List wards
+      tags:
+      - Location
   /api/v2/login:
     post:
       consumes:
