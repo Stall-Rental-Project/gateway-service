@@ -127,10 +127,9 @@ type PageRoles struct {
 // @Accept json
 // @Param size query integer false "Page size"
 // @Param page query integer false "Page number"
-// @Param sort query string false "Sort field"
-// @Param direction query string false "Sort direction"
+// @Param sort query string false "Sort field Accepts: [name,status]. Default to name."
+// @Param direction query string false "Sort direction Accepts: [asc, desc]. Default to asc"
 // @Param name query string false "Search By Name"
-// @Param status query string false "Filter by status"
 // @Param include_public query bool false "Should include public user role or not. Default to false"
 // @Success 200 {object} PageRoles
 // @Failure 401,400,500 {object} model.ErrorResponse

@@ -472,13 +472,13 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Sort field",
+                        "description": "Sort field Accepts: [name,status]. Default to name.",
                         "name": "sort",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Sort direction",
+                        "description": "Sort direction Accepts: [asc, desc]. Default to asc",
                         "name": "direction",
                         "in": "query"
                     },
@@ -486,12 +486,6 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Search By Name",
                         "name": "name",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by status",
-                        "name": "status",
                         "in": "query"
                     },
                     {

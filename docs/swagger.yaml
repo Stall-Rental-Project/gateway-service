@@ -715,21 +715,17 @@ paths:
         in: query
         name: page
         type: integer
-      - description: Sort field
+      - description: 'Sort field Accepts: [name,status]. Default to name.'
         in: query
         name: sort
         type: string
-      - description: Sort direction
+      - description: 'Sort direction Accepts: [asc, desc]. Default to asc'
         in: query
         name: direction
         type: string
       - description: Search By Name
         in: query
         name: name
-        type: string
-      - description: Filter by status
-        in: query
-        name: status
         type: string
       - description: Should include public user role or not. Default to false
         in: query
