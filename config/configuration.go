@@ -7,24 +7,14 @@ import (
 type Configuration struct {
 	Port                   string `mapstructure:"PORT"`
 	Host                   string `mapstructure:"HOST"`
-	EServiceHost           string `mapstructure:"E_SERVICE_HOST"`
-	EPaymentServiceHost    string `mapstructure:"E_PAYMENT_SERVICE_HOST"`
-	UiHost                 string `mapstructure:"UI_HOST"`
 	AccountClientUrl       string `mapstructure:"ACCOUNT_CLIENT_URL"`
 	MarketClientUrl        string `mapstructure:"MARKET_CLIENT_URL"`
 	RentalClientUrl        string `mapstructure:"RENTAL_CLIENT_URL"`
-	LoggingClientUrl       string `mapstructure:"LOGGING_CLIENT_URL"`
-	RateClientUrl          string `mapstructure:"RATE_CLIENT_URL"`
-	RedisAddr              string `mapstructure:"REDIS_ADDR"`
-	RedisPwd               string `mapstructure:"REDIS_PWD"`
-	AwsRegion              string `mapstructure:"AWS_REGION"`
-	AwsBucket              string `mapstructure:"AWS_BUCKET"`
-	AwsContentCategory     string `mapstructure:"AWS_CONTENT_CATEGORY"`
-	UploadMaxSize          int64  `mapstructure:"UPLOAD_MAX_SIZE"`
 	CloudinaryCloudName    string `mapstructure:"CLOUDINARY_CLOUD_NAME"`
 	CloudinaryApiKey       string `mapstructure:"CLOUDINARY_API_KEY"`
 	CloudinaryApiSecret    string `mapstructure:"CLOUDINARY_API_SECRET"`
 	CloudinaryUploadFolder string `mapstructure:"CLOUDINARY_UPLOAD_FOLDER"`
+	UploadMaxSize          int64  `mapstructure:"UPLOAD_MAX_SIZE"`
 }
 
 var Config Configuration

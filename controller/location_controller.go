@@ -29,11 +29,8 @@ func NewLocationController(locationClient *client.LocationClient) LocationContro
 // @Success 200 {object} market.ListProvinceResponse_Data
 // @Failure 400,401,500 {object} model.ErrorResponse
 func (controller *LocationController) ListProvinces(ctx *gin.Context) {
-	req := new(market.ListProvinceRequest)
-
-	if err := ctx.ShouldBindJSON(req); err != nil {
-		common.ReturnErrorResponse(ctx, http.StatusBadRequest, err.Error())
-		return
+	req := &market.ListProvinceRequest{
+		SearchTerm: ctx.Query("search_term"),
 	}
 
 	res, err := controller.locationClient.ListProvinces(req, common.GetMetadataFromContext(ctx))
@@ -133,7 +130,7 @@ func (controller *LocationController) GetLocation(ctx *gin.Context) {
 	} else if ctx.Query("city") == "" {
 		common.ReturnErrorResponse(ctx, http.StatusBadRequest, "missing required query - city")
 		return
-	} else if ctx.Query("barangay") == "" {
+	} else if ctx.Query("ward") == "" {
 		common.ReturnErrorResponse(ctx, http.StatusBadRequest, "missing required query - ward")
 		return
 	}
