@@ -374,6 +374,245 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v2/markets": {
+            "get": {
+                "description": "Returns the primary (current) version of markets",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Market"
+                ],
+                "summary": "List market",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "search by name or location (district, ward, detail address)",
+                        "name": "search_term",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "query page, start from 1",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "query page size, start from 1",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "sort field, default to name, accepts - name, location, types, statuses",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "sort direction, default to desc, accepts - asc, desc",
+                        "name": "direction",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "fetch all. default to false",
+                        "name": "all",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Comma-separated market's type. Accepts [1,2,3]",
+                        "name": "types",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Comma-separated market's status. Accepts [1,2,3]",
+                        "name": "statuses",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ListMarketsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Update Market",
+                "parameters": [
+                    {
+                        "description": "Market Metadata",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/market.UpsertMarketRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/market.UpdateMarketResponse_Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "For step 1",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Create market",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/market.UpsertMarketRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.OnlyIdResponse_Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/markets/:id": {
+            "get": {
+                "description": "Returns the draft (if draft = true) or primary (otherwise) version of markets",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Get market (for both edit \u0026 review)",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "description": "should get the draft version or not, default to false",
+                        "name": "draft",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/market.GetMarketResponse_Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v2/permissions": {
             "get": {
                 "consumes": [
@@ -1532,6 +1771,37 @@ const docTemplate = `{
                 }
             }
         },
+        "common.OnlyIdResponse_Data": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "controller.ListMarketsResponse": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/market.Market"
+                    }
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "total_elements": {
+                    "type": "integer"
+                },
+                "total_pages": {
+                    "type": "integer"
+                }
+            }
+        },
         "controller.ListUsers": {
             "type": "object",
             "properties": {
@@ -1680,6 +1950,14 @@ const docTemplate = `{
                 }
             }
         },
+        "market.GetMarketResponse_Data": {
+            "type": "object",
+            "properties": {
+                "market": {
+                    "$ref": "#/definitions/market.Market"
+                }
+            }
+        },
         "market.ListCityResponse_Data": {
             "type": "object",
             "properties": {
@@ -1736,6 +2014,139 @@ const docTemplate = `{
                 },
                 "zipcode": {
                     "type": "string"
+                }
+            }
+        },
+        "market.Market": {
+            "type": "object",
+            "properties": {
+                "available_date": {
+                    "type": "integer"
+                },
+                "clazz": {
+                    "type": "integer"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "full_address": {
+                    "type": "string"
+                },
+                "google_map": {
+                    "type": "string"
+                },
+                "has_deleted": {
+                    "type": "boolean"
+                },
+                "has_draft": {
+                    "type": "boolean"
+                },
+                "has_published": {
+                    "type": "boolean"
+                },
+                "location": {
+                    "$ref": "#/definitions/market.Location"
+                },
+                "market_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "supervisor": {
+                    "$ref": "#/definitions/market.Supervisor"
+                },
+                "type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "market.MarketLocation": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "province": {
+                    "type": "string"
+                },
+                "ward": {
+                    "type": "string"
+                }
+            }
+        },
+        "market.Supervisor": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "middle_name": {
+                    "type": "string"
+                },
+                "mobile_phone": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "supervisor_id": {
+                    "type": "string"
+                },
+                "telephone": {
+                    "type": "string"
+                }
+            }
+        },
+        "market.UpdateMarketResponse_Data": {
+            "type": "object",
+            "properties": {
+                "market_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "market.UpsertMarketRequest": {
+            "type": "object",
+            "properties": {
+                "clazz": {
+                    "type": "integer"
+                },
+                "google_map": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/market.MarketLocation"
+                },
+                "market_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "supervisor": {
+                    "$ref": "#/definitions/market.Supervisor"
+                },
+                "type": {
+                    "type": "integer"
                 }
             }
         },

@@ -152,6 +152,26 @@ definitions:
       code:
         type: string
     type: object
+  common.OnlyIdResponse_Data:
+    properties:
+      id:
+        type: string
+    type: object
+  controller.ListMarketsResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/market.Market'
+        type: array
+      page:
+        type: integer
+      size:
+        type: integer
+      total_elements:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
   controller.ListUsers:
     properties:
       items:
@@ -248,6 +268,11 @@ definitions:
       location:
         $ref: '#/definitions/market.Location'
     type: object
+  market.GetMarketResponse_Data:
+    properties:
+      market:
+        $ref: '#/definitions/market.Market'
+    type: object
   market.ListCityResponse_Data:
     properties:
       cities:
@@ -285,6 +310,93 @@ definitions:
         type: string
       zipcode:
         type: string
+    type: object
+  market.Market:
+    properties:
+      available_date:
+        type: integer
+      clazz:
+        type: integer
+      code:
+        type: string
+      full_address:
+        type: string
+      google_map:
+        type: string
+      has_deleted:
+        type: boolean
+      has_draft:
+        type: boolean
+      has_published:
+        type: boolean
+      location:
+        $ref: '#/definitions/market.Location'
+      market_id:
+        type: string
+      name:
+        type: string
+      state:
+        type: integer
+      status:
+        type: integer
+      supervisor:
+        $ref: '#/definitions/market.Supervisor'
+      type:
+        type: integer
+    type: object
+  market.MarketLocation:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      province:
+        type: string
+      ward:
+        type: string
+    type: object
+  market.Supervisor:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      middle_name:
+        type: string
+      mobile_phone:
+        type: string
+      position:
+        type: string
+      supervisor_id:
+        type: string
+      telephone:
+        type: string
+    type: object
+  market.UpdateMarketResponse_Data:
+    properties:
+      market_id:
+        type: string
+    type: object
+  market.UpsertMarketRequest:
+    properties:
+      clazz:
+        type: integer
+      google_map:
+        type: string
+      location:
+        $ref: '#/definitions/market.MarketLocation'
+      market_id:
+        type: string
+      name:
+        type: string
+      status:
+        type: integer
+      supervisor:
+        $ref: '#/definitions/market.Supervisor'
+      type:
+        type: integer
     type: object
   model.ErrorResponse:
     properties:
@@ -699,6 +811,165 @@ paths:
       summary: Logout
       tags:
       - Auth
+  /api/v2/markets:
+    get:
+      consumes:
+      - application/json
+      description: Returns the primary (current) version of markets
+      parameters:
+      - description: search by name or location (district, ward, detail address)
+        in: query
+        name: search_term
+        type: string
+      - description: query page, start from 1
+        in: query
+        name: page
+        type: integer
+      - description: query page size, start from 1
+        in: query
+        name: size
+        type: integer
+      - description: sort field, default to name, accepts - name, location, types,
+          statuses
+        in: query
+        name: sort
+        type: string
+      - description: sort direction, default to desc, accepts - asc, desc
+        in: query
+        name: direction
+        type: string
+      - description: fetch all. default to false
+        in: query
+        name: all
+        type: boolean
+      - description: Comma-separated market's type. Accepts [1,2,3]
+        in: query
+        name: types
+        type: string
+      - description: Comma-separated market's status. Accepts [1,2,3]
+        in: query
+        name: statuses
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ListMarketsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List market
+      tags:
+      - Market
+    post:
+      consumes:
+      - application/json
+      description: For step 1
+      parameters:
+      - description: request body
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/market.UpsertMarketRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.OnlyIdResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Create market
+      tags:
+      - Market
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Market Metadata
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/market.UpsertMarketRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.UpdateMarketResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Update Market
+      tags:
+      - Market
+  /api/v2/markets/:id:
+    get:
+      consumes:
+      - application/json
+      description: Returns the draft (if draft = true) or primary (otherwise) version
+        of markets
+      parameters:
+      - description: should get the draft version or not, default to false
+        in: query
+        name: draft
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.GetMarketResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get market (for both edit & review)
+      tags:
+      - Market
   /api/v2/permissions:
     get:
       consumes:

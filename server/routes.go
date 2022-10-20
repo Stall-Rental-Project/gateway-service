@@ -39,6 +39,7 @@ func (server *Server) InitializeRoutes() {
 
 	rateClient := client.NewRateClient(rentalCC)
 	locationClient := client.NewLocationClient(marketCC)
+	marketClient := client.NewMarketClient(marketCC)
 	//controller
 	authController := controller.NewAuthController(authClient)
 	roleController := controller.NewRoleController(roleClient)
@@ -46,6 +47,7 @@ func (server *Server) InitializeRoutes() {
 	permissionController := controller.NewPermissionController(permissionClient)
 
 	locationController := controller.NewLocationController(locationClient)
+	marketController := controller.NewMarketController(marketClient)
 
 	rateController := controller.NewRateController(rateClient)
 
@@ -132,6 +134,25 @@ func (server *Server) InitializeRoutes() {
 		location.GET("/query", locationController.GetLocation)
 	}
 
+	market := server.router.Group("/api/v2/markets")
+	market.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
+	{
+		market.GET("", common.HasAnyPermission([]string{
+			constants.MarketView,
+		}), marketController.ListMarkets)
+		market.GET("/:id", common.HasAnyPermission([]string{
+			constants.MarketView,
+			constants.ApplicationSubmit,
+			constants.ApplicationView,
+		}), marketController.GetMarket)
+		market.POST("", common.HasAnyPermission([]string{
+			constants.MarketAddUpdate,
+		}), marketController.CreateMarket)
+		market.PUT("", common.HasAnyPermission([]string{
+			constants.MarketAddUpdate,
+		}), marketController.UpdateMarket)
+
+	}
 	file := server.router.Group("/api/v2/files")
 	file.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
 	{
