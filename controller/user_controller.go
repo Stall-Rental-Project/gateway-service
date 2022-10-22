@@ -206,11 +206,13 @@ func (controller *UserController) DeleteUser(ctx *gin.Context) {
 // @Router /api/v2/users/{id} [PUT]
 func (controller *UserController) UpdateUser(ctx *gin.Context) {
 	req := new(account.UpsertUserRequest)
+	id := ctx.Param("id")
 
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		common.ReturnErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
+	req.UserId = id
 
 	res, err := controller.userClient.UpdateUser(req, common.GetMetadataFromContext(ctx))
 
