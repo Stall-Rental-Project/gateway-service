@@ -558,6 +558,8 @@ definitions:
       rate_code:
         description: applied for update operation only
         type: string
+      rate_id:
+        type: string
       rental_rate:
         $ref: '#/definitions/rental.StallRentalRate'
       rights_rate:
@@ -617,7 +619,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: List provinces
+      description: List cities
       parameters:
       - description: province that cities belong to
         in: query
@@ -647,7 +649,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.ErrorResponse'
-      summary: List provinces
+      summary: List cities
       tags:
       - Location
   /api/v2/locations/provinces:
@@ -1106,6 +1108,36 @@ paths:
       tags:
       - Rate
   /api/v2/rates/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a Rate
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Delete Rate
+      tags:
+      - Rate
     get:
       consumes:
       - application/json

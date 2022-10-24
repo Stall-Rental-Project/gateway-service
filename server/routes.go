@@ -123,6 +123,9 @@ func (server *Server) InitializeRoutes() {
 		rate.PUT("/:id", common.HasAnyPermission([]string{
 			constants.RateManagement,
 		}), rateController.UpdateRate)
+		rate.DELETE("/:id", common.HasAnyPermission([]string{
+			constants.RateManagement,
+		}), rateController.DeleteRate)
 	}
 
 	location := server.router.Group("/api/v2/locations")

@@ -45,8 +45,8 @@ func (controller *LocationController) ListProvinces(ctx *gin.Context) {
 
 // ListCities
 // @Router /api/v2/locations/cities [GET]
-// @Summary List provinces
-// @Description List provinces
+// @Summary List cities
+// @Description List cities
 // @Param province query string true "province that cities belong to"
 // @Param search_term query string false "search by name"
 // @Tags Location

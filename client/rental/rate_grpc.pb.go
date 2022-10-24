@@ -27,6 +27,7 @@ type RateServiceClient interface {
 	GetRate(ctx context.Context, in *GetRateRequest, opts ...grpc.CallOption) (*GetRateResponse, error)
 	CreateRate(ctx context.Context, in *UpsertRateRequest, opts ...grpc.CallOption) (*common.OnlyCodeResponse, error)
 	UpdateRate(ctx context.Context, in *UpsertRateRequest, opts ...grpc.CallOption) (*common.OnlyCodeResponse, error)
+	DeleteRate(ctx context.Context, in *common.FindByIdRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error)
 }
 
 type rateServiceClient struct {
@@ -73,6 +74,15 @@ func (c *rateServiceClient) UpdateRate(ctx context.Context, in *UpsertRateReques
 	return out, nil
 }
 
+func (c *rateServiceClient) DeleteRate(ctx context.Context, in *common.FindByIdRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error) {
+	out := new(common.NoContentResponse)
+	err := c.cc.Invoke(ctx, "/rental.RateService/DeleteRate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RateServiceServer is the server API for RateService service.
 // All implementations must embed UnimplementedRateServiceServer
 // for forward compatibility
@@ -81,6 +91,7 @@ type RateServiceServer interface {
 	GetRate(context.Context, *GetRateRequest) (*GetRateResponse, error)
 	CreateRate(context.Context, *UpsertRateRequest) (*common.OnlyCodeResponse, error)
 	UpdateRate(context.Context, *UpsertRateRequest) (*common.OnlyCodeResponse, error)
+	DeleteRate(context.Context, *common.FindByIdRequest) (*common.NoContentResponse, error)
 	mustEmbedUnimplementedRateServiceServer()
 }
 
@@ -99,6 +110,9 @@ func (UnimplementedRateServiceServer) CreateRate(context.Context, *UpsertRateReq
 }
 func (UnimplementedRateServiceServer) UpdateRate(context.Context, *UpsertRateRequest) (*common.OnlyCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateRate not implemented")
+}
+func (UnimplementedRateServiceServer) DeleteRate(context.Context, *common.FindByIdRequest) (*common.NoContentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteRate not implemented")
 }
 func (UnimplementedRateServiceServer) mustEmbedUnimplementedRateServiceServer() {}
 
@@ -185,6 +199,24 @@ func _RateService_UpdateRate_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RateService_DeleteRate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(common.FindByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RateServiceServer).DeleteRate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rental.RateService/DeleteRate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RateServiceServer).DeleteRate(ctx, req.(*common.FindByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RateService_ServiceDesc is the grpc.ServiceDesc for RateService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -207,6 +239,10 @@ var RateService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateRate",
 			Handler:    _RateService_UpdateRate_Handler,
+		},
+		{
+			MethodName: "DeleteRate",
+			Handler:    _RateService_DeleteRate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -211,7 +211,7 @@ func (controller *RateController) UpdateRate(ctx *gin.Context) {
 		return
 	}
 
-	req.RateCode = &id
+	req.RateId = &id
 
 	res, err := controller.rateClient.UpdateRate(req, common.GetMetadataFromContext(ctx))
 
@@ -222,6 +222,32 @@ func (controller *RateController) UpdateRate(ctx *gin.Context) {
 
 	if res.Success {
 		ctx.JSON(http.StatusOK, res.GetData())
+	} else {
+		ctx.JSON(http.StatusBadRequest, model.AsErrorResponse(res.GetError()))
+	}
+}
+
+// DeleteRate
+// @Summary Delete Rate
+// @Description Delete a Rate
+// @Tags Rate
+// @Accept json
+// @Param id path string true "ID"
+// @Success 200 {object} model.SuccessResponse
+// @Failure 401,400,500 {object} model.ErrorResponse
+// @Router /api/v2/rates/{id} [DELETE]
+func (controller *RateController) DeleteRate(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	res, err := controller.rateClient.DeleteRate(&grpc.FindByIdRequest{Id: id}, common.GetMetadataFromContext(ctx))
+
+	if err != nil {
+		common.ReturnErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if res.GetSuccess() {
+		ctx.JSON(http.StatusOK, res)
 	} else {
 		ctx.JSON(http.StatusBadRequest, model.AsErrorResponse(res.GetError()))
 	}

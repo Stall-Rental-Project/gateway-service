@@ -76,7 +76,7 @@ const docTemplate = `{
         },
         "/api/v2/locations/cities": {
             "get": {
-                "description": "List provinces",
+                "description": "List cities",
                 "consumes": [
                     "application/json"
                 ],
@@ -86,7 +86,7 @@ const docTemplate = `{
                 "tags": [
                     "Location"
                 ],
-                "summary": "List provinces",
+                "summary": "List cities",
                 "parameters": [
                     {
                         "type": "string",
@@ -896,6 +896,51 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/common.OnlyCodeResponse_Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a Rate",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rate"
+                ],
+                "summary": "Delete Rate",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.SuccessResponse"
                         }
                     },
                     "400": {
@@ -2392,6 +2437,9 @@ const docTemplate = `{
                 },
                 "rate_code": {
                     "description": "applied for update operation only",
+                    "type": "string"
+                },
+                "rate_id": {
                     "type": "string"
                 },
                 "rental_rate": {
