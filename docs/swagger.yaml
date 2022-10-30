@@ -157,6 +157,13 @@ definitions:
       id:
         type: string
     type: object
+  controller.ListFloorsResponse:
+    properties:
+      floors:
+        items:
+          $ref: '#/definitions/market.Floor'
+        type: array
+    type: object
   controller.ListMarketsResponse:
     properties:
       items:
@@ -263,6 +270,57 @@ definitions:
       type:
         type: integer
     type: object
+  market.CreateFloorRequest:
+    properties:
+      image:
+        type: string
+      market_id:
+        type: string
+      name:
+        type: string
+    type: object
+  market.CreateFloorResponse_Data:
+    properties:
+      floorplan_id:
+        type: string
+      market_id:
+        type: string
+    type: object
+  market.DeleteFloorRequest:
+    properties:
+      draft_only:
+        type: boolean
+      floorplan_id:
+        type: string
+    type: object
+  market.Floor:
+    properties:
+      code:
+        type: string
+      floor_data:
+        type: string
+      floorplan_id:
+        type: string
+      image:
+        type: string
+      name:
+        type: string
+      previous_version:
+        type: string
+      stall_with_detail:
+        type: integer
+      stalls:
+        items:
+          $ref: '#/definitions/market.Stall'
+        type: array
+      total_stalls:
+        type: integer
+    type: object
+  market.GetFloorResponse_Data:
+    properties:
+      floor:
+        $ref: '#/definitions/market.Floor'
+    type: object
   market.GetLocationResponse_Data:
     properties:
       location:
@@ -355,6 +413,75 @@ definitions:
       ward:
         type: string
     type: object
+  market.Point:
+    properties:
+      x_axis:
+        type: number
+      y_axis:
+        type: number
+    type: object
+  market.Stall:
+    properties:
+      area:
+        type: number
+      clazz:
+        description: Default to Regular
+        type: integer
+      code:
+        type: string
+      floor_code:
+        type: string
+      font_size:
+        type: number
+      h_axis:
+        type: number
+      label:
+        type: string
+      lease_status:
+        type: integer
+      market_class:
+        type: integer
+      market_code:
+        type: string
+      market_type:
+        type: integer
+      monthly_fee:
+        type: number
+      name:
+        type: string
+      occupied_by:
+        type: string
+      points:
+        items:
+          $ref: '#/definitions/market.Point'
+        type: array
+      previous_version:
+        type: string
+      rotate:
+        type: integer
+      shape:
+        description: Position data
+        type: string
+      stall_holder_name:
+        description: Fetch from rental service
+        type: string
+      stall_id:
+        type: string
+      state:
+        type: integer
+      status:
+        description: Default to Inactive
+        type: integer
+      type:
+        description: Default to Temporary
+        type: integer
+      w_axis:
+        type: number
+      x_axis:
+        type: number
+      y_axis:
+        type: number
+    type: object
   market.Supervisor:
     properties:
       email:
@@ -372,6 +499,22 @@ definitions:
       supervisor_id:
         type: string
       telephone:
+        type: string
+    type: object
+  market.UpdateFloorRequest:
+    properties:
+      floor_data:
+        type: string
+      floorplan_id:
+        type: string
+      image:
+        type: string
+      name:
+        type: string
+    type: object
+  market.UpdateFloorResponse_Data:
+    properties:
+      floorplan_id:
         type: string
     type: object
   market.UpdateMarketResponse_Data:
@@ -615,6 +758,139 @@ paths:
       summary: Upload attachment
       tags:
       - File
+  /api/v2/floors:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: request body
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/market.DeleteFloorRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NoContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Delete floor (single)
+      tags:
+      - Floor
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request body
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/market.CreateFloorRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.CreateFloorResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Create floor
+      tags:
+      - Floor
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: request body
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/market.UpdateFloorRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.UpdateFloorResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Update floor
+      tags:
+      - Floor
+  /api/v2/floors/:id:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: floor id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: return draft version ? default to false
+        in: query
+        name: draft
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.GetFloorResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get floor
+      tags:
+      - Floor
   /api/v2/locations/cities:
     get:
       consumes:
@@ -972,6 +1248,42 @@ paths:
       summary: Get market (for both edit & review)
       tags:
       - Market
+  /api/v2/markets/:id/floors:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: market id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: return draft version ? default to false
+        in: query
+        name: draft
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ListFloorsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List floors
+      tags:
+      - Floor
   /api/v2/permissions:
     get:
       consumes:

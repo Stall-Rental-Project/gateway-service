@@ -74,6 +74,210 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v2/floors": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Floor"
+                ],
+                "summary": "Update floor",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/market.UpdateFloorRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/market.UpdateFloorResponse_Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Floor"
+                ],
+                "summary": "Create floor",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/market.CreateFloorRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/market.CreateFloorResponse_Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Floor"
+                ],
+                "summary": "Delete floor (single)",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/market.DeleteFloorRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.NoContentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/floors/:id": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Floor"
+                ],
+                "summary": "Get floor",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "floor id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "return draft version ? default to false",
+                        "name": "draft",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/market.GetFloorResponse_Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v2/locations/cities": {
             "get": {
                 "description": "List cities",
@@ -590,6 +794,61 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/market.GetMarketResponse_Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/markets/:id/floors": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Floor"
+                ],
+                "summary": "List floors",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "market id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "return draft version ? default to false",
+                        "name": "draft",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ListFloorsResponse"
                         }
                     },
                     "400": {
@@ -1824,6 +2083,17 @@ const docTemplate = `{
                 }
             }
         },
+        "controller.ListFloorsResponse": {
+            "type": "object",
+            "properties": {
+                "floors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/market.Floor"
+                    }
+                }
+            }
+        },
         "controller.ListMarketsResponse": {
             "type": "object",
             "properties": {
@@ -1987,6 +2257,85 @@ const docTemplate = `{
                 }
             }
         },
+        "market.CreateFloorRequest": {
+            "type": "object",
+            "properties": {
+                "image": {
+                    "type": "string"
+                },
+                "market_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "market.CreateFloorResponse_Data": {
+            "type": "object",
+            "properties": {
+                "floorplan_id": {
+                    "type": "string"
+                },
+                "market_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "market.DeleteFloorRequest": {
+            "type": "object",
+            "properties": {
+                "draft_only": {
+                    "type": "boolean"
+                },
+                "floorplan_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "market.Floor": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "floor_data": {
+                    "type": "string"
+                },
+                "floorplan_id": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "previous_version": {
+                    "type": "string"
+                },
+                "stall_with_detail": {
+                    "type": "integer"
+                },
+                "stalls": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/market.Stall"
+                    }
+                },
+                "total_stalls": {
+                    "type": "integer"
+                }
+            }
+        },
+        "market.GetFloorResponse_Data": {
+            "type": "object",
+            "properties": {
+                "floor": {
+                    "$ref": "#/definitions/market.Floor"
+                }
+            }
+        },
         "market.GetLocationResponse_Data": {
             "type": "object",
             "properties": {
@@ -2129,6 +2478,108 @@ const docTemplate = `{
                 }
             }
         },
+        "market.Point": {
+            "type": "object",
+            "properties": {
+                "x_axis": {
+                    "type": "number"
+                },
+                "y_axis": {
+                    "type": "number"
+                }
+            }
+        },
+        "market.Stall": {
+            "type": "object",
+            "properties": {
+                "area": {
+                    "type": "number"
+                },
+                "clazz": {
+                    "description": "Default to Regular",
+                    "type": "integer"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "floor_code": {
+                    "type": "string"
+                },
+                "font_size": {
+                    "type": "number"
+                },
+                "h_axis": {
+                    "type": "number"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "lease_status": {
+                    "type": "integer"
+                },
+                "market_class": {
+                    "type": "integer"
+                },
+                "market_code": {
+                    "type": "string"
+                },
+                "market_type": {
+                    "type": "integer"
+                },
+                "monthly_fee": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "occupied_by": {
+                    "type": "string"
+                },
+                "points": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/market.Point"
+                    }
+                },
+                "previous_version": {
+                    "type": "string"
+                },
+                "rotate": {
+                    "type": "integer"
+                },
+                "shape": {
+                    "description": "Position data",
+                    "type": "string"
+                },
+                "stall_holder_name": {
+                    "description": "Fetch from rental service",
+                    "type": "string"
+                },
+                "stall_id": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "Default to Inactive",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "Default to Temporary",
+                    "type": "integer"
+                },
+                "w_axis": {
+                    "type": "number"
+                },
+                "x_axis": {
+                    "type": "number"
+                },
+                "y_axis": {
+                    "type": "number"
+                }
+            }
+        },
         "market.Supervisor": {
             "type": "object",
             "properties": {
@@ -2154,6 +2605,31 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "telephone": {
+                    "type": "string"
+                }
+            }
+        },
+        "market.UpdateFloorRequest": {
+            "type": "object",
+            "properties": {
+                "floor_data": {
+                    "type": "string"
+                },
+                "floorplan_id": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "market.UpdateFloorResponse_Data": {
+            "type": "object",
+            "properties": {
+                "floorplan_id": {
                     "type": "string"
                 }
             }

@@ -40,6 +40,7 @@ func (server *Server) InitializeRoutes() {
 	rateClient := client.NewRateClient(rentalCC)
 	locationClient := client.NewLocationClient(marketCC)
 	marketClient := client.NewMarketClient(marketCC)
+	floorClient := client.NewFloorClient(marketCC)
 	//controller
 	authController := controller.NewAuthController(authClient)
 	roleController := controller.NewRoleController(roleClient)
@@ -48,6 +49,7 @@ func (server *Server) InitializeRoutes() {
 
 	locationController := controller.NewLocationController(locationClient)
 	marketController := controller.NewMarketController(marketClient)
+	floorController := controller.NewFloorController(floorClient)
 
 	rateController := controller.NewRateController(rateClient)
 
@@ -156,6 +158,24 @@ func (server *Server) InitializeRoutes() {
 		}), marketController.UpdateMarket)
 
 	}
+
+	floor := server.router.Group("/api/v2/floors")
+	floor.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
+	{
+		floor.POST("", common.HasAnyPermission([]string{
+			constants.MarketAddUpdate,
+		}), floorController.CreateFloor)
+		floor.PUT("", common.HasAnyPermission([]string{
+			constants.MarketAddUpdate,
+		}), floorController.UpdateFloor)
+		floor.GET("/:id", common.HasAnyPermission([]string{
+			constants.MarketView,
+		}), floorController.GetFloor)
+		floor.DELETE("", common.HasAnyPermission([]string{
+			constants.MarketDelete,
+		}), floorController.DeleteFloor)
+	}
+
 	file := server.router.Group("/api/v2/files")
 	file.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
 	{
