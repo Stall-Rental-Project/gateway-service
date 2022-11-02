@@ -63,3 +63,12 @@ func (client *MarketClient) DeleteMarket(req *common.FindByIdRequest, md metadat
 	res, err = client.marketClient.DeleteMarket(ctx, req)
 	return
 }
+
+func (client MarketClient) ListPublishedMarkets(req *market.ListMarketsRequest, md metadata.MD) (res *common.PageResponse, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	defer cancel()
+	req.PublishedOnly = true
+	res, err = client.marketClient.ListMarkets(ctx, req)
+	return
+}

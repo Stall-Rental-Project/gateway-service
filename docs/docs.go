@@ -783,6 +783,55 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v2/markets/published": {
+            "get": {
+                "description": "Returns the published markets",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Market"
+                ],
+                "summary": "List published markets",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Comma-separated market's status. Accepts [1,2,3]",
+                        "name": "statuses",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ListPublishedMarketsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v2/markets/{id}": {
             "get": {
                 "description": "Returns the draft (if draft = true) or primary (otherwise) version of markets",
@@ -2136,6 +2185,20 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "total_pages": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controller.ListPublishedMarketsResponse": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/market.Market"
+                    }
+                },
+                "total_elements": {
                     "type": "integer"
                 }
             }

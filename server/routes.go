@@ -145,6 +145,9 @@ func (server *Server) InitializeRoutes() {
 		market.GET("", common.HasAnyPermission([]string{
 			constants.MarketView,
 		}), marketController.ListMarkets)
+
+		market.GET("/published", marketController.ListPublishedMarkets)
+
 		market.GET("/:id", common.HasAnyPermission([]string{
 			constants.MarketView,
 			constants.ApplicationSubmit,

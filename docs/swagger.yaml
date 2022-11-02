@@ -179,6 +179,15 @@ definitions:
       total_pages:
         type: integer
     type: object
+  controller.ListPublishedMarketsResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/market.Market'
+        type: array
+      total_elements:
+        type: integer
+    type: object
   controller.ListUsers:
     properties:
       items:
@@ -1298,6 +1307,38 @@ paths:
           schema:
             $ref: '#/definitions/model.ErrorResponse'
       summary: Update Market
+      tags:
+      - Market
+  /api/v2/markets/published:
+    get:
+      consumes:
+      - application/json
+      description: Returns the published markets
+      parameters:
+      - description: Comma-separated market's status. Accepts [1,2,3]
+        in: query
+        name: statuses
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ListPublishedMarketsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List published markets
       tags:
       - Market
   /api/v2/permissions:

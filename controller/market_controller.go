@@ -246,3 +246,83 @@ func (controller *MarketController) UpdateMarket(ctx *gin.Context) {
 type PublishMarketRequest struct {
 	MarketId string `json:"market_id"`
 }
+
+// ListPublishedMarkets
+// @Router /api/v2/markets/published [GET]
+// @Summary List published markets
+// @Param statuses query string false "Comma-separated market's status. Accepts [1,2,3]"
+// @Description Returns the published markets
+// @Tags Market
+// @Accept json
+// @Produce json
+// @Success 200 {object} ListPublishedMarketsResponse
+// @Failure 400,401,500 {object} model.ErrorResponse
+func (controller *MarketController) ListPublishedMarkets(ctx *gin.Context) {
+	marketTypeStr := ctx.Query("types")
+
+	req := &market.ListMarketsRequest{
+		All:           true,
+		PublishedOnly: true,
+	}
+
+	if marketTypeStr != "" {
+		tmuStrList := strings.Split(marketTypeStr, ",")
+		tmuNumList := make([]market.MarketType, len(tmuStrList))
+		for i := 0; i < len(tmuStrList); i++ {
+			tmuNum, err := strconv.ParseInt(tmuStrList[i], 10, 32)
+			if err != nil {
+				continue
+			}
+			result := int32(tmuNum)
+			tmuNumList[i] = market.MarketType(result)
+		}
+
+		req.Types = tmuNumList
+	}
+
+	marketStatusStr := ctx.Query("statuses")
+	if marketStatusStr != "" {
+		tmuStrList := strings.Split(marketStatusStr, ",")
+		tmuNumList := make([]market.MarketStatus, len(tmuStrList))
+		for i := 0; i < len(tmuStrList); i++ {
+			tmuNum, err := strconv.ParseInt(tmuStrList[i], 10, 32)
+			if err != nil {
+				continue
+			}
+			result := int32(tmuNum)
+			tmuNumList[i] = market.MarketStatus(result)
+		}
+
+		req.Statuses = tmuNumList
+	}
+
+	res, err := controller.marketClient.ListPublishedMarkets(req, common.GetMetadataFromContext(ctx))
+
+	if err != nil {
+		common.ReturnErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if res.Success {
+		var items []*market.Market
+		for _, value := range res.GetData().Items {
+			var item market.Market
+			err := value.UnmarshalTo(&item)
+			if err != nil {
+				ctx.JSON(http.StatusBadRequest, gin.H{
+					"ErrorCode":        grpc.ErrorCode_INTERNAL_SERVER_ERROR,
+					"ErrorDescription": err.Error(),
+				})
+				return
+			}
+			items = append(items, &item)
+		}
+
+		ctx.JSON(http.StatusOK, ListPublishedMarketsResponse{
+			TotalElements: res.GetData().TotalElements,
+			Items:         items,
+		})
+	} else {
+		common.AsErrorResponse(res.GetError(), ctx)
+	}
+}
