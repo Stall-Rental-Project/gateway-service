@@ -28,6 +28,8 @@ type MarketServiceClient interface {
 	GetMarket(ctx context.Context, in *GetMarketRequest, opts ...grpc.CallOption) (*GetMarketResponse, error)
 	UpdateMarket(ctx context.Context, in *UpsertMarketRequest, opts ...grpc.CallOption) (*UpdateMarketResponse, error)
 	DeleteMarket(ctx context.Context, in *common.FindByIdRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error)
+	PublishMarket(ctx context.Context, in *common.FindByIdRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error)
+	CountStalls(ctx context.Context, in *common.FindByIdRequest, opts ...grpc.CallOption) (*CountStallsResponse, error)
 }
 
 type marketServiceClient struct {
@@ -83,6 +85,24 @@ func (c *marketServiceClient) DeleteMarket(ctx context.Context, in *common.FindB
 	return out, nil
 }
 
+func (c *marketServiceClient) PublishMarket(ctx context.Context, in *common.FindByIdRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error) {
+	out := new(common.NoContentResponse)
+	err := c.cc.Invoke(ctx, "/market.MarketService/PublishMarket", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketServiceClient) CountStalls(ctx context.Context, in *common.FindByIdRequest, opts ...grpc.CallOption) (*CountStallsResponse, error) {
+	out := new(CountStallsResponse)
+	err := c.cc.Invoke(ctx, "/market.MarketService/CountStalls", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MarketServiceServer is the server API for MarketService service.
 // All implementations must embed UnimplementedMarketServiceServer
 // for forward compatibility
@@ -92,6 +112,8 @@ type MarketServiceServer interface {
 	GetMarket(context.Context, *GetMarketRequest) (*GetMarketResponse, error)
 	UpdateMarket(context.Context, *UpsertMarketRequest) (*UpdateMarketResponse, error)
 	DeleteMarket(context.Context, *common.FindByIdRequest) (*common.NoContentResponse, error)
+	PublishMarket(context.Context, *common.FindByIdRequest) (*common.NoContentResponse, error)
+	CountStalls(context.Context, *common.FindByIdRequest) (*CountStallsResponse, error)
 	mustEmbedUnimplementedMarketServiceServer()
 }
 
@@ -113,6 +135,12 @@ func (UnimplementedMarketServiceServer) UpdateMarket(context.Context, *UpsertMar
 }
 func (UnimplementedMarketServiceServer) DeleteMarket(context.Context, *common.FindByIdRequest) (*common.NoContentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMarket not implemented")
+}
+func (UnimplementedMarketServiceServer) PublishMarket(context.Context, *common.FindByIdRequest) (*common.NoContentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PublishMarket not implemented")
+}
+func (UnimplementedMarketServiceServer) CountStalls(context.Context, *common.FindByIdRequest) (*CountStallsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CountStalls not implemented")
 }
 func (UnimplementedMarketServiceServer) mustEmbedUnimplementedMarketServiceServer() {}
 
@@ -217,6 +245,42 @@ func _MarketService_DeleteMarket_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MarketService_PublishMarket_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(common.FindByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketServiceServer).PublishMarket(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/market.MarketService/PublishMarket",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketServiceServer).PublishMarket(ctx, req.(*common.FindByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MarketService_CountStalls_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(common.FindByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketServiceServer).CountStalls(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/market.MarketService/CountStalls",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketServiceServer).CountStalls(ctx, req.(*common.FindByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MarketService_ServiceDesc is the grpc.ServiceDesc for MarketService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -243,6 +307,14 @@ var MarketService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteMarket",
 			Handler:    _MarketService_DeleteMarket_Handler,
+		},
+		{
+			MethodName: "PublishMarket",
+			Handler:    _MarketService_PublishMarket_Handler,
+		},
+		{
+			MethodName: "CountStalls",
+			Handler:    _MarketService_CountStalls_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

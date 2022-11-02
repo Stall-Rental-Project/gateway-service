@@ -7,7 +7,11 @@
 package market
 
 import (
+	context "context"
+	common "gateway-service/client/common"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,6 +23,11 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StallServiceClient interface {
+	CreateStall(ctx context.Context, in *CreateStallRequest, opts ...grpc.CallOption) (*GetStallResponse, error)
+	GetStall(ctx context.Context, in *GetStallRequest, opts ...grpc.CallOption) (*GetStallResponse, error)
+	GetPublishedStall(ctx context.Context, in *common.FindByIdRequest, opts ...grpc.CallOption) (*GetStallResponse, error)
+	UpdateStallMetadata(ctx context.Context, in *UpdateStallMetadataRequest, opts ...grpc.CallOption) (*GetStallResponse, error)
+	UpdateStallPosition(ctx context.Context, in *UpdateStallPositionRequest, opts ...grpc.CallOption) (*GetStallResponse, error)
 }
 
 type stallServiceClient struct {
@@ -29,10 +38,60 @@ func NewStallServiceClient(cc grpc.ClientConnInterface) StallServiceClient {
 	return &stallServiceClient{cc}
 }
 
+func (c *stallServiceClient) CreateStall(ctx context.Context, in *CreateStallRequest, opts ...grpc.CallOption) (*GetStallResponse, error) {
+	out := new(GetStallResponse)
+	err := c.cc.Invoke(ctx, "/market.StallService/CreateStall", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *stallServiceClient) GetStall(ctx context.Context, in *GetStallRequest, opts ...grpc.CallOption) (*GetStallResponse, error) {
+	out := new(GetStallResponse)
+	err := c.cc.Invoke(ctx, "/market.StallService/GetStall", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *stallServiceClient) GetPublishedStall(ctx context.Context, in *common.FindByIdRequest, opts ...grpc.CallOption) (*GetStallResponse, error) {
+	out := new(GetStallResponse)
+	err := c.cc.Invoke(ctx, "/market.StallService/GetPublishedStall", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *stallServiceClient) UpdateStallMetadata(ctx context.Context, in *UpdateStallMetadataRequest, opts ...grpc.CallOption) (*GetStallResponse, error) {
+	out := new(GetStallResponse)
+	err := c.cc.Invoke(ctx, "/market.StallService/UpdateStallMetadata", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *stallServiceClient) UpdateStallPosition(ctx context.Context, in *UpdateStallPositionRequest, opts ...grpc.CallOption) (*GetStallResponse, error) {
+	out := new(GetStallResponse)
+	err := c.cc.Invoke(ctx, "/market.StallService/UpdateStallPosition", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // StallServiceServer is the server API for StallService service.
 // All implementations must embed UnimplementedStallServiceServer
 // for forward compatibility
 type StallServiceServer interface {
+	CreateStall(context.Context, *CreateStallRequest) (*GetStallResponse, error)
+	GetStall(context.Context, *GetStallRequest) (*GetStallResponse, error)
+	GetPublishedStall(context.Context, *common.FindByIdRequest) (*GetStallResponse, error)
+	UpdateStallMetadata(context.Context, *UpdateStallMetadataRequest) (*GetStallResponse, error)
+	UpdateStallPosition(context.Context, *UpdateStallPositionRequest) (*GetStallResponse, error)
 	mustEmbedUnimplementedStallServiceServer()
 }
 
@@ -40,6 +99,21 @@ type StallServiceServer interface {
 type UnimplementedStallServiceServer struct {
 }
 
+func (UnimplementedStallServiceServer) CreateStall(context.Context, *CreateStallRequest) (*GetStallResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateStall not implemented")
+}
+func (UnimplementedStallServiceServer) GetStall(context.Context, *GetStallRequest) (*GetStallResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetStall not implemented")
+}
+func (UnimplementedStallServiceServer) GetPublishedStall(context.Context, *common.FindByIdRequest) (*GetStallResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPublishedStall not implemented")
+}
+func (UnimplementedStallServiceServer) UpdateStallMetadata(context.Context, *UpdateStallMetadataRequest) (*GetStallResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateStallMetadata not implemented")
+}
+func (UnimplementedStallServiceServer) UpdateStallPosition(context.Context, *UpdateStallPositionRequest) (*GetStallResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateStallPosition not implemented")
+}
 func (UnimplementedStallServiceServer) mustEmbedUnimplementedStallServiceServer() {}
 
 // UnsafeStallServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -53,13 +127,124 @@ func RegisterStallServiceServer(s grpc.ServiceRegistrar, srv StallServiceServer)
 	s.RegisterService(&StallService_ServiceDesc, srv)
 }
 
+func _StallService_CreateStall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateStallRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StallServiceServer).CreateStall(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/market.StallService/CreateStall",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StallServiceServer).CreateStall(ctx, req.(*CreateStallRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StallService_GetStall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetStallRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StallServiceServer).GetStall(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/market.StallService/GetStall",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StallServiceServer).GetStall(ctx, req.(*GetStallRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StallService_GetPublishedStall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(common.FindByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StallServiceServer).GetPublishedStall(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/market.StallService/GetPublishedStall",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StallServiceServer).GetPublishedStall(ctx, req.(*common.FindByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StallService_UpdateStallMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateStallMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StallServiceServer).UpdateStallMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/market.StallService/UpdateStallMetadata",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StallServiceServer).UpdateStallMetadata(ctx, req.(*UpdateStallMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StallService_UpdateStallPosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateStallPositionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StallServiceServer).UpdateStallPosition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/market.StallService/UpdateStallPosition",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StallServiceServer).UpdateStallPosition(ctx, req.(*UpdateStallPositionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // StallService_ServiceDesc is the grpc.ServiceDesc for StallService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var StallService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "market.StallService",
 	HandlerType: (*StallServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "market/stall.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateStall",
+			Handler:    _StallService_CreateStall_Handler,
+		},
+		{
+			MethodName: "GetStall",
+			Handler:    _StallService_GetStall_Handler,
+		},
+		{
+			MethodName: "GetPublishedStall",
+			Handler:    _StallService_GetPublishedStall_Handler,
+		},
+		{
+			MethodName: "UpdateStallMetadata",
+			Handler:    _StallService_UpdateStallMetadata_Handler,
+		},
+		{
+			MethodName: "UpdateStallPosition",
+			Handler:    _StallService_UpdateStallPosition_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "market/stall.proto",
 }

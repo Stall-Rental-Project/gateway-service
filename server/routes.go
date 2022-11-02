@@ -41,6 +41,7 @@ func (server *Server) InitializeRoutes() {
 	locationClient := client.NewLocationClient(marketCC)
 	marketClient := client.NewMarketClient(marketCC)
 	floorClient := client.NewFloorClient(marketCC)
+	stallClient := client.NewStallClient(marketCC)
 	//controller
 	authController := controller.NewAuthController(authClient)
 	roleController := controller.NewRoleController(roleClient)
@@ -50,6 +51,7 @@ func (server *Server) InitializeRoutes() {
 	locationController := controller.NewLocationController(locationClient)
 	marketController := controller.NewMarketController(marketClient)
 	floorController := controller.NewFloorController(floorClient)
+	stallController := controller.NewStallController(stallClient, rateClient)
 
 	rateController := controller.NewRateController(rateClient)
 
@@ -182,6 +184,27 @@ func (server *Server) InitializeRoutes() {
 		floor.DELETE("", common.HasAnyPermission([]string{
 			constants.MarketDelete,
 		}), floorController.DeleteFloor)
+	}
+
+	stall := server.router.Group("/api/v2/stalls")
+	stall.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
+	{
+		stall.POST("", common.HasAnyPermission([]string{
+			constants.MarketAddUpdate,
+		}), stallController.CreateStall)
+		stall.PUT("/metadata", common.HasAnyPermission([]string{
+			constants.MarketAddUpdate,
+		}), stallController.UpdateStallMetadata)
+		stall.PUT("/position", common.HasAnyPermission([]string{
+			constants.MarketAddUpdate,
+		}), stallController.UpdateStallPosition)
+		stall.GET("/:id", common.HasAnyPermission([]string{
+			constants.MarketView,
+			constants.ApplicationSubmit,
+			constants.ApplicationView,
+		}), stallController.GetStall)
+
+		stall.GET("/:id/published", stallController.GetPublishedStall)
 	}
 
 	file := server.router.Group("/api/v2/files")

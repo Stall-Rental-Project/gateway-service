@@ -295,6 +295,44 @@ definitions:
       market_id:
         type: string
     type: object
+  market.CreateStallRequest:
+    properties:
+      area:
+        type: number
+      clazz:
+        description: Default to Regular
+        type: integer
+      floorplan_id:
+        type: string
+      font_size:
+        type: number
+      h_axis:
+        type: number
+      label:
+        type: string
+      name:
+        type: string
+      points:
+        items:
+          $ref: '#/definitions/market.Point'
+        type: array
+      rotate:
+        type: integer
+      shape:
+        type: string
+      status:
+        description: Default to Inactive
+        type: integer
+      type:
+        description: Default to Temporary
+        type: integer
+      w_axis:
+        type: number
+      x_axis:
+        type: number
+      y_axis:
+        type: number
+    type: object
   market.DeleteFloorRequest:
     properties:
       draft_only:
@@ -530,6 +568,49 @@ definitions:
     properties:
       market_id:
         type: string
+    type: object
+  market.UpdateStallMetadataRequest:
+    properties:
+      area:
+        type: number
+      clazz:
+        description: Default to Regular
+        type: integer
+      name:
+        type: string
+      stall_id:
+        type: string
+      status:
+        description: Default to Inactive
+        type: integer
+      type:
+        description: Default to Temporary
+        type: integer
+    type: object
+  market.UpdateStallPositionRequest:
+    properties:
+      font_size:
+        type: number
+      h_axis:
+        type: number
+      label:
+        type: string
+      points:
+        items:
+          $ref: '#/definitions/market.Point'
+        type: array
+      rotate:
+        type: integer
+      shape:
+        type: string
+      stall_id:
+        type: string
+      w_axis:
+        type: number
+      x_axis:
+        type: number
+      y_axis:
+        type: number
     type: object
   market.UpsertMarketRequest:
     properties:
@@ -1742,6 +1823,169 @@ paths:
       summary: Update Role
       tags:
       - Role
+  /api/v2/stalls:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request body
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/market.CreateStallRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.Stall'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Create Stalls
+      tags:
+      - Stall
+  /api/v2/stalls/:id:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: stall id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.Stall'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get Stall
+      tags:
+      - Stall
+  /api/v2/stalls/:id/published:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: stall id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.Stall'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get Published Stall
+      tags:
+      - Stall
+  /api/v2/stalls/metadata:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: request body
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/market.UpdateStallMetadataRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.Stall'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Update Stall Metadata
+      tags:
+      - Stall
+  /api/v2/stalls/position:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: request body
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/market.UpdateStallPositionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.Stall'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Update Stall Position (single)
+      tags:
+      - Stall
   /api/v2/users:
     get:
       consumes:

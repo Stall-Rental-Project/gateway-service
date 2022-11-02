@@ -1554,6 +1554,257 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v2/stalls": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stall"
+                ],
+                "summary": "Create Stalls",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/market.CreateStallRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/market.Stall"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/stalls/:id": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stall"
+                ],
+                "summary": "Get Stall",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "stall id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/market.Stall"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/stalls/:id/published": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stall"
+                ],
+                "summary": "Get Published Stall",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "stall id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/market.Stall"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/stalls/metadata": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stall"
+                ],
+                "summary": "Update Stall Metadata",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/market.UpdateStallMetadataRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/market.Stall"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/stalls/position": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stall"
+                ],
+                "summary": "Update Stall Position (single)",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/market.UpdateStallPositionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/market.Stall"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v2/users": {
             "get": {
                 "consumes": [
@@ -2368,6 +2619,62 @@ const docTemplate = `{
                 }
             }
         },
+        "market.CreateStallRequest": {
+            "type": "object",
+            "properties": {
+                "area": {
+                    "type": "number"
+                },
+                "clazz": {
+                    "description": "Default to Regular",
+                    "type": "integer"
+                },
+                "floorplan_id": {
+                    "type": "string"
+                },
+                "font_size": {
+                    "type": "number"
+                },
+                "h_axis": {
+                    "type": "number"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "points": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/market.Point"
+                    }
+                },
+                "rotate": {
+                    "type": "integer"
+                },
+                "shape": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Default to Inactive",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "Default to Temporary",
+                    "type": "integer"
+                },
+                "w_axis": {
+                    "type": "number"
+                },
+                "x_axis": {
+                    "type": "number"
+                },
+                "y_axis": {
+                    "type": "number"
+                }
+            }
+        },
         "market.DeleteFloorRequest": {
             "type": "object",
             "properties": {
@@ -2725,6 +3032,70 @@ const docTemplate = `{
             "properties": {
                 "market_id": {
                     "type": "string"
+                }
+            }
+        },
+        "market.UpdateStallMetadataRequest": {
+            "type": "object",
+            "properties": {
+                "area": {
+                    "type": "number"
+                },
+                "clazz": {
+                    "description": "Default to Regular",
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "stall_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Default to Inactive",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "Default to Temporary",
+                    "type": "integer"
+                }
+            }
+        },
+        "market.UpdateStallPositionRequest": {
+            "type": "object",
+            "properties": {
+                "font_size": {
+                    "type": "number"
+                },
+                "h_axis": {
+                    "type": "number"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "points": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/market.Point"
+                    }
+                },
+                "rotate": {
+                    "type": "integer"
+                },
+                "shape": {
+                    "type": "string"
+                },
+                "stall_id": {
+                    "type": "string"
+                },
+                "w_axis": {
+                    "type": "number"
+                },
+                "x_axis": {
+                    "type": "number"
+                },
+                "y_axis": {
+                    "type": "number"
                 }
             }
         },
