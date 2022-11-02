@@ -153,7 +153,7 @@ func (server *Server) InitializeRoutes() {
 		market.POST("", common.HasAnyPermission([]string{
 			constants.MarketAddUpdate,
 		}), marketController.CreateMarket)
-		market.PUT("", common.HasAnyPermission([]string{
+		market.PUT("/:id", common.HasAnyPermission([]string{
 			constants.MarketAddUpdate,
 		}), marketController.UpdateMarket)
 

@@ -211,8 +211,9 @@ func (controller *MarketController) CreateMarket(ctx *gin.Context) {
 }
 
 // UpdateMarket
-// @Router /api/v2/markets [PUT]
+// @Router /api/v2/markets/{id} [PUT]
 // @Summary Update Market
+// @Param id path string true "ID"
 // @Param _ body market.UpsertMarketRequest true "Market Metadata"
 // @Tags Market
 // @Accept json
@@ -221,12 +222,12 @@ func (controller *MarketController) CreateMarket(ctx *gin.Context) {
 // @Failure 400,401,500 {object} model.ErrorResponse
 func (controller *MarketController) UpdateMarket(ctx *gin.Context) {
 	req := new(market.UpsertMarketRequest)
-
+	id := ctx.Param("id")
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		common.ReturnErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
-
+	req.MarketId = id
 	res, err := controller.marketClient.UpdateMarket(req, common.GetMetadataFromContext(ctx))
 
 	if err != nil {
