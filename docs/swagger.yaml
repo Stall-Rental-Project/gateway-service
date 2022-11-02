@@ -823,38 +823,6 @@ paths:
       summary: Create floor
       tags:
       - Floor
-    put:
-      consumes:
-      - application/json
-      parameters:
-      - description: request body
-        in: body
-        name: _
-        required: true
-        schema:
-          $ref: '#/definitions/market.UpdateFloorRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/market.UpdateFloorResponse_Data'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-      summary: Update floor
-      tags:
-      - Floor
   /api/v2/floors/:id:
     get:
       consumes:
@@ -889,6 +857,44 @@ paths:
           schema:
             $ref: '#/definitions/model.ErrorResponse'
       summary: Get floor
+      tags:
+      - Floor
+  /api/v2/floors/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: request body
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/market.UpdateFloorRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.UpdateFloorResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Update floor
       tags:
       - Floor
   /api/v2/locations/cities:
@@ -1183,39 +1189,6 @@ paths:
       summary: Create market
       tags:
       - Market
-  /api/v2/markets/:id:
-    get:
-      consumes:
-      - application/json
-      description: Returns the draft (if draft = true) or primary (otherwise) version
-        of markets
-      parameters:
-      - description: should get the draft version or not, default to false
-        in: query
-        name: draft
-        type: boolean
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/market.GetMarketResponse_Data'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-      summary: Get market (for both edit & review)
-      tags:
-      - Market
   /api/v2/markets/:id/floors:
     get:
       consumes:
@@ -1253,6 +1226,43 @@ paths:
       tags:
       - Floor
   /api/v2/markets/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Returns the draft (if draft = true) or primary (otherwise) version
+        of markets
+      parameters:
+      - description: should get the draft version or not, default to false
+        in: query
+        name: draft
+        type: boolean
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.GetMarketResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get market (for both edit & review)
+      tags:
+      - Market
     put:
       consumes:
       - application/json

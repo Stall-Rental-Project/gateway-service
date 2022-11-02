@@ -156,6 +156,11 @@ func (server *Server) InitializeRoutes() {
 		market.PUT("/:id", common.HasAnyPermission([]string{
 			constants.MarketAddUpdate,
 		}), marketController.UpdateMarket)
+		market.GET("/:id/floors", common.HasAnyPermission([]string{
+			constants.MarketView,
+			constants.ApplicationSubmit,
+			constants.ApplicationView,
+		}), floorController.ListFloors)
 
 	}
 

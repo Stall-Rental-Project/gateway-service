@@ -50,8 +50,9 @@ func (controller *FloorController) CreateFloor(ctx *gin.Context) {
 }
 
 // UpdateFloor
-// @Router /api/v2/floors [PUT]
+// @Router /api/v2/floors/{id} [PUT]
 // @Summary Update floor
+// @Param id path string true "ID"
 // @Param _ body market.UpdateFloorRequest true "request body"
 // @Tags Floor
 // @Accept json
@@ -60,12 +61,13 @@ func (controller *FloorController) CreateFloor(ctx *gin.Context) {
 // @Failure 400,401,500 {object} model.ErrorResponse
 func (controller *FloorController) UpdateFloor(ctx *gin.Context) {
 	req := new(market.UpdateFloorRequest)
+	floorId := ctx.Param("id")
 
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		common.ReturnErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
-
+	req.FloorplanId = floorId
 	res, err := controller.floorClient.UpdateFloor(req, common.GetMetadataFromContext(ctx))
 
 	if err != nil {

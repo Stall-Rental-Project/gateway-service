@@ -141,10 +141,11 @@ type ListPublishedMarketsResponse struct {
 }
 
 // GetMarket
-// @Router /api/v2/markets/:id [GET]
+// @Router /api/v2/markets/{id} [GET]
 // @Summary Get market (for both edit & review)
 // @Description Returns the draft (if draft = true) or primary (otherwise) version of markets
 // @Param draft query bool false "should get the draft version or not, default to false"
+// @Param id path string true "ID"
 // @Tags Market
 // @Accept json
 // @Produce json
