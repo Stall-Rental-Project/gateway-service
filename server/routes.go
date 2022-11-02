@@ -173,7 +173,7 @@ func (server *Server) InitializeRoutes() {
 		floor.POST("", common.HasAnyPermission([]string{
 			constants.MarketAddUpdate,
 		}), floorController.CreateFloor)
-		floor.PUT("", common.HasAnyPermission([]string{
+		floor.PUT("/:id", common.HasAnyPermission([]string{
 			constants.MarketAddUpdate,
 		}), floorController.UpdateFloor)
 		floor.GET("/:id", common.HasAnyPermission([]string{
