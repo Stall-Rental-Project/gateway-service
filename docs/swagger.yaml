@@ -279,22 +279,6 @@ definitions:
       type:
         type: integer
     type: object
-  market.CreateFloorRequest:
-    properties:
-      image:
-        type: string
-      market_id:
-        type: string
-      name:
-        type: string
-    type: object
-  market.CreateFloorResponse_Data:
-    properties:
-      floorplan_id:
-        type: string
-      market_id:
-        type: string
-    type: object
   market.CreateStallRequest:
     properties:
       area:
@@ -344,13 +328,13 @@ definitions:
     properties:
       code:
         type: string
-      floor_data:
+      floor_name:
         type: string
       floorplan_id:
         type: string
-      image:
+      image_name:
         type: string
-      name:
+      image_url:
         type: string
       previous_version:
         type: string
@@ -548,22 +532,6 @@ definitions:
       telephone:
         type: string
     type: object
-  market.UpdateFloorRequest:
-    properties:
-      floor_data:
-        type: string
-      floorplan_id:
-        type: string
-      image:
-        type: string
-      name:
-        type: string
-    type: object
-  market.UpdateFloorResponse_Data:
-    properties:
-      floorplan_id:
-        type: string
-    type: object
   market.UpdateMarketResponse_Data:
     properties:
       market_id:
@@ -611,6 +579,26 @@ definitions:
         type: number
       y_axis:
         type: number
+    type: object
+  market.UpsertFloorRequest:
+    properties:
+      floor_name:
+        type: string
+      floorplan_id:
+        type: string
+      image_name:
+        type: string
+      image_url:
+        type: string
+      market_id:
+        type: string
+    type: object
+  market.UpsertFloorResponse_Data:
+    properties:
+      floorplan_id:
+        type: string
+      market_id:
+        type: string
     type: object
   market.UpsertMarketRequest:
     properties:
@@ -890,14 +878,14 @@ paths:
         name: _
         required: true
         schema:
-          $ref: '#/definitions/market.CreateFloorRequest'
+          $ref: '#/definitions/market.UpsertFloorRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/market.CreateFloorResponse_Data'
+            $ref: '#/definitions/market.UpsertFloorResponse_Data'
         "400":
           description: Bad Request
           schema:
@@ -964,14 +952,14 @@ paths:
         name: _
         required: true
         schema:
-          $ref: '#/definitions/market.UpdateFloorRequest'
+          $ref: '#/definitions/market.UpsertFloorRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/market.UpdateFloorResponse_Data'
+            $ref: '#/definitions/market.UpsertFloorResponse_Data'
         "400":
           description: Bad Request
           schema:

@@ -93,7 +93,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/market.CreateFloorRequest"
+                            "$ref": "#/definitions/market.UpsertFloorRequest"
                         }
                     }
                 ],
@@ -101,7 +101,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/market.CreateFloorResponse_Data"
+                            "$ref": "#/definitions/market.UpsertFloorResponse_Data"
                         }
                     },
                     "400": {
@@ -255,7 +255,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/market.UpdateFloorRequest"
+                            "$ref": "#/definitions/market.UpsertFloorRequest"
                         }
                     }
                 ],
@@ -263,7 +263,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/market.UpdateFloorResponse_Data"
+                            "$ref": "#/definitions/market.UpsertFloorResponse_Data"
                         }
                     },
                     "400": {
@@ -2594,31 +2594,6 @@ const docTemplate = `{
                 }
             }
         },
-        "market.CreateFloorRequest": {
-            "type": "object",
-            "properties": {
-                "image": {
-                    "type": "string"
-                },
-                "market_id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "market.CreateFloorResponse_Data": {
-            "type": "object",
-            "properties": {
-                "floorplan_id": {
-                    "type": "string"
-                },
-                "market_id": {
-                    "type": "string"
-                }
-            }
-        },
         "market.CreateStallRequest": {
             "type": "object",
             "properties": {
@@ -2692,16 +2667,16 @@ const docTemplate = `{
                 "code": {
                     "type": "string"
                 },
-                "floor_data": {
+                "floor_name": {
                     "type": "string"
                 },
                 "floorplan_id": {
                     "type": "string"
                 },
-                "image": {
+                "image_name": {
                     "type": "string"
                 },
-                "name": {
+                "image_url": {
                     "type": "string"
                 },
                 "previous_version": {
@@ -3002,31 +2977,6 @@ const docTemplate = `{
                 }
             }
         },
-        "market.UpdateFloorRequest": {
-            "type": "object",
-            "properties": {
-                "floor_data": {
-                    "type": "string"
-                },
-                "floorplan_id": {
-                    "type": "string"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "market.UpdateFloorResponse_Data": {
-            "type": "object",
-            "properties": {
-                "floorplan_id": {
-                    "type": "string"
-                }
-            }
-        },
         "market.UpdateMarketResponse_Data": {
             "type": "object",
             "properties": {
@@ -3096,6 +3046,37 @@ const docTemplate = `{
                 },
                 "y_axis": {
                     "type": "number"
+                }
+            }
+        },
+        "market.UpsertFloorRequest": {
+            "type": "object",
+            "properties": {
+                "floor_name": {
+                    "type": "string"
+                },
+                "floorplan_id": {
+                    "type": "string"
+                },
+                "image_name": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "market_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "market.UpsertFloorResponse_Data": {
+            "type": "object",
+            "properties": {
+                "floorplan_id": {
+                    "type": "string"
+                },
+                "market_id": {
+                    "type": "string"
                 }
             }
         },

@@ -23,8 +23,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FloorServiceClient interface {
-	CreateFloor(ctx context.Context, in *CreateFloorRequest, opts ...grpc.CallOption) (*CreateFloorResponse, error)
-	UpdateFloor(ctx context.Context, in *UpdateFloorRequest, opts ...grpc.CallOption) (*UpdateFloorResponse, error)
+	CreateFloor(ctx context.Context, in *UpsertFloorRequest, opts ...grpc.CallOption) (*UpsertFloorResponse, error)
+	UpdateFloor(ctx context.Context, in *UpsertFloorRequest, opts ...grpc.CallOption) (*UpsertFloorResponse, error)
 	GetFloor(ctx context.Context, in *GetFloorRequest, opts ...grpc.CallOption) (*GetFloorResponse, error)
 	GetFloorCodeAndMarketCode(ctx context.Context, in *common.FindByIdRequest, opts ...grpc.CallOption) (*GetFloorCodeAndMarketCodeResponse, error)
 	GetPublishedFloor(ctx context.Context, in *GetPublishedFloorRequest, opts ...grpc.CallOption) (*GetFloorResponse, error)
@@ -41,8 +41,8 @@ func NewFloorServiceClient(cc grpc.ClientConnInterface) FloorServiceClient {
 	return &floorServiceClient{cc}
 }
 
-func (c *floorServiceClient) CreateFloor(ctx context.Context, in *CreateFloorRequest, opts ...grpc.CallOption) (*CreateFloorResponse, error) {
-	out := new(CreateFloorResponse)
+func (c *floorServiceClient) CreateFloor(ctx context.Context, in *UpsertFloorRequest, opts ...grpc.CallOption) (*UpsertFloorResponse, error) {
+	out := new(UpsertFloorResponse)
 	err := c.cc.Invoke(ctx, "/market.FloorService/CreateFloor", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -50,8 +50,8 @@ func (c *floorServiceClient) CreateFloor(ctx context.Context, in *CreateFloorReq
 	return out, nil
 }
 
-func (c *floorServiceClient) UpdateFloor(ctx context.Context, in *UpdateFloorRequest, opts ...grpc.CallOption) (*UpdateFloorResponse, error) {
-	out := new(UpdateFloorResponse)
+func (c *floorServiceClient) UpdateFloor(ctx context.Context, in *UpsertFloorRequest, opts ...grpc.CallOption) (*UpsertFloorResponse, error) {
+	out := new(UpsertFloorResponse)
 	err := c.cc.Invoke(ctx, "/market.FloorService/UpdateFloor", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -117,8 +117,8 @@ func (c *floorServiceClient) DeleteFloor(ctx context.Context, in *DeleteFloorReq
 // All implementations must embed UnimplementedFloorServiceServer
 // for forward compatibility
 type FloorServiceServer interface {
-	CreateFloor(context.Context, *CreateFloorRequest) (*CreateFloorResponse, error)
-	UpdateFloor(context.Context, *UpdateFloorRequest) (*UpdateFloorResponse, error)
+	CreateFloor(context.Context, *UpsertFloorRequest) (*UpsertFloorResponse, error)
+	UpdateFloor(context.Context, *UpsertFloorRequest) (*UpsertFloorResponse, error)
 	GetFloor(context.Context, *GetFloorRequest) (*GetFloorResponse, error)
 	GetFloorCodeAndMarketCode(context.Context, *common.FindByIdRequest) (*GetFloorCodeAndMarketCodeResponse, error)
 	GetPublishedFloor(context.Context, *GetPublishedFloorRequest) (*GetFloorResponse, error)
@@ -132,10 +132,10 @@ type FloorServiceServer interface {
 type UnimplementedFloorServiceServer struct {
 }
 
-func (UnimplementedFloorServiceServer) CreateFloor(context.Context, *CreateFloorRequest) (*CreateFloorResponse, error) {
+func (UnimplementedFloorServiceServer) CreateFloor(context.Context, *UpsertFloorRequest) (*UpsertFloorResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateFloor not implemented")
 }
-func (UnimplementedFloorServiceServer) UpdateFloor(context.Context, *UpdateFloorRequest) (*UpdateFloorResponse, error) {
+func (UnimplementedFloorServiceServer) UpdateFloor(context.Context, *UpsertFloorRequest) (*UpsertFloorResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateFloor not implemented")
 }
 func (UnimplementedFloorServiceServer) GetFloor(context.Context, *GetFloorRequest) (*GetFloorResponse, error) {
@@ -170,7 +170,7 @@ func RegisterFloorServiceServer(s grpc.ServiceRegistrar, srv FloorServiceServer)
 }
 
 func _FloorService_CreateFloor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateFloorRequest)
+	in := new(UpsertFloorRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -182,13 +182,13 @@ func _FloorService_CreateFloor_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: "/market.FloorService/CreateFloor",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FloorServiceServer).CreateFloor(ctx, req.(*CreateFloorRequest))
+		return srv.(FloorServiceServer).CreateFloor(ctx, req.(*UpsertFloorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _FloorService_UpdateFloor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateFloorRequest)
+	in := new(UpsertFloorRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -200,7 +200,7 @@ func _FloorService_UpdateFloor_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: "/market.FloorService/UpdateFloor",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FloorServiceServer).UpdateFloor(ctx, req.(*UpdateFloorRequest))
+		return srv.(FloorServiceServer).UpdateFloor(ctx, req.(*UpsertFloorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

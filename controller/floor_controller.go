@@ -21,14 +21,14 @@ func NewFloorController(floorClient *client.FloorClient) FloorController {
 // CreateFloor
 // @Router /api/v2/floors [POST]
 // @Summary Create floor
-// @Param _ body market.CreateFloorRequest true "request body"
+// @Param _ body market.UpsertFloorRequest true "request body"
 // @Tags Floor
 // @Accept json
 // @Produce json
-// @Success 200 {object} market.CreateFloorResponse_Data
+// @Success 200 {object} market.UpsertFloorResponse_Data
 // @Failure 400,401,500 {object} model.ErrorResponse
 func (controller *FloorController) CreateFloor(ctx *gin.Context) {
-	req := new(market.CreateFloorRequest)
+	req := new(market.UpsertFloorRequest)
 
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		common.ReturnErrorResponse(ctx, http.StatusBadRequest, err.Error())
@@ -53,14 +53,14 @@ func (controller *FloorController) CreateFloor(ctx *gin.Context) {
 // @Router /api/v2/floors/{id} [PUT]
 // @Summary Update floor
 // @Param id path string true "ID"
-// @Param _ body market.UpdateFloorRequest true "request body"
+// @Param _ body market.UpsertFloorRequest true "request body"
 // @Tags Floor
 // @Accept json
 // @Produce json
-// @Success 200 {object} market.UpdateFloorResponse_Data
+// @Success 200 {object} market.UpsertFloorResponse_Data
 // @Failure 400,401,500 {object} model.ErrorResponse
 func (controller *FloorController) UpdateFloor(ctx *gin.Context) {
-	req := new(market.UpdateFloorRequest)
+	req := new(market.UpsertFloorRequest)
 	floorId := ctx.Param("id")
 
 	if err := ctx.ShouldBindJSON(req); err != nil {

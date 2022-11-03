@@ -34,7 +34,7 @@ func (service FloorClient) GetFloor(req *market.GetFloorRequest, md metadata.MD)
 	return
 }
 
-func (service FloorClient) CreateFloor(req *market.CreateFloorRequest, md metadata.MD) (res *market.CreateFloorResponse, err error) {
+func (service FloorClient) CreateFloor(req *market.UpsertFloorRequest, md metadata.MD) (res *market.UpsertFloorResponse, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
 	ctx = metadata.NewOutgoingContext(ctx, md)
 	defer cancel()
@@ -42,7 +42,7 @@ func (service FloorClient) CreateFloor(req *market.CreateFloorRequest, md metada
 	return
 }
 
-func (service FloorClient) UpdateFloor(req *market.UpdateFloorRequest, md metadata.MD) (res *market.UpdateFloorResponse, err error) {
+func (service FloorClient) UpdateFloor(req *market.UpsertFloorRequest, md metadata.MD) (res *market.UpsertFloorResponse, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
 	ctx = metadata.NewOutgoingContext(ctx, md)
 	defer cancel()
