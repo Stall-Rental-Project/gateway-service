@@ -72,3 +72,19 @@ func (client MarketClient) ListPublishedMarkets(req *market.ListMarketsRequest, 
 	res, err = client.marketClient.ListMarkets(ctx, req)
 	return
 }
+
+func (client *MarketClient) PublishMarket(req *common.FindByIdRequest, md metadata.MD) (res *common.NoContentResponse, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	defer cancel()
+
+	res, err = client.marketClient.PublishMarket(ctx, req)
+	return
+}
+func (client *MarketClient) CountStalls(req *common.FindByIdRequest, md metadata.MD) (res *market.CountStallsResponse, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	defer cancel()
+	res, err = client.marketClient.CountStalls(ctx, req)
+	return
+}

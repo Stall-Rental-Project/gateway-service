@@ -57,3 +57,18 @@ func (service FloorClient) DeleteFloor(req *market.DeleteFloorRequest, md metada
 	res, err = service.client.DeleteFloor(ctx, req)
 	return
 }
+
+func (service FloorClient) ListPublishedFloors(req *common.FindByIdRequest, md metadata.MD) (res *market.ListFloorsResponse, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	defer cancel()
+	res, err = service.client.ListPublishedFloors(ctx, req)
+	return
+}
+func (service FloorClient) GetPublishedFloor(req *market.GetPublishedFloorRequest, md metadata.MD) (res *market.GetFloorResponse, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	defer cancel()
+	res, err = service.client.GetPublishedFloor(ctx, req)
+	return
+}

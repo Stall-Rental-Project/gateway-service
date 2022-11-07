@@ -149,6 +149,9 @@ func (server *Server) InitializeRoutes() {
 		}), marketController.ListMarkets)
 
 		market.GET("/published", marketController.ListPublishedMarkets)
+		market.POST("/:id/publish", common.HasAnyPermission([]string{
+			constants.MarketApprovePublish,
+		}), marketController.PublishMarket)
 
 		market.GET("/:id", common.HasAnyPermission([]string{
 			constants.MarketView,
@@ -166,7 +169,8 @@ func (server *Server) InitializeRoutes() {
 			constants.ApplicationSubmit,
 			constants.ApplicationView,
 		}), floorController.ListFloors)
-
+		market.GET("/:id/stalls/count", marketController.CountStalls)
+		market.GET("/:id/floors/published", floorController.ListPublishedFloors)
 	}
 
 	floor := server.router.Group("/api/v2/floors")
@@ -184,6 +188,8 @@ func (server *Server) InitializeRoutes() {
 		floor.DELETE("", common.HasAnyPermission([]string{
 			constants.MarketDelete,
 		}), floorController.DeleteFloor)
+		floor.GET("/:id/published", floorController.GetPublishedFloor)
+
 	}
 
 	stall := server.router.Group("/api/v2/stalls")

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"gateway-service/client"
+	common2 "gateway-service/client/common"
 	"gateway-service/client/market"
 	"gateway-service/common"
 	"github.com/gin-gonic/gin"
@@ -220,6 +221,68 @@ func (controller *FloorController) DeleteFloor(ctx *gin.Context) {
 
 	if res.Success {
 		ctx.JSON(http.StatusOK, res)
+	} else {
+		common.AsErrorResponse(res.GetError(), ctx)
+	}
+}
+
+// GetPublishedFloor
+// @Router /api/v2/floors/:id/published [GET]
+// @Summary Get published floor
+// @Param id path string true "floor id"
+// @Tags Floor
+// @Accept json
+// @Produce json
+// @Success 200 {object} market.Floor
+// @Failure 400,401,500 {object} model.ErrorResponse
+func (controller *FloorController) GetPublishedFloor(ctx *gin.Context) {
+	floorID := ctx.Param("id")
+
+	req := &market.GetPublishedFloorRequest{
+		Id: floorID,
+	}
+
+	res, err := controller.floorClient.GetPublishedFloor(req, common.GetMetadataFromContext(ctx))
+
+	if err != nil {
+		common.ReturnErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if res.Success {
+		ctx.JSON(http.StatusOK, res.GetData().GetFloor())
+	} else {
+		common.AsErrorResponse(res.GetError(), ctx)
+	}
+}
+
+// ListPublishedFloors
+// @Router /api/v2/markets/:id/floors/published [GET]
+// @Summary List published floors
+// @Param id path string true "market id"
+// @Tags Floor
+// @Accept json
+// @Produce json
+// @Success 200 {object} ListFloorsResponse
+// @Failure 400,401,500 {object} model.ErrorResponse
+func (controller *FloorController) ListPublishedFloors(ctx *gin.Context) {
+	marketID := ctx.Param("id")
+
+	req := &common2.FindByIdRequest{
+		Id: marketID,
+	}
+
+	res, err := controller.floorClient.ListPublishedFloors(req, common.GetMetadataFromContext(ctx))
+
+	if err != nil {
+		common.ReturnErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if res.Success {
+		ctx.JSON(http.StatusOK, ListFloorsResponse{
+			Floors: res.GetData().GetFloors(),
+		})
 	} else {
 		common.AsErrorResponse(res.GetError(), ctx)
 	}

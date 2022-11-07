@@ -157,6 +157,15 @@ definitions:
       id:
         type: string
     type: object
+  controller.CountStallsResponse:
+    properties:
+      available_stalls:
+        type: integer
+      occupied_stalls:
+        type: integer
+      total_stalls:
+        type: integer
+    type: object
   controller.ListFloorsResponse:
     properties:
       floors:
@@ -937,6 +946,38 @@ paths:
       summary: Get floor
       tags:
       - Floor
+  /api/v2/floors/:id/published:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: floor id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.Floor'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get published floor
+      tags:
+      - Floor
   /api/v2/floors/{id}:
     put:
       consumes:
@@ -1303,6 +1344,70 @@ paths:
       summary: List floors
       tags:
       - Floor
+  /api/v2/markets/:id/floors/published:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: market id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ListFloorsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List published floors
+      tags:
+      - Floor
+  /api/v2/markets/:id/stalls/count:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Market ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.CountStallsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Count and classify stalls by market for rent
+      tags:
+      - Market
   /api/v2/markets/{id}:
     get:
       consumes:
@@ -1376,6 +1481,38 @@ paths:
           schema:
             $ref: '#/definitions/model.ErrorResponse'
       summary: Update Market
+      tags:
+      - Market
+  /api/v2/markets/{id}/publish:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NoContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Publish Market
       tags:
       - Market
   /api/v2/markets/published:

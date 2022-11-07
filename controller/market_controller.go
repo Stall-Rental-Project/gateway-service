@@ -326,3 +326,76 @@ func (controller *MarketController) ListPublishedMarkets(ctx *gin.Context) {
 		common.AsErrorResponse(res.GetError(), ctx)
 	}
 }
+
+// PublishMarket
+// @Router /api/v2/markets/{id}/publish [POST]
+// @Summary Publish Market
+// @Param id path string true "ID"
+// @Tags Market
+// @Accept json
+// @Produce json
+// @Success 200 {object} common.NoContentResponse
+// @Failure 400,401,500 {object} model.ErrorResponse
+func (controller *MarketController) PublishMarket(ctx *gin.Context) {
+	marketId := ctx.Param("id")
+
+	res, err := controller.marketClient.PublishMarket(&grpc.FindByIdRequest{
+		Id: marketId,
+	}, common.GetMetadataFromContext(ctx))
+
+	if err != nil {
+		common.ReturnErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if res.Success {
+		common.AsSuccessResponse(gin.H{
+			"success": true,
+		}, ctx)
+	} else {
+		common.AsErrorResponse(res.GetError(), ctx)
+	}
+}
+
+// CountStalls
+// @Router /api/v2/markets/:id/stalls/count [GET]
+// @Summary Count and classify stalls by market for rent
+// @Param id path string true "Market ID"
+// @Tags Market
+// @Accept json
+// @Produce json
+// @Success 200 {object} CountStallsResponse
+// @Failure 400,401,500 {object} model.ErrorResponse
+func (controller *MarketController) CountStalls(ctx *gin.Context) {
+	req := new(grpc.FindByIdRequest)
+
+	if ctx.Param("id") == "" {
+		common.ReturnErrorResponse(ctx, http.StatusInternalServerError, "Missing required request path - id")
+		return
+	}
+
+	req.Id = ctx.Param("id")
+
+	res, err := controller.marketClient.CountStalls(req, common.GetMetadataFromContext(ctx))
+
+	if err != nil {
+		common.ReturnErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if res.Success {
+		common.AsSuccessResponse(&CountStallsResponse{
+			TotalStalls:     res.GetData().TotalStalls,
+			AvailableStalls: res.GetData().AvailableStalls,
+			OccupiedStalls:  res.GetData().ReservedStalls + res.GetData().OccupiedStalls,
+		}, ctx)
+	} else {
+		common.AsErrorResponse(res.GetError(), ctx)
+	}
+}
+
+type CountStallsResponse struct {
+	TotalStalls     int64 `json:"total_stalls"`
+	AvailableStalls int64 `json:"available_stalls"`
+	OccupiedStalls  int64 `json:"occupied_stalls"`
+}
