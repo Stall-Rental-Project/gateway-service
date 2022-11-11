@@ -36,6 +36,8 @@ func (server *Server) InitializeRoutes() {
 	userClient := client.NewUserClient(accountCC)
 
 	cloudinaryClient := client.NewCloudinaryClient()
+	nsaClient := client.NewNSAClient(rentalCC)
+	applicationClient := client.NewApplicationClient(rentalCC)
 
 	rateClient := client.NewRateClient(rentalCC)
 	locationClient := client.NewLocationClient(marketCC)
@@ -54,6 +56,9 @@ func (server *Server) InitializeRoutes() {
 	stallController := controller.NewStallController(stallClient, rateClient)
 
 	rateController := controller.NewRateController(rateClient)
+	nsaController := controller.NewNSAController(nsaClient, stallClient,
+		marketClient, userClient, rateClient)
+	applicationController := controller.NewApplicationController(applicationClient, stallClient)
 
 	fileController := controller.NewFileController(cloudinaryClient)
 
@@ -211,6 +216,30 @@ func (server *Server) InitializeRoutes() {
 		}), stallController.GetStall)
 
 		stall.GET("/:id/published", stallController.GetPublishedStall)
+	}
+
+	application := server.router.Group("/api/v2/applications")
+	application.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
+	{
+		application.GET("", common.HasAnyPermission([]string{
+			constants.ApplicationView,
+		}), applicationController.ListApplication)
+
+		application.GET("/:id", common.HasAnyPermission([]string{
+			constants.ApplicationView,
+		}), nsaController.GetApplication)
+
+		application.POST("", common.HasAnyPermission([]string{
+			constants.ApplicationSubmit,
+		}), nsaController.SubmitRequest)
+
+		application.PUT("/:id/docs", common.HasAnyPermission([]string{
+			constants.ApplicationSubmit,
+		}), nsaController.SubmitDocs)
+
+		application.PUT("/:id", common.HasAnyPermission([]string{
+			constants.ApplicationSubmit,
+		}), nsaController.UpdateApplication)
 	}
 
 	file := server.router.Group("/api/v2/files")

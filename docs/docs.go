@@ -23,6 +23,292 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v2/applications": {
+            "get": {
+                "description": "Get applications",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Application"
+                ],
+                "summary": "List Application",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page size",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort field. Accept value[ first_name, last_name, code]",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort direction",
+                        "name": "direction",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter By Application Code",
+                        "name": "code",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by owner first name",
+                        "name": "first_name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by owner last name",
+                        "name": "last_name",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.PageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Submit new Application",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Application"
+                ],
+                "summary": "Submit Application",
+                "parameters": [
+                    {
+                        "description": "Application Information",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rental.SubmitApplicationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/applications/{id}": {
+            "get": {
+                "description": "Get Application",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Application"
+                ],
+                "summary": "Get Application",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Application ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/rental.Application"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update Application",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Application"
+                ],
+                "summary": "Update Application",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Application ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Application Information",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rental.Application"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/rental.SubmitApplicationRequest"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/applications/{id}/docs": {
+            "put": {
+                "description": "Submit new application documents or update the application documents",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Application"
+                ],
+                "summary": "Submit Application Documents",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Application ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Application Docs Information",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rental.SubmitApplicationDocsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.NoContentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v2/files/upload": {
             "post": {
                 "consumes": [
@@ -3467,6 +3753,245 @@ const docTemplate = `{
                 }
             }
         },
+        "rental.Application": {
+            "type": "object",
+            "properties": {
+                "administrative_criminal": {
+                    "type": "boolean"
+                },
+                "administrative_criminal_reason": {
+                    "type": "string"
+                },
+                "application_id": {
+                    "type": "string"
+                },
+                "approved_date": {
+                    "type": "string"
+                },
+                "birth_certificate": {
+                    "description": "URL",
+                    "type": "string"
+                },
+                "capital": {
+                    "type": "string"
+                },
+                "code": {
+                    "description": "application generated code",
+                    "type": "string"
+                },
+                "convicted_violate_law": {
+                    "type": "boolean"
+                },
+                "convicted_violate_law_reason": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by": {
+                    "type": "string"
+                },
+                "current_payment_status": {
+                    "description": "only set when accessing Market Lease - related APIs",
+                    "type": "integer"
+                },
+                "draft": {
+                    "description": "used in NSA \u0026 RSA step 1",
+                    "type": "boolean"
+                },
+                "exchange_rent_stall": {
+                    "type": "boolean"
+                },
+                "exchange_rent_stall_name": {
+                    "type": "string"
+                },
+                "floor_code": {
+                    "type": "string"
+                },
+                "floor_name": {
+                    "description": "fetched from Market service",
+                    "type": "string"
+                },
+                "forced_terminate_previous": {
+                    "type": "boolean"
+                },
+                "forced_terminate_reason": {
+                    "type": "string"
+                },
+                "identification": {
+                    "description": "Unknown/Misleading field ~~",
+                    "type": "string"
+                },
+                "initial_fee": {
+                    "type": "number"
+                },
+                "item_type": {
+                    "description": "what stallholder is going to sell",
+                    "type": "string"
+                },
+                "lease_code": {
+                    "description": "double monthly_fee = 48; // Calculated dynamically from rate management module\n double security_fee = 49;\n double total_amount_due = 50;\n\nApplication in-lease only",
+                    "type": "string"
+                },
+                "lease_end_date": {
+                    "type": "string"
+                },
+                "lease_start_date": {
+                    "description": "in form of 1970-01-01T00:00:00Z (yyyy-MM-ddThh:mm:ssZ)",
+                    "type": "string"
+                },
+                "lease_status": {
+                    "type": "integer"
+                },
+                "market_address": {
+                    "description": "fetched from Market service",
+                    "type": "string"
+                },
+                "market_class": {
+                    "type": "integer"
+                },
+                "market_code": {
+                    "type": "string"
+                },
+                "market_name": {
+                    "description": "fetched from Market service",
+                    "type": "string"
+                },
+                "market_type": {
+                    "type": "integer"
+                },
+                "members": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/rental.Member"
+                    }
+                },
+                "other_occupation": {
+                    "description": "Other occupation or source of income",
+                    "type": "string"
+                },
+                "owned_any_stall": {
+                    "type": "boolean"
+                },
+                "owned_stall_info": {
+                    "type": "string"
+                },
+                "owner": {
+                    "$ref": "#/definitions/rental.ApplicationOwner"
+                },
+                "pay_tax_previous": {
+                    "type": "boolean"
+                },
+                "pay_tax_previous_reason": {
+                    "type": "string"
+                },
+                "payment_method": {
+                    "type": "integer"
+                },
+                "picture": {
+                    "description": "URL",
+                    "type": "string"
+                },
+                "proof_of_residencies": {
+                    "description": "URL",
+                    "type": "string"
+                },
+                "proof_of_transfer": {
+                    "type": "string"
+                },
+                "source_of_capital": {
+                    "type": "string"
+                },
+                "stall_area": {
+                    "type": "number"
+                },
+                "stall_class": {
+                    "description": "Default to Regular",
+                    "type": "integer"
+                },
+                "stall_code": {
+                    "type": "string"
+                },
+                "stall_name": {
+                    "description": "fetched from Market service",
+                    "type": "string"
+                },
+                "stall_type": {
+                    "description": "Default to Temporary",
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "references to WorkflowStatus enum",
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "rental.ApplicationOwner": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "description": "calculated from date_of_birth",
+                    "type": "integer"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "date_of_birth": {
+                    "type": "string"
+                },
+                "district": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "farther_name": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "house_number": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "marital_status": {
+                    "type": "integer"
+                },
+                "middle_name": {
+                    "type": "string"
+                },
+                "mother_name": {
+                    "type": "string"
+                },
+                "place_of_birth": {
+                    "type": "string"
+                },
+                "province": {
+                    "type": "string"
+                },
+                "sex": {
+                    "type": "integer"
+                },
+                "street": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                },
+                "ward": {
+                    "type": "string"
+                },
+                "zipcode": {
+                    "type": "string"
+                }
+            }
+        },
         "rental.ClassAmountRate": {
             "type": "object",
             "properties": {
@@ -3475,6 +4000,20 @@ const docTemplate = `{
                 },
                 "clazz": {
                     "type": "integer"
+                }
+            }
+        },
+        "rental.Member": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer"
+                },
+                "member_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         },
@@ -3549,6 +4088,117 @@ const docTemplate = `{
                 },
                 "rental_fee": {
                     "type": "number"
+                }
+            }
+        },
+        "rental.SubmitApplicationDocsRequest": {
+            "type": "object",
+            "properties": {
+                "application_id": {
+                    "type": "string"
+                },
+                "birth_certificate": {
+                    "type": "string"
+                },
+                "draft": {
+                    "type": "boolean"
+                },
+                "identification": {
+                    "type": "string"
+                },
+                "picture": {
+                    "type": "string"
+                },
+                "proof_of_residencies": {
+                    "type": "string"
+                }
+            }
+        },
+        "rental.SubmitApplicationRequest": {
+            "type": "object",
+            "properties": {
+                "administrative_criminal": {
+                    "type": "boolean"
+                },
+                "administrative_criminal_reason": {
+                    "type": "string"
+                },
+                "application_id": {
+                    "type": "string"
+                },
+                "capital": {
+                    "type": "string"
+                },
+                "convicted_violate_law": {
+                    "type": "boolean"
+                },
+                "convicted_violate_law_reason": {
+                    "type": "string"
+                },
+                "draft": {
+                    "type": "boolean"
+                },
+                "exchange_rent_stall": {
+                    "type": "boolean"
+                },
+                "exchange_rent_stall_name": {
+                    "type": "string"
+                },
+                "floor_code": {
+                    "type": "string"
+                },
+                "forced_terminate_previous": {
+                    "type": "boolean"
+                },
+                "forced_terminate_reason": {
+                    "type": "string"
+                },
+                "market_class": {
+                    "type": "integer"
+                },
+                "market_code": {
+                    "type": "string"
+                },
+                "market_type": {
+                    "type": "integer"
+                },
+                "members": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/rental.Member"
+                    }
+                },
+                "owned_any_stall": {
+                    "type": "boolean"
+                },
+                "owned_stall_info": {
+                    "type": "string"
+                },
+                "owner": {
+                    "$ref": "#/definitions/rental.ApplicationOwner"
+                },
+                "pay_tax_previous": {
+                    "type": "boolean"
+                },
+                "pay_tax_previous_reason": {
+                    "type": "string"
+                },
+                "source_of_capital": {
+                    "type": "string"
+                },
+                "stall_area": {
+                    "type": "number"
+                },
+                "stall_class": {
+                    "description": "Default to Regular",
+                    "type": "integer"
+                },
+                "stall_code": {
+                    "type": "string"
+                },
+                "stall_type": {
+                    "description": "Default to Temporary",
+                    "type": "integer"
                 }
             }
         },

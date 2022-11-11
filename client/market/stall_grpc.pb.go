@@ -28,6 +28,9 @@ type StallServiceClient interface {
 	GetPublishedStall(ctx context.Context, in *common.FindByIdRequest, opts ...grpc.CallOption) (*GetStallResponse, error)
 	UpdateStallMetadata(ctx context.Context, in *UpdateStallMetadataRequest, opts ...grpc.CallOption) (*GetStallResponse, error)
 	UpdateStallPosition(ctx context.Context, in *UpdateStallPositionRequest, opts ...grpc.CallOption) (*GetStallResponse, error)
+	DeleteStall(ctx context.Context, in *common.FindByIdRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error)
+	GetStallInfo(ctx context.Context, in *GetStallInfoRequest, opts ...grpc.CallOption) (*GetStallInfoResponse, error)
+	ListStallsInfo(ctx context.Context, in *ListStallsInfoRequest, opts ...grpc.CallOption) (*ListStallsInfoResponse, error)
 }
 
 type stallServiceClient struct {
@@ -83,6 +86,33 @@ func (c *stallServiceClient) UpdateStallPosition(ctx context.Context, in *Update
 	return out, nil
 }
 
+func (c *stallServiceClient) DeleteStall(ctx context.Context, in *common.FindByIdRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error) {
+	out := new(common.NoContentResponse)
+	err := c.cc.Invoke(ctx, "/market.StallService/DeleteStall", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *stallServiceClient) GetStallInfo(ctx context.Context, in *GetStallInfoRequest, opts ...grpc.CallOption) (*GetStallInfoResponse, error) {
+	out := new(GetStallInfoResponse)
+	err := c.cc.Invoke(ctx, "/market.StallService/GetStallInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *stallServiceClient) ListStallsInfo(ctx context.Context, in *ListStallsInfoRequest, opts ...grpc.CallOption) (*ListStallsInfoResponse, error) {
+	out := new(ListStallsInfoResponse)
+	err := c.cc.Invoke(ctx, "/market.StallService/ListStallsInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // StallServiceServer is the server API for StallService service.
 // All implementations must embed UnimplementedStallServiceServer
 // for forward compatibility
@@ -92,6 +122,9 @@ type StallServiceServer interface {
 	GetPublishedStall(context.Context, *common.FindByIdRequest) (*GetStallResponse, error)
 	UpdateStallMetadata(context.Context, *UpdateStallMetadataRequest) (*GetStallResponse, error)
 	UpdateStallPosition(context.Context, *UpdateStallPositionRequest) (*GetStallResponse, error)
+	DeleteStall(context.Context, *common.FindByIdRequest) (*common.NoContentResponse, error)
+	GetStallInfo(context.Context, *GetStallInfoRequest) (*GetStallInfoResponse, error)
+	ListStallsInfo(context.Context, *ListStallsInfoRequest) (*ListStallsInfoResponse, error)
 	mustEmbedUnimplementedStallServiceServer()
 }
 
@@ -113,6 +146,15 @@ func (UnimplementedStallServiceServer) UpdateStallMetadata(context.Context, *Upd
 }
 func (UnimplementedStallServiceServer) UpdateStallPosition(context.Context, *UpdateStallPositionRequest) (*GetStallResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateStallPosition not implemented")
+}
+func (UnimplementedStallServiceServer) DeleteStall(context.Context, *common.FindByIdRequest) (*common.NoContentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteStall not implemented")
+}
+func (UnimplementedStallServiceServer) GetStallInfo(context.Context, *GetStallInfoRequest) (*GetStallInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetStallInfo not implemented")
+}
+func (UnimplementedStallServiceServer) ListStallsInfo(context.Context, *ListStallsInfoRequest) (*ListStallsInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListStallsInfo not implemented")
 }
 func (UnimplementedStallServiceServer) mustEmbedUnimplementedStallServiceServer() {}
 
@@ -217,6 +259,60 @@ func _StallService_UpdateStallPosition_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _StallService_DeleteStall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(common.FindByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StallServiceServer).DeleteStall(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/market.StallService/DeleteStall",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StallServiceServer).DeleteStall(ctx, req.(*common.FindByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StallService_GetStallInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetStallInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StallServiceServer).GetStallInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/market.StallService/GetStallInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StallServiceServer).GetStallInfo(ctx, req.(*GetStallInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StallService_ListStallsInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListStallsInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StallServiceServer).ListStallsInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/market.StallService/ListStallsInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StallServiceServer).ListStallsInfo(ctx, req.(*ListStallsInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // StallService_ServiceDesc is the grpc.ServiceDesc for StallService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -243,6 +339,18 @@ var StallService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateStallPosition",
 			Handler:    _StallService_UpdateStallPosition_Handler,
+		},
+		{
+			MethodName: "DeleteStall",
+			Handler:    _StallService_DeleteStall_Handler,
+		},
+		{
+			MethodName: "GetStallInfo",
+			Handler:    _StallService_GetStallInfo_Handler,
+		},
+		{
+			MethodName: "ListStallsInfo",
+			Handler:    _StallService_ListStallsInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

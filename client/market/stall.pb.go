@@ -1083,6 +1083,339 @@ func (x *UpdateStallPositionRequest) GetFontSize() float64 {
 	return 0
 }
 
+type GetStallInfoRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Searcher *StallSearcher `protobuf:"bytes,1,opt,name=searcher,proto3" json:"searcher"`
+}
+
+func (x *GetStallInfoRequest) Reset() {
+	*x = GetStallInfoRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_market_stall_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetStallInfoRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetStallInfoRequest) ProtoMessage() {}
+
+func (x *GetStallInfoRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_market_stall_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetStallInfoRequest.ProtoReflect.Descriptor instead.
+func (*GetStallInfoRequest) Descriptor() ([]byte, []int) {
+	return file_market_stall_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *GetStallInfoRequest) GetSearcher() *StallSearcher {
+	if x != nil {
+		return x.Searcher
+	}
+	return nil
+}
+
+type StallSearcher struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	MarketCode string `protobuf:"bytes,1,opt,name=market_code,json=marketCode,proto3" json:"market_code"`
+	FloorCode  string `protobuf:"bytes,2,opt,name=floor_code,json=floorCode,proto3" json:"floor_code"`
+	StallCode  string `protobuf:"bytes,3,opt,name=stall_code,json=stallCode,proto3" json:"stall_code"`
+}
+
+func (x *StallSearcher) Reset() {
+	*x = StallSearcher{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_market_stall_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *StallSearcher) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StallSearcher) ProtoMessage() {}
+
+func (x *StallSearcher) ProtoReflect() protoreflect.Message {
+	mi := &file_market_stall_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StallSearcher.ProtoReflect.Descriptor instead.
+func (*StallSearcher) Descriptor() ([]byte, []int) {
+	return file_market_stall_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *StallSearcher) GetMarketCode() string {
+	if x != nil {
+		return x.MarketCode
+	}
+	return ""
+}
+
+func (x *StallSearcher) GetFloorCode() string {
+	if x != nil {
+		return x.FloorCode
+	}
+	return ""
+}
+
+func (x *StallSearcher) GetStallCode() string {
+	if x != nil {
+		return x.StallCode
+	}
+	return ""
+}
+
+type GetStallInfoResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success"`
+	// Types that are assignable to Response:
+	//	*GetStallInfoResponse_Data_
+	//	*GetStallInfoResponse_Error
+	Response isGetStallInfoResponse_Response `protobuf_oneof:"response"`
+}
+
+func (x *GetStallInfoResponse) Reset() {
+	*x = GetStallInfoResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_market_stall_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetStallInfoResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetStallInfoResponse) ProtoMessage() {}
+
+func (x *GetStallInfoResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_market_stall_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetStallInfoResponse.ProtoReflect.Descriptor instead.
+func (*GetStallInfoResponse) Descriptor() ([]byte, []int) {
+	return file_market_stall_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *GetStallInfoResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (m *GetStallInfoResponse) GetResponse() isGetStallInfoResponse_Response {
+	if m != nil {
+		return m.Response
+	}
+	return nil
+}
+
+func (x *GetStallInfoResponse) GetData() *GetStallInfoResponse_Data {
+	if x, ok := x.GetResponse().(*GetStallInfoResponse_Data_); ok {
+		return x.Data
+	}
+	return nil
+}
+
+func (x *GetStallInfoResponse) GetError() *common.Error {
+	if x, ok := x.GetResponse().(*GetStallInfoResponse_Error); ok {
+		return x.Error
+	}
+	return nil
+}
+
+type isGetStallInfoResponse_Response interface {
+	isGetStallInfoResponse_Response()
+}
+
+type GetStallInfoResponse_Data_ struct {
+	Data *GetStallInfoResponse_Data `protobuf:"bytes,2,opt,name=data,proto3,oneof"`
+}
+
+type GetStallInfoResponse_Error struct {
+	Error *common.Error `protobuf:"bytes,3,opt,name=error,proto3,oneof"`
+}
+
+func (*GetStallInfoResponse_Data_) isGetStallInfoResponse_Response() {}
+
+func (*GetStallInfoResponse_Error) isGetStallInfoResponse_Response() {}
+
+type ListStallsInfoRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Searchers []*StallSearcher `protobuf:"bytes,1,rep,name=searchers,proto3" json:"searchers"`
+}
+
+func (x *ListStallsInfoRequest) Reset() {
+	*x = ListStallsInfoRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_market_stall_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListStallsInfoRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListStallsInfoRequest) ProtoMessage() {}
+
+func (x *ListStallsInfoRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_market_stall_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListStallsInfoRequest.ProtoReflect.Descriptor instead.
+func (*ListStallsInfoRequest) Descriptor() ([]byte, []int) {
+	return file_market_stall_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ListStallsInfoRequest) GetSearchers() []*StallSearcher {
+	if x != nil {
+		return x.Searchers
+	}
+	return nil
+}
+
+type ListStallsInfoResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success"`
+	// Types that are assignable to Response:
+	//	*ListStallsInfoResponse_Data_
+	//	*ListStallsInfoResponse_Error
+	Response isListStallsInfoResponse_Response `protobuf_oneof:"response"`
+}
+
+func (x *ListStallsInfoResponse) Reset() {
+	*x = ListStallsInfoResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_market_stall_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListStallsInfoResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListStallsInfoResponse) ProtoMessage() {}
+
+func (x *ListStallsInfoResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_market_stall_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListStallsInfoResponse.ProtoReflect.Descriptor instead.
+func (*ListStallsInfoResponse) Descriptor() ([]byte, []int) {
+	return file_market_stall_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *ListStallsInfoResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (m *ListStallsInfoResponse) GetResponse() isListStallsInfoResponse_Response {
+	if m != nil {
+		return m.Response
+	}
+	return nil
+}
+
+func (x *ListStallsInfoResponse) GetData() *ListStallsInfoResponse_Data {
+	if x, ok := x.GetResponse().(*ListStallsInfoResponse_Data_); ok {
+		return x.Data
+	}
+	return nil
+}
+
+func (x *ListStallsInfoResponse) GetError() *common.Error {
+	if x, ok := x.GetResponse().(*ListStallsInfoResponse_Error); ok {
+		return x.Error
+	}
+	return nil
+}
+
+type isListStallsInfoResponse_Response interface {
+	isListStallsInfoResponse_Response()
+}
+
+type ListStallsInfoResponse_Data_ struct {
+	Data *ListStallsInfoResponse_Data `protobuf:"bytes,2,opt,name=data,proto3,oneof"`
+}
+
+type ListStallsInfoResponse_Error struct {
+	Error *common.Error `protobuf:"bytes,3,opt,name=error,proto3,oneof"`
+}
+
+func (*ListStallsInfoResponse_Data_) isListStallsInfoResponse_Response() {}
+
+func (*ListStallsInfoResponse_Error) isListStallsInfoResponse_Response() {}
+
 type GetStallResponse_Data struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1094,7 +1427,7 @@ type GetStallResponse_Data struct {
 func (x *GetStallResponse_Data) Reset() {
 	*x = GetStallResponse_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_market_stall_proto_msgTypes[9]
+		mi := &file_market_stall_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1107,7 +1440,7 @@ func (x *GetStallResponse_Data) String() string {
 func (*GetStallResponse_Data) ProtoMessage() {}
 
 func (x *GetStallResponse_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_market_stall_proto_msgTypes[9]
+	mi := &file_market_stall_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1141,7 +1474,7 @@ type ListStallsResponse_Data struct {
 func (x *ListStallsResponse_Data) Reset() {
 	*x = ListStallsResponse_Data{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_market_stall_proto_msgTypes[10]
+		mi := &file_market_stall_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1154,7 +1487,7 @@ func (x *ListStallsResponse_Data) String() string {
 func (*ListStallsResponse_Data) ProtoMessage() {}
 
 func (x *ListStallsResponse_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_market_stall_proto_msgTypes[10]
+	mi := &file_market_stall_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1171,6 +1504,100 @@ func (*ListStallsResponse_Data) Descriptor() ([]byte, []int) {
 }
 
 func (x *ListStallsResponse_Data) GetStalls() []*Stall {
+	if x != nil {
+		return x.Stalls
+	}
+	return nil
+}
+
+type GetStallInfoResponse_Data struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Stall *StallInfo `protobuf:"bytes,1,opt,name=stall,proto3" json:"stall"`
+}
+
+func (x *GetStallInfoResponse_Data) Reset() {
+	*x = GetStallInfoResponse_Data{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_market_stall_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetStallInfoResponse_Data) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetStallInfoResponse_Data) ProtoMessage() {}
+
+func (x *GetStallInfoResponse_Data) ProtoReflect() protoreflect.Message {
+	mi := &file_market_stall_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetStallInfoResponse_Data.ProtoReflect.Descriptor instead.
+func (*GetStallInfoResponse_Data) Descriptor() ([]byte, []int) {
+	return file_market_stall_proto_rawDescGZIP(), []int{11, 0}
+}
+
+func (x *GetStallInfoResponse_Data) GetStall() *StallInfo {
+	if x != nil {
+		return x.Stall
+	}
+	return nil
+}
+
+type ListStallsInfoResponse_Data struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Stalls []*StallInfo `protobuf:"bytes,1,rep,name=stalls,proto3" json:"stalls"`
+}
+
+func (x *ListStallsInfoResponse_Data) Reset() {
+	*x = ListStallsInfoResponse_Data{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_market_stall_proto_msgTypes[17]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListStallsInfoResponse_Data) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListStallsInfoResponse_Data) ProtoMessage() {}
+
+func (x *ListStallsInfoResponse_Data) ProtoReflect() protoreflect.Message {
+	mi := &file_market_stall_proto_msgTypes[17]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListStallsInfoResponse_Data.ProtoReflect.Descriptor instead.
+func (*ListStallsInfoResponse_Data) Descriptor() ([]byte, []int) {
+	return file_market_stall_proto_rawDescGZIP(), []int{13, 0}
+}
+
+func (x *ListStallsInfoResponse_Data) GetStalls() []*StallInfo {
 	if x != nil {
 		return x.Stalls
 	}
@@ -1392,36 +1819,93 @@ var file_market_stall_proto_rawDesc = []byte{
 	0x5f, 0x61, 0x78, 0x69, 0x73, 0x42, 0x09, 0x0a, 0x07, 0x5f, 0x77, 0x5f, 0x61, 0x78, 0x69, 0x73,
 	0x42, 0x09, 0x0a, 0x07, 0x5f, 0x68, 0x5f, 0x61, 0x78, 0x69, 0x73, 0x42, 0x08, 0x0a, 0x06, 0x5f,
 	0x6c, 0x61, 0x62, 0x65, 0x6c, 0x42, 0x09, 0x0a, 0x07, 0x5f, 0x72, 0x6f, 0x74, 0x61, 0x74, 0x65,
-	0x42, 0x0c, 0x0a, 0x0a, 0x5f, 0x66, 0x6f, 0x6e, 0x74, 0x5f, 0x73, 0x69, 0x7a, 0x65, 0x32, 0x8e,
-	0x03, 0x0a, 0x0c, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12,
-	0x45, 0x0a, 0x0b, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x12, 0x1a,
-	0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x53, 0x74,
-	0x61, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x18, 0x2e, 0x6d, 0x61, 0x72,
-	0x6b, 0x65, 0x74, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3f, 0x0a, 0x08, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61,
-	0x6c, 0x6c, 0x12, 0x17, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x47, 0x65, 0x74, 0x53,
-	0x74, 0x61, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x18, 0x2e, 0x6d, 0x61,
-	0x72, 0x6b, 0x65, 0x74, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x48, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x50, 0x75,
-	0x62, 0x6c, 0x69, 0x73, 0x68, 0x65, 0x64, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x12, 0x17, 0x2e, 0x63,
-	0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x46, 0x69, 0x6e, 0x64, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x18, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x47,
-	0x65, 0x74, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x00, 0x12, 0x55, 0x0a, 0x13, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x74, 0x61, 0x6c, 0x6c,
-	0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0x12, 0x22, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65,
-	0x74, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x4d, 0x65, 0x74,
-	0x61, 0x64, 0x61, 0x74, 0x61, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x18, 0x2e, 0x6d,
-	0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x55, 0x0a, 0x13, 0x55, 0x70, 0x64, 0x61,
-	0x74, 0x65, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x12,
-	0x22, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53,
-	0x74, 0x61, 0x6c, 0x6c, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75,
+	0x42, 0x0c, 0x0a, 0x0a, 0x5f, 0x66, 0x6f, 0x6e, 0x74, 0x5f, 0x73, 0x69, 0x7a, 0x65, 0x22, 0x48,
+	0x0a, 0x13, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x31, 0x0a, 0x08, 0x73, 0x65, 0x61, 0x72, 0x63, 0x68, 0x65,
+	0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74,
+	0x2e, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x65, 0x72, 0x52, 0x08,
+	0x73, 0x65, 0x61, 0x72, 0x63, 0x68, 0x65, 0x72, 0x22, 0x6e, 0x0a, 0x0d, 0x53, 0x74, 0x61, 0x6c,
+	0x6c, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x65, 0x72, 0x12, 0x1f, 0x0a, 0x0b, 0x6d, 0x61, 0x72,
+	0x6b, 0x65, 0x74, 0x5f, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a,
+	0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x1d, 0x0a, 0x0a, 0x66, 0x6c,
+	0x6f, 0x6f, 0x72, 0x5f, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09,
+	0x66, 0x6c, 0x6f, 0x6f, 0x72, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x1d, 0x0a, 0x0a, 0x73, 0x74, 0x61,
+	0x6c, 0x6c, 0x5f, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x73,
+	0x74, 0x61, 0x6c, 0x6c, 0x43, 0x6f, 0x64, 0x65, 0x22, 0xcd, 0x01, 0x0a, 0x14, 0x47, 0x65, 0x74,
+	0x53, 0x74, 0x61, 0x6c, 0x6c, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x12, 0x37, 0x0a, 0x04, 0x64,
+	0x61, 0x74, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x21, 0x2e, 0x6d, 0x61, 0x72, 0x6b,
+	0x65, 0x74, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x49, 0x6e, 0x66, 0x6f, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x44, 0x61, 0x74, 0x61, 0x48, 0x00, 0x52, 0x04,
+	0x64, 0x61, 0x74, 0x61, 0x12, 0x25, 0x0a, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x0b, 0x32, 0x0d, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x45, 0x72, 0x72,
+	0x6f, 0x72, 0x48, 0x00, 0x52, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x1a, 0x2f, 0x0a, 0x04, 0x44,
+	0x61, 0x74, 0x61, 0x12, 0x27, 0x0a, 0x05, 0x73, 0x74, 0x61, 0x6c, 0x6c, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x11, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x53, 0x74, 0x61, 0x6c,
+	0x6c, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x05, 0x73, 0x74, 0x61, 0x6c, 0x6c, 0x42, 0x0a, 0x0a, 0x08,
+	0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x4c, 0x0a, 0x15, 0x4c, 0x69, 0x73, 0x74,
+	0x53, 0x74, 0x61, 0x6c, 0x6c, 0x73, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x12, 0x33, 0x0a, 0x09, 0x73, 0x65, 0x61, 0x72, 0x63, 0x68, 0x65, 0x72, 0x73, 0x18, 0x01,
+	0x20, 0x03, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x53, 0x74,
+	0x61, 0x6c, 0x6c, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x65, 0x72, 0x52, 0x09, 0x73, 0x65, 0x61,
+	0x72, 0x63, 0x68, 0x65, 0x72, 0x73, 0x22, 0xd3, 0x01, 0x0a, 0x16, 0x4c, 0x69, 0x73, 0x74, 0x53,
+	0x74, 0x61, 0x6c, 0x6c, 0x73, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x12, 0x39, 0x0a, 0x04, 0x64,
+	0x61, 0x74, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x23, 0x2e, 0x6d, 0x61, 0x72, 0x6b,
+	0x65, 0x74, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x73, 0x49, 0x6e, 0x66,
+	0x6f, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x44, 0x61, 0x74, 0x61, 0x48, 0x00,
+	0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x25, 0x0a, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0d, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x45,
+	0x72, 0x72, 0x6f, 0x72, 0x48, 0x00, 0x52, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x1a, 0x31, 0x0a,
+	0x04, 0x44, 0x61, 0x74, 0x61, 0x12, 0x29, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x6c, 0x6c, 0x73, 0x18,
+	0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x53,
+	0x74, 0x61, 0x6c, 0x6c, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x06, 0x73, 0x74, 0x61, 0x6c, 0x6c, 0x73,
+	0x42, 0x0a, 0x0a, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xf3, 0x04, 0x0a,
+	0x0c, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x45, 0x0a,
+	0x0b, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x12, 0x1a, 0x2e, 0x6d,
+	0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x53, 0x74, 0x61, 0x6c,
+	0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x18, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65,
+	0x74, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x22, 0x00, 0x12, 0x3f, 0x0a, 0x08, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x6c, 0x6c,
+	0x12, 0x17, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61,
+	0x6c, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x18, 0x2e, 0x6d, 0x61, 0x72, 0x6b,
+	0x65, 0x74, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x48, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x50, 0x75, 0x62, 0x6c,
+	0x69, 0x73, 0x68, 0x65, 0x64, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x12, 0x17, 0x2e, 0x63, 0x6f, 0x6d,
+	0x6d, 0x6f, 0x6e, 0x2e, 0x46, 0x69, 0x6e, 0x64, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75,
 	0x65, 0x73, 0x74, 0x1a, 0x18, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x47, 0x65, 0x74,
-	0x53, 0x74, 0x61, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42,
-	0x31, 0x0a, 0x0e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x72, 0x73, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65,
-	0x74, 0x50, 0x01, 0x5a, 0x1d, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2d, 0x73, 0x65, 0x72,
-	0x76, 0x69, 0x63, 0x65, 0x2f, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x2f, 0x6d, 0x61, 0x72, 0x6b,
-	0x65, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x53, 0x74, 0x61, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12,
+	0x55, 0x0a, 0x13, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x4d, 0x65,
+	0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0x12, 0x22, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e,
+	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x4d, 0x65, 0x74, 0x61, 0x64,
+	0x61, 0x74, 0x61, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x18, 0x2e, 0x6d, 0x61, 0x72,
+	0x6b, 0x65, 0x74, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x55, 0x0a, 0x13, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
+	0x53, 0x74, 0x61, 0x6c, 0x6c, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x22, 0x2e,
+	0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x74, 0x61,
+	0x6c, 0x6c, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x18, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74,
+	0x61, 0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x43, 0x0a,
+	0x0b, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x12, 0x17, 0x2e, 0x63,
+	0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x46, 0x69, 0x6e, 0x64, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x19, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x4e,
+	0x6f, 0x43, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x22, 0x00, 0x12, 0x4b, 0x0a, 0x0c, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x49, 0x6e,
+	0x66, 0x6f, 0x12, 0x1b, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x47, 0x65, 0x74, 0x53,
+	0x74, 0x61, 0x6c, 0x6c, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x1c, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x6c,
+	0x6c, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12,
+	0x51, 0x0a, 0x0e, 0x4c, 0x69, 0x73, 0x74, 0x53, 0x74, 0x61, 0x6c, 0x6c, 0x73, 0x49, 0x6e, 0x66,
+	0x6f, 0x12, 0x1d, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x53,
+	0x74, 0x61, 0x6c, 0x6c, 0x73, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x1a, 0x1e, 0x2e, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x53, 0x74,
+	0x61, 0x6c, 0x6c, 0x73, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x22, 0x00, 0x42, 0x31, 0x0a, 0x0e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x72, 0x73, 0x2e, 0x6d, 0x61,
+	0x72, 0x6b, 0x65, 0x74, 0x50, 0x01, 0x5a, 0x1d, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2d,
+	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2f, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x2f, 0x6d,
+	0x61, 0x72, 0x6b, 0x65, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1436,72 +1920,94 @@ func file_market_stall_proto_rawDescGZIP() []byte {
 	return file_market_stall_proto_rawDescData
 }
 
-var file_market_stall_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_market_stall_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_market_stall_proto_goTypes = []interface{}{
-	(*CreateStallRequest)(nil),         // 0: market.CreateStallRequest
-	(*Point)(nil),                      // 1: market.Point
-	(*Stall)(nil),                      // 2: market.Stall
-	(*GetStallResponse)(nil),           // 3: market.GetStallResponse
-	(*ListStallsResponse)(nil),         // 4: market.ListStallsResponse
-	(*GetStallRequest)(nil),            // 5: market.GetStallRequest
-	(*StallInfo)(nil),                  // 6: market.StallInfo
-	(*UpdateStallMetadataRequest)(nil), // 7: market.UpdateStallMetadataRequest
-	(*UpdateStallPositionRequest)(nil), // 8: market.UpdateStallPositionRequest
-	(*GetStallResponse_Data)(nil),      // 9: market.GetStallResponse.Data
-	(*ListStallsResponse_Data)(nil),    // 10: market.ListStallsResponse.Data
-	(StallStatus)(0),                   // 11: market.StallStatus
-	(StallType)(0),                     // 12: market.StallType
-	(StallClass)(0),                    // 13: market.StallClass
-	(StallState)(0),                    // 14: market.StallState
-	(StallLeaseStatus)(0),              // 15: market.StallLeaseStatus
-	(MarketClass)(0),                   // 16: market.MarketClass
-	(MarketType)(0),                    // 17: market.MarketType
-	(*common.Error)(nil),               // 18: common.Error
-	(*common.FindByIdRequest)(nil),     // 19: common.FindByIdRequest
+	(*CreateStallRequest)(nil),          // 0: market.CreateStallRequest
+	(*Point)(nil),                       // 1: market.Point
+	(*Stall)(nil),                       // 2: market.Stall
+	(*GetStallResponse)(nil),            // 3: market.GetStallResponse
+	(*ListStallsResponse)(nil),          // 4: market.ListStallsResponse
+	(*GetStallRequest)(nil),             // 5: market.GetStallRequest
+	(*StallInfo)(nil),                   // 6: market.StallInfo
+	(*UpdateStallMetadataRequest)(nil),  // 7: market.UpdateStallMetadataRequest
+	(*UpdateStallPositionRequest)(nil),  // 8: market.UpdateStallPositionRequest
+	(*GetStallInfoRequest)(nil),         // 9: market.GetStallInfoRequest
+	(*StallSearcher)(nil),               // 10: market.StallSearcher
+	(*GetStallInfoResponse)(nil),        // 11: market.GetStallInfoResponse
+	(*ListStallsInfoRequest)(nil),       // 12: market.ListStallsInfoRequest
+	(*ListStallsInfoResponse)(nil),      // 13: market.ListStallsInfoResponse
+	(*GetStallResponse_Data)(nil),       // 14: market.GetStallResponse.Data
+	(*ListStallsResponse_Data)(nil),     // 15: market.ListStallsResponse.Data
+	(*GetStallInfoResponse_Data)(nil),   // 16: market.GetStallInfoResponse.Data
+	(*ListStallsInfoResponse_Data)(nil), // 17: market.ListStallsInfoResponse.Data
+	(StallStatus)(0),                    // 18: market.StallStatus
+	(StallType)(0),                      // 19: market.StallType
+	(StallClass)(0),                     // 20: market.StallClass
+	(StallState)(0),                     // 21: market.StallState
+	(StallLeaseStatus)(0),               // 22: market.StallLeaseStatus
+	(MarketClass)(0),                    // 23: market.MarketClass
+	(MarketType)(0),                     // 24: market.MarketType
+	(*common.Error)(nil),                // 25: common.Error
+	(*common.FindByIdRequest)(nil),      // 26: common.FindByIdRequest
+	(*common.NoContentResponse)(nil),    // 27: common.NoContentResponse
 }
 var file_market_stall_proto_depIdxs = []int32{
-	11, // 0: market.CreateStallRequest.status:type_name -> market.StallStatus
-	12, // 1: market.CreateStallRequest.type:type_name -> market.StallType
-	13, // 2: market.CreateStallRequest.clazz:type_name -> market.StallClass
+	18, // 0: market.CreateStallRequest.status:type_name -> market.StallStatus
+	19, // 1: market.CreateStallRequest.type:type_name -> market.StallType
+	20, // 2: market.CreateStallRequest.clazz:type_name -> market.StallClass
 	1,  // 3: market.CreateStallRequest.points:type_name -> market.Point
-	11, // 4: market.Stall.status:type_name -> market.StallStatus
-	12, // 5: market.Stall.type:type_name -> market.StallType
-	13, // 6: market.Stall.clazz:type_name -> market.StallClass
-	14, // 7: market.Stall.state:type_name -> market.StallState
-	15, // 8: market.Stall.lease_status:type_name -> market.StallLeaseStatus
+	18, // 4: market.Stall.status:type_name -> market.StallStatus
+	19, // 5: market.Stall.type:type_name -> market.StallType
+	20, // 6: market.Stall.clazz:type_name -> market.StallClass
+	21, // 7: market.Stall.state:type_name -> market.StallState
+	22, // 8: market.Stall.lease_status:type_name -> market.StallLeaseStatus
 	1,  // 9: market.Stall.points:type_name -> market.Point
-	16, // 10: market.Stall.market_class:type_name -> market.MarketClass
-	17, // 11: market.Stall.market_type:type_name -> market.MarketType
-	9,  // 12: market.GetStallResponse.data:type_name -> market.GetStallResponse.Data
-	18, // 13: market.GetStallResponse.error:type_name -> common.Error
-	10, // 14: market.ListStallsResponse.data:type_name -> market.ListStallsResponse.Data
-	18, // 15: market.ListStallsResponse.error:type_name -> common.Error
-	12, // 16: market.StallInfo.stall_type:type_name -> market.StallType
-	13, // 17: market.StallInfo.stall_class:type_name -> market.StallClass
-	17, // 18: market.StallInfo.market_type:type_name -> market.MarketType
-	16, // 19: market.StallInfo.market_class:type_name -> market.MarketClass
-	15, // 20: market.StallInfo.lease_status:type_name -> market.StallLeaseStatus
-	11, // 21: market.UpdateStallMetadataRequest.status:type_name -> market.StallStatus
-	12, // 22: market.UpdateStallMetadataRequest.type:type_name -> market.StallType
-	13, // 23: market.UpdateStallMetadataRequest.clazz:type_name -> market.StallClass
+	23, // 10: market.Stall.market_class:type_name -> market.MarketClass
+	24, // 11: market.Stall.market_type:type_name -> market.MarketType
+	14, // 12: market.GetStallResponse.data:type_name -> market.GetStallResponse.Data
+	25, // 13: market.GetStallResponse.error:type_name -> common.Error
+	15, // 14: market.ListStallsResponse.data:type_name -> market.ListStallsResponse.Data
+	25, // 15: market.ListStallsResponse.error:type_name -> common.Error
+	19, // 16: market.StallInfo.stall_type:type_name -> market.StallType
+	20, // 17: market.StallInfo.stall_class:type_name -> market.StallClass
+	24, // 18: market.StallInfo.market_type:type_name -> market.MarketType
+	23, // 19: market.StallInfo.market_class:type_name -> market.MarketClass
+	22, // 20: market.StallInfo.lease_status:type_name -> market.StallLeaseStatus
+	18, // 21: market.UpdateStallMetadataRequest.status:type_name -> market.StallStatus
+	19, // 22: market.UpdateStallMetadataRequest.type:type_name -> market.StallType
+	20, // 23: market.UpdateStallMetadataRequest.clazz:type_name -> market.StallClass
 	1,  // 24: market.UpdateStallPositionRequest.points:type_name -> market.Point
-	2,  // 25: market.GetStallResponse.Data.stall:type_name -> market.Stall
-	2,  // 26: market.ListStallsResponse.Data.stalls:type_name -> market.Stall
-	0,  // 27: market.StallService.CreateStall:input_type -> market.CreateStallRequest
-	5,  // 28: market.StallService.GetStall:input_type -> market.GetStallRequest
-	19, // 29: market.StallService.GetPublishedStall:input_type -> common.FindByIdRequest
-	7,  // 30: market.StallService.UpdateStallMetadata:input_type -> market.UpdateStallMetadataRequest
-	8,  // 31: market.StallService.UpdateStallPosition:input_type -> market.UpdateStallPositionRequest
-	3,  // 32: market.StallService.CreateStall:output_type -> market.GetStallResponse
-	3,  // 33: market.StallService.GetStall:output_type -> market.GetStallResponse
-	3,  // 34: market.StallService.GetPublishedStall:output_type -> market.GetStallResponse
-	3,  // 35: market.StallService.UpdateStallMetadata:output_type -> market.GetStallResponse
-	3,  // 36: market.StallService.UpdateStallPosition:output_type -> market.GetStallResponse
-	32, // [32:37] is the sub-list for method output_type
-	27, // [27:32] is the sub-list for method input_type
-	27, // [27:27] is the sub-list for extension type_name
-	27, // [27:27] is the sub-list for extension extendee
-	0,  // [0:27] is the sub-list for field type_name
+	10, // 25: market.GetStallInfoRequest.searcher:type_name -> market.StallSearcher
+	16, // 26: market.GetStallInfoResponse.data:type_name -> market.GetStallInfoResponse.Data
+	25, // 27: market.GetStallInfoResponse.error:type_name -> common.Error
+	10, // 28: market.ListStallsInfoRequest.searchers:type_name -> market.StallSearcher
+	17, // 29: market.ListStallsInfoResponse.data:type_name -> market.ListStallsInfoResponse.Data
+	25, // 30: market.ListStallsInfoResponse.error:type_name -> common.Error
+	2,  // 31: market.GetStallResponse.Data.stall:type_name -> market.Stall
+	2,  // 32: market.ListStallsResponse.Data.stalls:type_name -> market.Stall
+	6,  // 33: market.GetStallInfoResponse.Data.stall:type_name -> market.StallInfo
+	6,  // 34: market.ListStallsInfoResponse.Data.stalls:type_name -> market.StallInfo
+	0,  // 35: market.StallService.CreateStall:input_type -> market.CreateStallRequest
+	5,  // 36: market.StallService.GetStall:input_type -> market.GetStallRequest
+	26, // 37: market.StallService.GetPublishedStall:input_type -> common.FindByIdRequest
+	7,  // 38: market.StallService.UpdateStallMetadata:input_type -> market.UpdateStallMetadataRequest
+	8,  // 39: market.StallService.UpdateStallPosition:input_type -> market.UpdateStallPositionRequest
+	26, // 40: market.StallService.DeleteStall:input_type -> common.FindByIdRequest
+	9,  // 41: market.StallService.GetStallInfo:input_type -> market.GetStallInfoRequest
+	12, // 42: market.StallService.ListStallsInfo:input_type -> market.ListStallsInfoRequest
+	3,  // 43: market.StallService.CreateStall:output_type -> market.GetStallResponse
+	3,  // 44: market.StallService.GetStall:output_type -> market.GetStallResponse
+	3,  // 45: market.StallService.GetPublishedStall:output_type -> market.GetStallResponse
+	3,  // 46: market.StallService.UpdateStallMetadata:output_type -> market.GetStallResponse
+	3,  // 47: market.StallService.UpdateStallPosition:output_type -> market.GetStallResponse
+	27, // 48: market.StallService.DeleteStall:output_type -> common.NoContentResponse
+	11, // 49: market.StallService.GetStallInfo:output_type -> market.GetStallInfoResponse
+	13, // 50: market.StallService.ListStallsInfo:output_type -> market.ListStallsInfoResponse
+	43, // [43:51] is the sub-list for method output_type
+	35, // [35:43] is the sub-list for method input_type
+	35, // [35:35] is the sub-list for extension type_name
+	35, // [35:35] is the sub-list for extension extendee
+	0,  // [0:35] is the sub-list for field type_name
 }
 
 func init() { file_market_stall_proto_init() }
@@ -1620,7 +2126,7 @@ func file_market_stall_proto_init() {
 			}
 		}
 		file_market_stall_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetStallResponse_Data); i {
+			switch v := v.(*GetStallInfoRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1632,7 +2138,91 @@ func file_market_stall_proto_init() {
 			}
 		}
 		file_market_stall_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*StallSearcher); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_market_stall_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetStallInfoResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_market_stall_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListStallsInfoRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_market_stall_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListStallsInfoResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_market_stall_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetStallResponse_Data); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_market_stall_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ListStallsResponse_Data); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_market_stall_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetStallInfoResponse_Data); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_market_stall_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListStallsInfoResponse_Data); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1656,13 +2246,21 @@ func file_market_stall_proto_init() {
 	file_market_stall_proto_msgTypes[5].OneofWrappers = []interface{}{}
 	file_market_stall_proto_msgTypes[7].OneofWrappers = []interface{}{}
 	file_market_stall_proto_msgTypes[8].OneofWrappers = []interface{}{}
+	file_market_stall_proto_msgTypes[11].OneofWrappers = []interface{}{
+		(*GetStallInfoResponse_Data_)(nil),
+		(*GetStallInfoResponse_Error)(nil),
+	}
+	file_market_stall_proto_msgTypes[13].OneofWrappers = []interface{}{
+		(*ListStallsInfoResponse_Data_)(nil),
+		(*ListStallsInfoResponse_Error)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_market_stall_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

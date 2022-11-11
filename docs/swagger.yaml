@@ -725,12 +725,191 @@ definitions:
       type:
         type: integer
     type: object
+  rental.Application:
+    properties:
+      administrative_criminal:
+        type: boolean
+      administrative_criminal_reason:
+        type: string
+      application_id:
+        type: string
+      approved_date:
+        type: string
+      birth_certificate:
+        description: URL
+        type: string
+      capital:
+        type: string
+      code:
+        description: application generated code
+        type: string
+      convicted_violate_law:
+        type: boolean
+      convicted_violate_law_reason:
+        type: string
+      created_at:
+        type: string
+      created_by:
+        type: string
+      current_payment_status:
+        description: only set when accessing Market Lease - related APIs
+        type: integer
+      draft:
+        description: used in NSA & RSA step 1
+        type: boolean
+      exchange_rent_stall:
+        type: boolean
+      exchange_rent_stall_name:
+        type: string
+      floor_code:
+        type: string
+      floor_name:
+        description: fetched from Market service
+        type: string
+      forced_terminate_previous:
+        type: boolean
+      forced_terminate_reason:
+        type: string
+      identification:
+        description: Unknown/Misleading field ~~
+        type: string
+      initial_fee:
+        type: number
+      item_type:
+        description: what stallholder is going to sell
+        type: string
+      lease_code:
+        description: |-
+          double monthly_fee = 48; // Calculated dynamically from rate management module
+           double security_fee = 49;
+           double total_amount_due = 50;
+
+          Application in-lease only
+        type: string
+      lease_end_date:
+        type: string
+      lease_start_date:
+        description: in form of 1970-01-01T00:00:00Z (yyyy-MM-ddThh:mm:ssZ)
+        type: string
+      lease_status:
+        type: integer
+      market_address:
+        description: fetched from Market service
+        type: string
+      market_class:
+        type: integer
+      market_code:
+        type: string
+      market_name:
+        description: fetched from Market service
+        type: string
+      market_type:
+        type: integer
+      members:
+        items:
+          $ref: '#/definitions/rental.Member'
+        type: array
+      other_occupation:
+        description: Other occupation or source of income
+        type: string
+      owned_any_stall:
+        type: boolean
+      owned_stall_info:
+        type: string
+      owner:
+        $ref: '#/definitions/rental.ApplicationOwner'
+      pay_tax_previous:
+        type: boolean
+      pay_tax_previous_reason:
+        type: string
+      payment_method:
+        type: integer
+      picture:
+        description: URL
+        type: string
+      proof_of_residencies:
+        description: URL
+        type: string
+      proof_of_transfer:
+        type: string
+      source_of_capital:
+        type: string
+      stall_area:
+        type: number
+      stall_class:
+        description: Default to Regular
+        type: integer
+      stall_code:
+        type: string
+      stall_name:
+        description: fetched from Market service
+        type: string
+      stall_type:
+        description: Default to Temporary
+        type: integer
+      status:
+        description: references to WorkflowStatus enum
+        type: integer
+      type:
+        type: integer
+    type: object
+  rental.ApplicationOwner:
+    properties:
+      age:
+        description: calculated from date_of_birth
+        type: integer
+      city:
+        type: string
+      date_of_birth:
+        type: string
+      district:
+        type: string
+      email:
+        type: string
+      farther_name:
+        type: string
+      first_name:
+        type: string
+      house_number:
+        type: string
+      last_name:
+        type: string
+      marital_status:
+        type: integer
+      middle_name:
+        type: string
+      mother_name:
+        type: string
+      place_of_birth:
+        type: string
+      province:
+        type: string
+      sex:
+        type: integer
+      street:
+        type: string
+      user_id:
+        type: string
+      ward:
+        type: string
+      zipcode:
+        type: string
+    type: object
   rental.ClassAmountRate:
     properties:
       amount:
         type: number
       clazz:
         type: integer
+    type: object
+  rental.Member:
+    properties:
+      age:
+        type: integer
+      member_id:
+        type: string
+      name:
+        type: string
     type: object
   rental.OtherRate:
     properties:
@@ -780,6 +959,80 @@ definitions:
       rental_fee:
         type: number
     type: object
+  rental.SubmitApplicationDocsRequest:
+    properties:
+      application_id:
+        type: string
+      birth_certificate:
+        type: string
+      draft:
+        type: boolean
+      identification:
+        type: string
+      picture:
+        type: string
+      proof_of_residencies:
+        type: string
+    type: object
+  rental.SubmitApplicationRequest:
+    properties:
+      administrative_criminal:
+        type: boolean
+      administrative_criminal_reason:
+        type: string
+      application_id:
+        type: string
+      capital:
+        type: string
+      convicted_violate_law:
+        type: boolean
+      convicted_violate_law_reason:
+        type: string
+      draft:
+        type: boolean
+      exchange_rent_stall:
+        type: boolean
+      exchange_rent_stall_name:
+        type: string
+      floor_code:
+        type: string
+      forced_terminate_previous:
+        type: boolean
+      forced_terminate_reason:
+        type: string
+      market_class:
+        type: integer
+      market_code:
+        type: string
+      market_type:
+        type: integer
+      members:
+        items:
+          $ref: '#/definitions/rental.Member'
+        type: array
+      owned_any_stall:
+        type: boolean
+      owned_stall_info:
+        type: string
+      owner:
+        $ref: '#/definitions/rental.ApplicationOwner'
+      pay_tax_previous:
+        type: boolean
+      pay_tax_previous_reason:
+        type: string
+      source_of_capital:
+        type: string
+      stall_area:
+        type: number
+      stall_class:
+        description: Default to Regular
+        type: integer
+      stall_code:
+        type: string
+      stall_type:
+        description: Default to Temporary
+        type: integer
+    type: object
   rental.UpsertRateRequest:
     properties:
       other_rate:
@@ -812,6 +1065,195 @@ info:
   title: MHMarket REST API
   version: "1.0"
 paths:
+  /api/v2/applications:
+    get:
+      consumes:
+      - application/json
+      description: Get applications
+      parameters:
+      - description: Page size
+        in: query
+        name: size
+        type: integer
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Sort field. Accept value[ first_name, last_name, code]
+        in: query
+        name: sort
+        type: string
+      - description: Sort direction
+        in: query
+        name: direction
+        type: string
+      - description: Filter By Application Code
+        in: query
+        name: code
+        type: string
+      - description: Filter by owner first name
+        in: query
+        name: first_name
+        type: string
+      - description: Filter by owner last name
+        in: query
+        name: last_name
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List Application
+      tags:
+      - Application
+    post:
+      consumes:
+      - application/json
+      description: Submit new Application
+      parameters:
+      - description: Application Information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/rental.SubmitApplicationRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Submit Application
+      tags:
+      - Application
+  /api/v2/applications/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get Application
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rental.Application'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get Application
+      tags:
+      - Application
+    put:
+      consumes:
+      - application/json
+      description: Update Application
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Application Information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/rental.Application'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rental.SubmitApplicationRequest'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Update Application
+      tags:
+      - Application
+  /api/v2/applications/{id}/docs:
+    put:
+      consumes:
+      - application/json
+      description: Submit new application documents or update the application documents
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Application Docs Information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/rental.SubmitApplicationDocsRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NoContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Submit Application Documents
+      tags:
+      - Application
   /api/v2/files/upload:
     post:
       consumes:

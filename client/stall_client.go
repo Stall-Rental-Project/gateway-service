@@ -57,3 +57,18 @@ func (service *StallClient) GetPublishedStall(req *common.FindByIdRequest, md me
 	res, err = service.client.GetPublishedStall(ctx, req)
 	return
 }
+func (service *StallClient) GetStallInfo(req *market.GetStallInfoRequest, md metadata.MD) (res *market.GetStallInfoResponse, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	defer cancel()
+	res, err = service.client.GetStallInfo(ctx, req)
+	return
+}
+
+func (service *StallClient) ListStallsInfo(req *market.ListStallsInfoRequest, md metadata.MD) (res *market.ListStallsInfoResponse, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	defer cancel()
+	res, err = service.client.ListStallsInfo(ctx, req)
+	return
+}
