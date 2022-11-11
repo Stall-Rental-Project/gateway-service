@@ -4,6 +4,7 @@ import (
 	"gateway-service/client"
 	grpc "gateway-service/client/common"
 	"gateway-service/client/market"
+	"gateway-service/client/rental"
 	"gateway-service/common"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -14,11 +15,14 @@ import (
 
 type MarketController struct {
 	marketClient *client.MarketClient
+	nsaClient    *client.NSAClient
 }
 
-func NewMarketController(marketClient *client.MarketClient) MarketController {
+func NewMarketController(marketClient *client.MarketClient, nsaClient *client.NSAClient,
+) MarketController {
 	return MarketController{
 		marketClient,
+		nsaClient,
 	}
 }
 
@@ -358,7 +362,7 @@ func (controller *MarketController) PublishMarket(ctx *gin.Context) {
 }
 
 // CountStalls
-// @Router /api/v2/markets/:id/stalls/count [GET]
+// @Router /api/v2/markets/{id}/stalls/count [GET]
 // @Summary Count and classify stalls by market for rent
 // @Param id path string true "Market ID"
 // @Tags Market
@@ -398,4 +402,76 @@ type CountStallsResponse struct {
 	TotalStalls     int64 `json:"total_stalls"`
 	AvailableStalls int64 `json:"available_stalls"`
 	OccupiedStalls  int64 `json:"occupied_stalls"`
+}
+
+// DeleteMarket
+// @Router /api/v2/markets/{id} [DELETE]
+// @Param id path string true "Market ID"
+// @Summary Delete Market
+// @Tags Market
+// @Accept json
+// @Produce json
+// @Success 200 {object} common.NoContentResponse
+// @Failure 400,401,500 {object} model.ErrorResponse
+func (controller *MarketController) DeleteMarket(ctx *gin.Context) {
+	marketID := ctx.Param("id")
+
+	draft := false
+
+	if ctx.Query("draft") == "true" {
+		draft = true
+	}
+
+	req := &market.GetMarketRequest{
+		MarketId: marketID,
+		Draft:    &draft,
+	}
+
+	marketResp, marketErr := controller.marketClient.GetMarket(req, common.GetMetadataFromContext(ctx))
+
+	if marketErr != nil {
+		common.ReturnErrorResponse(ctx, http.StatusBadRequest, marketErr.Error())
+		return
+	} else if !marketResp.Success {
+		common.AsErrorResponse(marketResp.GetError(), ctx)
+		return
+	}
+
+	marketCode := marketResp.GetData().GetMarket().Code
+	marketType := marketResp.GetData().GetMarket().Type
+
+	if marketType == market.MarketType_MARKET_TYPE_PUBLIC {
+		applicationResp, applicationErr := controller.nsaClient.CheckExistApplication(&rental.CheckExistApplicationRequest{
+			MarketCode: marketCode,
+		}, common.GetMetadataFromContext(ctx))
+
+		if applicationErr != nil {
+			common.ReturnErrorResponse(ctx, http.StatusBadRequest, applicationErr.Error())
+			return
+		} else if applicationResp.GetErrorResponse() != nil {
+			common.AsLegacyErrorResponse(applicationResp.GetErrorResponse(), ctx)
+			return
+		} else if applicationResp.GetSuccessResponse().Result {
+			common.AsLegacyErrorResponse(&grpc.ErrorResponse{
+				ErrorCode:        grpc.ErrorCode_CANNOT_EXECUTE,
+				ErrorDescription: "Some application already exists",
+			}, ctx)
+			return
+		}
+	}
+
+	res, err := controller.marketClient.DeleteMarket(&grpc.FindByIdRequest{Id: marketID}, common.GetMetadataFromContext(ctx))
+
+	if err != nil {
+		common.ReturnErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if res.Success {
+		common.AsSuccessResponse(gin.H{
+			"success": true,
+		}, ctx)
+	} else {
+		common.AsErrorResponse(res.GetError(), ctx)
+	}
 }

@@ -51,9 +51,9 @@ func (server *Server) InitializeRoutes() {
 	permissionController := controller.NewPermissionController(permissionClient)
 
 	locationController := controller.NewLocationController(locationClient)
-	marketController := controller.NewMarketController(marketClient)
-	floorController := controller.NewFloorController(floorClient)
-	stallController := controller.NewStallController(stallClient, rateClient)
+	marketController := controller.NewMarketController(marketClient, nsaClient)
+	floorController := controller.NewFloorController(floorClient, nsaClient)
+	stallController := controller.NewStallController(stallClient, rateClient, nsaClient)
 
 	rateController := controller.NewRateController(rateClient)
 	nsaController := controller.NewNSAController(nsaClient, stallClient,
@@ -169,6 +169,9 @@ func (server *Server) InitializeRoutes() {
 		market.PUT("/:id", common.HasAnyPermission([]string{
 			constants.MarketAddUpdate,
 		}), marketController.UpdateMarket)
+		market.DELETE("/:id", common.HasAnyPermission([]string{
+			constants.MarketAddUpdate,
+		}), marketController.DeleteMarket)
 		market.GET("/:id/floors", common.HasAnyPermission([]string{
 			constants.MarketView,
 			constants.ApplicationSubmit,
@@ -190,7 +193,7 @@ func (server *Server) InitializeRoutes() {
 		floor.GET("/:id", common.HasAnyPermission([]string{
 			constants.MarketView,
 		}), floorController.GetFloor)
-		floor.DELETE("", common.HasAnyPermission([]string{
+		floor.DELETE("/:id", common.HasAnyPermission([]string{
 			constants.MarketDelete,
 		}), floorController.DeleteFloor)
 		floor.GET("/:id/published", floorController.GetPublishedFloor)
@@ -203,10 +206,10 @@ func (server *Server) InitializeRoutes() {
 		stall.POST("", common.HasAnyPermission([]string{
 			constants.MarketAddUpdate,
 		}), stallController.CreateStall)
-		stall.PUT("/metadata", common.HasAnyPermission([]string{
+		stall.PUT("/:id/metadata", common.HasAnyPermission([]string{
 			constants.MarketAddUpdate,
 		}), stallController.UpdateStallMetadata)
-		stall.PUT("/position", common.HasAnyPermission([]string{
+		stall.PUT("/:id/position", common.HasAnyPermission([]string{
 			constants.MarketAddUpdate,
 		}), stallController.UpdateStallPosition)
 		stall.GET("/:id", common.HasAnyPermission([]string{
@@ -214,7 +217,9 @@ func (server *Server) InitializeRoutes() {
 			constants.ApplicationSubmit,
 			constants.ApplicationView,
 		}), stallController.GetStall)
-
+		stall.DELETE("/:id", common.HasAnyPermission([]string{
+			constants.MarketAddUpdate,
+		}), stallController.DeleteStall)
 		stall.GET("/:id/published", stallController.GetPublishedStall)
 	}
 

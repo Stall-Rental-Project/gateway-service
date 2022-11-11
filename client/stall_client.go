@@ -72,3 +72,10 @@ func (service *StallClient) ListStallsInfo(req *market.ListStallsInfoRequest, md
 	res, err = service.client.ListStallsInfo(ctx, req)
 	return
 }
+func (service *StallClient) DeleteStall(req *common.FindByIdRequest, md metadata.MD) (res *common.NoContentResponse, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	defer cancel()
+	res, err = service.client.DeleteStall(ctx, req)
+	return
+}

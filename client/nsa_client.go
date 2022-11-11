@@ -56,6 +56,13 @@ func (service *NSAClient) GetApplication(applicationId string, md metadata.MD) (
 	res, err = service.nsaClient.GetApplication(ctx, &common.FindByIdRequest{Id: applicationId})
 	return
 }
+func (service *NSAClient) CheckExistApplication(req *rental.CheckExistApplicationRequest, md metadata.MD) (res *common.BooleanResponse, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	defer cancel()
+	res, err = service.nsaClient.CheckExistApplication(ctx, req)
+	return
+}
 
 //func (service *NSAClient) SubmitApplicationPayment(req *rental.SubmitApplicationPaymentRequest, md metadata.MD) (res *common.NoContentResponse, err error) {
 //	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
@@ -65,14 +72,7 @@ func (service *NSAClient) GetApplication(applicationId string, md metadata.MD) (
 //	return
 //}
 //
-//
-//func (service *NSAClient) CheckExistApplication(req *rental.CheckExistApplicationRequest, md metadata.MD) (res *common.BooleanResponse, err error) {
-//	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
-//	ctx = metadata.NewOutgoingContext(ctx, md)
-//	defer cancel()
-//	res, err = service.nsaClient.CheckExistApplication(ctx, req)
-//	return
-//}
+
 //
 //func (service *NSAClient) CheckExistApplications(req *rental.CheckExistApplicationsRequest, md metadata.MD) (res *rental.CheckExistApplicationsResponse, err error) {
 //	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)

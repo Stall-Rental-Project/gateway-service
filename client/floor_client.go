@@ -72,3 +72,11 @@ func (service FloorClient) GetPublishedFloor(req *market.GetPublishedFloorReques
 	res, err = service.client.GetPublishedFloor(ctx, req)
 	return
 }
+
+func (service FloorClient) GetFloorCodeAndMarketCode(req *common.FindByIdRequest, md metadata.MD) (res *market.GetFloorCodeAndMarketCodeResponse, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	defer cancel()
+	res, err = service.client.GetFloorCodeAndMarketCode(ctx, req)
+	return
+}

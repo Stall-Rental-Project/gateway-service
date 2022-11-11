@@ -97,3 +97,18 @@ func AsPageResponse(pageResponse *grpc.PageResponse, items interface{}) (result 
 func AsSuccessResponse(data interface{}, ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, data)
 }
+func AsLegacyErrorResponse(error *grpc.ErrorResponse, ctx *gin.Context) {
+	if len(error.Errors) > 0 {
+		ctx.JSON(http.StatusBadRequest, model.ErrorResponse{
+			ErrorCode:        grpc.ErrorCode_BAD_REQUEST.String(),
+			ErrorDescription: error.ErrorDescription,
+			Errors:           error.Errors,
+		})
+	} else {
+		ctx.JSON(http.StatusInternalServerError, model.ErrorResponse{
+			ErrorCode:        grpc.ErrorCode_INTERNAL_SERVER_ERROR.String(),
+			ErrorDescription: error.ErrorDescription,
+			Errors:           error.Errors,
+		})
+	}
+}

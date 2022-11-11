@@ -4,6 +4,7 @@ import (
 	"gateway-service/client"
 	common2 "gateway-service/client/common"
 	"gateway-service/client/market"
+	"gateway-service/client/rental"
 	"gateway-service/common"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -12,13 +13,17 @@ import (
 type StallController struct {
 	stallClient *client.StallClient
 	rateClient  *client.RateClient
+	nsaClient   *client.NSAClient
 }
 
 func NewStallController(stallClient *client.StallClient,
-	rateClient *client.RateClient) StallController {
+	rateClient *client.RateClient,
+	nsaClient *client.NSAClient,
+) StallController {
 	return StallController{
 		stallClient: stallClient,
 		rateClient:  rateClient,
+		nsaClient:   nsaClient,
 	}
 }
 
@@ -54,8 +59,9 @@ func (controller *StallController) CreateStall(ctx *gin.Context) {
 }
 
 // UpdateStallMetadata
-// @Router /api/v2/stalls/metadata [PUT]
+// @Router /api/v2/stalls/{id}/metadata [PUT]
 // @Summary Update Stall Metadata
+// @Param id path string true "Stall id"
 // @Param _ body market.UpdateStallMetadataRequest true "request body"
 // @Tags Stall
 // @Accept json
@@ -64,11 +70,12 @@ func (controller *StallController) CreateStall(ctx *gin.Context) {
 // @Failure 400,401,500 {object} model.ErrorResponse
 func (controller *StallController) UpdateStallMetadata(ctx *gin.Context) {
 	req := new(market.UpdateStallMetadataRequest)
-
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		common.ReturnErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
+	stallId := ctx.Param("id")
+	req.StallId = stallId
 
 	res, err := controller.stallClient.UpdateStallMetadata(req, common.GetMetadataFromContext(ctx))
 
@@ -85,8 +92,9 @@ func (controller *StallController) UpdateStallMetadata(ctx *gin.Context) {
 }
 
 // UpdateStallPosition
-// @Router /api/v2/stalls/position [PUT]
+// @Router /api/v2/stalls/{id}/position [PUT]
 // @Summary Update Stall Position (single)
+// @Param id path string true "Stall id"
 // @Param _ body market.UpdateStallPositionRequest true "request body"
 // @Tags Stall
 // @Accept json
@@ -95,11 +103,12 @@ func (controller *StallController) UpdateStallMetadata(ctx *gin.Context) {
 // @Failure 400,401,500 {object} model.ErrorResponse
 func (controller *StallController) UpdateStallPosition(ctx *gin.Context) {
 	req := new(market.UpdateStallPositionRequest)
-
+	stallId := ctx.Param("id")
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		common.ReturnErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
+	req.StallId = stallId
 
 	res, err := controller.stallClient.UpdateStallPosition(req, common.GetMetadataFromContext(ctx))
 
@@ -116,7 +125,7 @@ func (controller *StallController) UpdateStallPosition(ctx *gin.Context) {
 }
 
 // GetStall
-// @Router /api/v2/stalls/:id [GET]
+// @Router /api/v2/stalls/{id} [GET]
 // @Summary Get Stall
 // @Param id path string true "stall id"
 // @Tags Stall
@@ -198,7 +207,7 @@ func (controller *StallController) GetStall(ctx *gin.Context) {
 //}
 
 // GetPublishedStall
-// @Router /api/v2/stalls/:id/published [GET]
+// @Router /api/v2/stalls/{id}/published [GET]
 // @Summary Get Published Stall
 // @Param id path string true "stall id"
 // @Tags Stall
@@ -252,3 +261,62 @@ func (controller *StallController) GetPublishedStall(ctx *gin.Context) {
 //
 //	return res.GetData().GetApplication().GetOwner().GetFirstName() + " " + res.GetData().GetApplication().GetOwner().GetLastName(), nil
 //}
+
+// DeleteStall
+// @Router /api/v2/stalls/{id} [DELETE]
+// @Summary Delete Stall
+// @Param id path string true "Stall ID"
+// @Tags Stall
+// @Accept json
+// @Produce json
+// @Success 200 {object} common.NoContentResponse
+// @Failure 400,401,500 {object} model.ErrorResponse
+func (controller *StallController) DeleteStall(ctx *gin.Context) {
+	stallId := ctx.Param("id")
+
+	stallResp, stallErr := controller.stallClient.GetPublishedStall(&common2.FindByIdRequest{Id: stallId}, common.GetMetadataFromContext(ctx))
+
+	if stallErr != nil {
+		common.ReturnErrorResponse(ctx, http.StatusBadRequest, stallErr.Error())
+		return
+	} else if !stallResp.Success {
+		common.AsErrorResponse(stallResp.GetError(), ctx)
+		return
+	}
+	stallCode := stallResp.GetData().Stall.Code
+	marketCode := stallResp.GetData().Stall.MarketCode
+	floorCode := stallResp.GetData().Stall.FloorCode
+
+	rentalResp, rentalErr := controller.nsaClient.CheckExistApplication(&rental.CheckExistApplicationRequest{StallCode: stallCode, FloorCode: floorCode, MarketCode: marketCode}, common.GetMetadataFromContext(ctx))
+
+	if rentalErr != nil {
+		common.ReturnErrorResponse(ctx, http.StatusBadRequest, rentalErr.Error())
+		return
+	} else if rentalResp.GetErrorResponse() != nil {
+		common.AsLegacyErrorResponse(rentalResp.GetErrorResponse(), ctx)
+		return
+	} else if rentalResp.GetSuccessResponse().Result {
+		common.AsLegacyErrorResponse(&common2.ErrorResponse{
+			ErrorCode:        common2.ErrorCode_CANNOT_EXECUTE,
+			ErrorDescription: "Some application already exists",
+		}, ctx)
+		return
+	}
+
+	res, err := controller.stallClient.DeleteStall(&common2.FindByIdRequest{
+		Id: stallId,
+	}, common.GetMetadataFromContext(ctx))
+
+	if err != nil {
+		common.ReturnErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if res.Success {
+		common.AsSuccessResponse(gin.H{
+			"success": true,
+		}, ctx)
+	} else {
+		common.AsErrorResponse(res.GetError(), ctx)
+	}
+}

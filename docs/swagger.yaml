@@ -326,13 +326,6 @@ definitions:
       y_axis:
         type: number
     type: object
-  market.DeleteFloorRequest:
-    properties:
-      draft_only:
-        type: boolean
-      floorplan_id:
-        type: string
-    type: object
   market.Floor:
     properties:
       code:
@@ -1288,38 +1281,6 @@ paths:
       tags:
       - File
   /api/v2/floors:
-    delete:
-      consumes:
-      - application/json
-      parameters:
-      - description: request body
-        in: body
-        name: _
-        required: true
-        schema:
-          $ref: '#/definitions/market.DeleteFloorRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/common.NoContentResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-      summary: Delete floor (single)
-      tags:
-      - Floor
     post:
       consumes:
       - application/json
@@ -1352,7 +1313,38 @@ paths:
       summary: Create floor
       tags:
       - Floor
-  /api/v2/floors/:id:
+  /api/v2/floors/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Floor id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NoContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Delete floor (single)
+      tags:
+      - Floor
     get:
       consumes:
       - application/json
@@ -1388,39 +1380,6 @@ paths:
       summary: Get floor
       tags:
       - Floor
-  /api/v2/floors/:id/published:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: floor id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/market.Floor'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-      summary: Get published floor
-      tags:
-      - Floor
-  /api/v2/floors/{id}:
     put:
       consumes:
       - application/json
@@ -1456,6 +1415,38 @@ paths:
           schema:
             $ref: '#/definitions/model.ErrorResponse'
       summary: Update floor
+      tags:
+      - Floor
+  /api/v2/floors/{id}/published:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Floor id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.Floor'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get published floor
       tags:
       - Floor
   /api/v2/locations/cities:
@@ -1750,76 +1741,8 @@ paths:
       summary: Create market
       tags:
       - Market
-  /api/v2/markets/:id/floors:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: market id
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: return draft version ? default to false
-        in: query
-        name: draft
-        type: boolean
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controller.ListFloorsResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-      summary: List floors
-      tags:
-      - Floor
-  /api/v2/markets/:id/floors/published:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: market id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controller.ListFloorsResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-      summary: List published floors
-      tags:
-      - Floor
-  /api/v2/markets/:id/stalls/count:
-    get:
+  /api/v2/markets/{id}:
+    delete:
       consumes:
       - application/json
       parameters:
@@ -1834,7 +1757,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.CountStallsResponse'
+            $ref: '#/definitions/common.NoContentResponse'
         "400":
           description: Bad Request
           schema:
@@ -1847,10 +1770,9 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.ErrorResponse'
-      summary: Count and classify stalls by market for rent
+      summary: Delete Market
       tags:
       - Market
-  /api/v2/markets/{id}:
     get:
       consumes:
       - application/json
@@ -1925,6 +1847,74 @@ paths:
       summary: Update Market
       tags:
       - Market
+  /api/v2/markets/{id}/floors:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Market id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: return draft version ? default to false
+        in: query
+        name: draft
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ListFloorsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List floors
+      tags:
+      - Floor
+  /api/v2/markets/{id}/floors/published:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: market id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ListFloorsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List published floors
+      tags:
+      - Floor
   /api/v2/markets/{id}/publish:
     post:
       consumes:
@@ -1955,6 +1945,38 @@ paths:
           schema:
             $ref: '#/definitions/model.ErrorResponse'
       summary: Publish Market
+      tags:
+      - Market
+  /api/v2/markets/{id}/stalls/count:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Market ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.CountStallsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Count and classify stalls by market for rent
       tags:
       - Market
   /api/v2/markets/published:
@@ -2423,7 +2445,38 @@ paths:
       summary: Create Stalls
       tags:
       - Stall
-  /api/v2/stalls/:id:
+  /api/v2/stalls/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Stall ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NoContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Delete Stall
+      tags:
+      - Stall
     get:
       consumes:
       - application/json
@@ -2455,7 +2508,83 @@ paths:
       summary: Get Stall
       tags:
       - Stall
-  /api/v2/stalls/:id/published:
+  /api/v2/stalls/{id}/metadata:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Stall id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: request body
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/market.UpdateStallMetadataRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.Stall'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Update Stall Metadata
+      tags:
+      - Stall
+  /api/v2/stalls/{id}/position:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Stall id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: request body
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/market.UpdateStallPositionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.Stall'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Update Stall Position (single)
+      tags:
+      - Stall
+  /api/v2/stalls/{id}/published:
     get:
       consumes:
       - application/json
@@ -2485,72 +2614,6 @@ paths:
           schema:
             $ref: '#/definitions/model.ErrorResponse'
       summary: Get Published Stall
-      tags:
-      - Stall
-  /api/v2/stalls/metadata:
-    put:
-      consumes:
-      - application/json
-      parameters:
-      - description: request body
-        in: body
-        name: _
-        required: true
-        schema:
-          $ref: '#/definitions/market.UpdateStallMetadataRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/market.Stall'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-      summary: Update Stall Metadata
-      tags:
-      - Stall
-  /api/v2/stalls/position:
-    put:
-      consumes:
-      - application/json
-      parameters:
-      - description: request body
-        in: body
-        name: _
-        required: true
-        schema:
-          $ref: '#/definitions/market.UpdateStallPositionRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/market.Stall'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-      summary: Update Stall Position (single)
       tags:
       - Stall
   /api/v2/users:

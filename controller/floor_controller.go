@@ -4,6 +4,7 @@ import (
 	"gateway-service/client"
 	common2 "gateway-service/client/common"
 	"gateway-service/client/market"
+	"gateway-service/client/rental"
 	"gateway-service/common"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -11,11 +12,14 @@ import (
 
 type FloorController struct {
 	floorClient *client.FloorClient
+	nsaClient   *client.NSAClient
 }
 
-func NewFloorController(floorClient *client.FloorClient) FloorController {
+func NewFloorController(floorClient *client.FloorClient, nsaClient *client.NSAClient,
+) FloorController {
 	return FloorController{
 		floorClient,
+		nsaClient,
 	}
 }
 
@@ -84,7 +88,7 @@ func (controller *FloorController) UpdateFloor(ctx *gin.Context) {
 }
 
 // GetFloor
-// @Router /api/v2/floors/:id [GET]
+// @Router /api/v2/floors/{id} [GET]
 // @Summary Get floor
 // @Param id path string true "floor id"
 // @Param draft query bool false "return draft version ? default to false"
@@ -126,9 +130,9 @@ type ListFloorsResponse struct {
 }
 
 // ListFloors
-// @Router /api/v2/markets/:id/floors [GET]
+// @Router /api/v2/markets/{id}/floors [GET]
 // @Summary List floors
-// @Param id path string true "market id"
+// @Param id path string true "Market id"
 // @Param draft query bool false "return draft version ? default to false"
 // @Tags Floor
 // @Accept json
@@ -165,53 +169,49 @@ func (controller *FloorController) ListFloors(ctx *gin.Context) {
 }
 
 // DeleteFloor
-// @Router /api/v2/floors [DELETE]
+// @Router /api/v2/floors/{id} [DELETE]
 // @Summary Delete floor (single)
-// @Param _ body market.DeleteFloorRequest true "request body"
+// @Param id path string true "Floor id"
 // @Tags Floor
 // @Accept json
 // @Produce json
 // @Success 200 {object} common.NoContentResponse
 // @Failure 400,401,500 {object} model.ErrorResponse
 func (controller *FloorController) DeleteFloor(ctx *gin.Context) {
-	req := new(market.DeleteFloorRequest)
+	floorId := ctx.Param("id")
 
-	if err := ctx.ShouldBindJSON(req); err != nil {
-		common.ReturnErrorResponse(ctx, http.StatusBadRequest, err.Error())
+	floorResp, floorErr := controller.floorClient.GetFloorCodeAndMarketCode(&common2.FindByIdRequest{
+		Id: floorId,
+	}, common.GetMetadataFromContext(ctx))
+
+	if floorErr != nil {
+		common.ReturnErrorResponse(ctx, http.StatusBadRequest, floorErr.Error())
+		return
+	} else if !floorResp.Success {
+		common.AsErrorResponse(floorResp.GetError(), ctx)
 		return
 	}
 
-	//floorResp, floorErr := controller.floorClient.GetFloorCodeAndMarketCode(&common2.FindByIdRequest{
-	//	Id: req.FloorplanId,
-	//}, common.GetMetadataFromContext(ctx))
-	//
-	//if floorErr != nil {
-	//	common.ReturnErrorResponse(ctx, http.StatusBadRequest, floorErr.Error())
-	//	return
-	//} else if !floorResp.Success {
-	//	common.AsErrorResponse(floorResp.GetError(), ctx)
-	//	return
-	//}
-	//
-	//applicationResp, applicationErr := controller.applicationClient.CheckExistApplication(&rental.CheckExistApplicationRequest{
-	//	MarketCode: floorResp.GetData().MarketCode,
-	//	FloorCode:  floorResp.GetData().FloorCode,
-	//}, common.GetMetadataFromContext(ctx))
-	//
-	//if applicationErr != nil {
-	//	common.ReturnErrorResponse(ctx, http.StatusBadRequest, applicationErr.Error())
-	//	return
-	//} else if applicationResp.GetErrorResponse() != nil {
-	//	common.AsLegacyErrorResponse(applicationResp.GetErrorResponse(), ctx)
-	//	return
-	//} else if applicationResp.GetSuccessResponse().Result {
-	//	common.AsLegacyErrorResponse(&common2.ErrorResponse{
-	//		ErrorCode:        common2.ErrorCode_CANNOT_EXECUTE,
-	//		ErrorDescription: "Some application already exists",
-	//	}, ctx)
-	//	return
-	//}
+	applicationResp, applicationErr := controller.nsaClient.CheckExistApplication(&rental.CheckExistApplicationRequest{
+		MarketCode: floorResp.GetData().MarketCode,
+		FloorCode:  floorResp.GetData().FloorCode,
+	}, common.GetMetadataFromContext(ctx))
 
+	if applicationErr != nil {
+		common.ReturnErrorResponse(ctx, http.StatusBadRequest, applicationErr.Error())
+		return
+	} else if applicationResp.GetErrorResponse() != nil {
+		common.AsLegacyErrorResponse(applicationResp.GetErrorResponse(), ctx)
+		return
+	} else if applicationResp.GetSuccessResponse().Result {
+		common.AsLegacyErrorResponse(&common2.ErrorResponse{
+			ErrorCode:        common2.ErrorCode_CANNOT_EXECUTE,
+			ErrorDescription: "Some application already exists",
+		}, ctx)
+		return
+	}
+	req := new(market.DeleteFloorRequest)
+	req.FloorplanId = floorId
 	res, err := controller.floorClient.DeleteFloor(req, common.GetMetadataFromContext(ctx))
 
 	if err != nil {
@@ -227,9 +227,9 @@ func (controller *FloorController) DeleteFloor(ctx *gin.Context) {
 }
 
 // GetPublishedFloor
-// @Router /api/v2/floors/:id/published [GET]
+// @Router /api/v2/floors/{id}/published [GET]
 // @Summary Get published floor
-// @Param id path string true "floor id"
+// @Param id path string true "Floor id"
 // @Tags Floor
 // @Accept json
 // @Produce json
@@ -257,7 +257,7 @@ func (controller *FloorController) GetPublishedFloor(ctx *gin.Context) {
 }
 
 // ListPublishedFloors
-// @Router /api/v2/markets/:id/floors/published [GET]
+// @Router /api/v2/markets/{id}/floors/published [GET]
 // @Summary List published floors
 // @Param id path string true "market id"
 // @Tags Floor
