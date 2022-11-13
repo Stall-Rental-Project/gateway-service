@@ -27,11 +27,11 @@ type NSAServiceClient interface {
 	SubmitApplication(ctx context.Context, in *SubmitApplicationRequest, opts ...grpc.CallOption) (*GetApplicationResponse, error)
 	SubmitApplicationDocs(ctx context.Context, in *SubmitApplicationDocsRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error)
 	SubmitApplicationPayment(ctx context.Context, in *SubmitApplicationPaymentRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error)
-	SubmitOrderPayment(ctx context.Context, in *SubmitOrderPaymentRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error)
 	CheckExistApplication(ctx context.Context, in *CheckExistApplicationRequest, opts ...grpc.CallOption) (*common.BooleanResponse, error)
 	CheckExistApplications(ctx context.Context, in *CheckExistApplicationsRequest, opts ...grpc.CallOption) (*CheckExistApplicationsResponse, error)
 	GetApplication(ctx context.Context, in *common.FindByIdRequest, opts ...grpc.CallOption) (*GetApplicationResponse, error)
 	UpdateApplication(ctx context.Context, in *SubmitApplicationRequest, opts ...grpc.CallOption) (*GetApplicationResponse, error)
+	ConfirmApplication(ctx context.Context, in *ConfirmApplicationRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error)
 }
 
 type nSAServiceClient struct {
@@ -63,15 +63,6 @@ func (c *nSAServiceClient) SubmitApplicationDocs(ctx context.Context, in *Submit
 func (c *nSAServiceClient) SubmitApplicationPayment(ctx context.Context, in *SubmitApplicationPaymentRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error) {
 	out := new(common.NoContentResponse)
 	err := c.cc.Invoke(ctx, "/rental.NSAService/SubmitApplicationPayment", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *nSAServiceClient) SubmitOrderPayment(ctx context.Context, in *SubmitOrderPaymentRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error) {
-	out := new(common.NoContentResponse)
-	err := c.cc.Invoke(ctx, "/rental.NSAService/SubmitOrderPayment", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -114,6 +105,15 @@ func (c *nSAServiceClient) UpdateApplication(ctx context.Context, in *SubmitAppl
 	return out, nil
 }
 
+func (c *nSAServiceClient) ConfirmApplication(ctx context.Context, in *ConfirmApplicationRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error) {
+	out := new(common.NoContentResponse)
+	err := c.cc.Invoke(ctx, "/rental.NSAService/ConfirmApplication", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NSAServiceServer is the server API for NSAService service.
 // All implementations must embed UnimplementedNSAServiceServer
 // for forward compatibility
@@ -122,11 +122,11 @@ type NSAServiceServer interface {
 	SubmitApplication(context.Context, *SubmitApplicationRequest) (*GetApplicationResponse, error)
 	SubmitApplicationDocs(context.Context, *SubmitApplicationDocsRequest) (*common.NoContentResponse, error)
 	SubmitApplicationPayment(context.Context, *SubmitApplicationPaymentRequest) (*common.NoContentResponse, error)
-	SubmitOrderPayment(context.Context, *SubmitOrderPaymentRequest) (*common.NoContentResponse, error)
 	CheckExistApplication(context.Context, *CheckExistApplicationRequest) (*common.BooleanResponse, error)
 	CheckExistApplications(context.Context, *CheckExistApplicationsRequest) (*CheckExistApplicationsResponse, error)
 	GetApplication(context.Context, *common.FindByIdRequest) (*GetApplicationResponse, error)
 	UpdateApplication(context.Context, *SubmitApplicationRequest) (*GetApplicationResponse, error)
+	ConfirmApplication(context.Context, *ConfirmApplicationRequest) (*common.NoContentResponse, error)
 	mustEmbedUnimplementedNSAServiceServer()
 }
 
@@ -143,9 +143,6 @@ func (UnimplementedNSAServiceServer) SubmitApplicationDocs(context.Context, *Sub
 func (UnimplementedNSAServiceServer) SubmitApplicationPayment(context.Context, *SubmitApplicationPaymentRequest) (*common.NoContentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SubmitApplicationPayment not implemented")
 }
-func (UnimplementedNSAServiceServer) SubmitOrderPayment(context.Context, *SubmitOrderPaymentRequest) (*common.NoContentResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SubmitOrderPayment not implemented")
-}
 func (UnimplementedNSAServiceServer) CheckExistApplication(context.Context, *CheckExistApplicationRequest) (*common.BooleanResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckExistApplication not implemented")
 }
@@ -157,6 +154,9 @@ func (UnimplementedNSAServiceServer) GetApplication(context.Context, *common.Fin
 }
 func (UnimplementedNSAServiceServer) UpdateApplication(context.Context, *SubmitApplicationRequest) (*GetApplicationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateApplication not implemented")
+}
+func (UnimplementedNSAServiceServer) ConfirmApplication(context.Context, *ConfirmApplicationRequest) (*common.NoContentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConfirmApplication not implemented")
 }
 func (UnimplementedNSAServiceServer) mustEmbedUnimplementedNSAServiceServer() {}
 
@@ -221,24 +221,6 @@ func _NSAService_SubmitApplicationPayment_Handler(srv interface{}, ctx context.C
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(NSAServiceServer).SubmitApplicationPayment(ctx, req.(*SubmitApplicationPaymentRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _NSAService_SubmitOrderPayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SubmitOrderPaymentRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(NSAServiceServer).SubmitOrderPayment(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/rental.NSAService/SubmitOrderPayment",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NSAServiceServer).SubmitOrderPayment(ctx, req.(*SubmitOrderPaymentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -315,6 +297,24 @@ func _NSAService_UpdateApplication_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NSAService_ConfirmApplication_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConfirmApplicationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NSAServiceServer).ConfirmApplication(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rental.NSAService/ConfirmApplication",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NSAServiceServer).ConfirmApplication(ctx, req.(*ConfirmApplicationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // NSAService_ServiceDesc is the grpc.ServiceDesc for NSAService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -335,10 +335,6 @@ var NSAService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _NSAService_SubmitApplicationPayment_Handler,
 		},
 		{
-			MethodName: "SubmitOrderPayment",
-			Handler:    _NSAService_SubmitOrderPayment_Handler,
-		},
-		{
 			MethodName: "CheckExistApplication",
 			Handler:    _NSAService_CheckExistApplication_Handler,
 		},
@@ -353,6 +349,10 @@ var NSAService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateApplication",
 			Handler:    _NSAService_UpdateApplication_Handler,
+		},
+		{
+			MethodName: "ConfirmApplication",
+			Handler:    _NSAService_ConfirmApplication_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

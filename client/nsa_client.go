@@ -64,29 +64,18 @@ func (service *NSAClient) CheckExistApplication(req *rental.CheckExistApplicatio
 	return
 }
 
-//func (service *NSAClient) SubmitApplicationPayment(req *rental.SubmitApplicationPaymentRequest, md metadata.MD) (res *common.NoContentResponse, err error) {
-//	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
-//	ctx = metadata.NewOutgoingContext(ctx, md)
-//	defer cancel()
-//	res, err = service.nsaClient.SubmitApplicationPayment(ctx, req)
-//	return
-//}
-//
+func (service *NSAClient) SubmitApplicationPayment(req *rental.SubmitApplicationPaymentRequest, md metadata.MD) (res *common.NoContentResponse, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	defer cancel()
+	res, err = service.nsaClient.SubmitApplicationPayment(ctx, req)
+	return
+}
 
-//
-//func (service *NSAClient) CheckExistApplications(req *rental.CheckExistApplicationsRequest, md metadata.MD) (res *rental.CheckExistApplicationsResponse, err error) {
-//	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
-//	ctx = metadata.NewOutgoingContext(ctx, md)
-//	defer cancel()
-//	res, err = service.nsaClient.CheckExistApplications(ctx, req)
-//	return
-//}
-//
-//func (service *NSAClient) SubmitOrderPayment(req *rental.SubmitOrderPaymentRequest, md metadata.MD) (res *common.NoContentResponse, err error) {
-//	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
-//	ctx = metadata.NewOutgoingContext(ctx, md)
-//	defer cancel()
-//	res, err = service.nsaClient.SubmitOrderPayment(ctx, req)
-//	return
-//}
-//
+func (service *NSAClient) ConfirmApplication(req *rental.ConfirmApplicationRequest, md metadata.MD) (res *common.NoContentResponse, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	defer cancel()
+	res, err = service.nsaClient.ConfirmApplication(ctx, req)
+	return
+}

@@ -233,3 +233,71 @@ func (controller *NSAController) GetApplication(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, model.AsErrorResponse(res.GetError()))
 	}
 }
+
+// SubmitPayment
+// @Summary Submit Application Payment
+// @Param id path string true "Application ID"
+// @Description Submit new application payment or update the application payment
+// @Tags Application
+// @Accept json
+// @Param data body rental.SubmitApplicationPaymentRequest true "Application Payment Information"
+// @Success 200 {object} model.SuccessResponse
+// @Failure 401,400,500 {object} model.ErrorResponse
+// @Router /api/v2/applications/{id}/payment [PUT]
+func (controller *NSAController) SubmitPayment(ctx *gin.Context) {
+	applicationId := ctx.Param("id")
+
+	applicationRequest := new(rental.SubmitApplicationPaymentRequest)
+	applicationRequest.ApplicationId = applicationId
+	if err := ctx.ShouldBindJSON(applicationRequest); err != nil {
+		common.ReturnErrorResponse(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	res, err := controller.nsaClient.SubmitApplicationPayment(applicationRequest, common.GetMetadataFromContext(ctx))
+
+	if err != nil {
+		common.ReturnErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if res.GetSuccess() {
+		ctx.JSON(http.StatusOK, res)
+	} else {
+		ctx.JSON(http.StatusBadRequest, model.AsErrorResponse(res.GetError()))
+	}
+}
+
+// ConfirmApplication
+// @Summary Confirm Application
+// @Param id path string true "Application ID"
+// @Description Confirm the Application to finish the application process
+// @Tags Application
+// @Accept json
+// @Param data body rental.ConfirmApplicationRequest true "Confirm Application Information"
+// @Success 200 {object} model.SuccessResponse
+// @Failure 401,400,500 {object} model.ErrorResponse
+// @Router /api/v2/applications/{id}/confirm [PUT]
+func (controller *NSAController) ConfirmApplication(ctx *gin.Context) {
+	applicationId := ctx.Param("id")
+
+	applicationRequest := new(rental.ConfirmApplicationRequest)
+	applicationRequest.ApplicationId = applicationId
+	if err := ctx.ShouldBindJSON(applicationRequest); err != nil {
+		common.ReturnErrorResponse(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	res, err := controller.nsaClient.ConfirmApplication(applicationRequest, common.GetMetadataFromContext(ctx))
+
+	if err != nil {
+		common.ReturnErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if res.GetSuccess() {
+		ctx.JSON(http.StatusOK, res)
+	} else {
+		ctx.JSON(http.StatusBadRequest, model.AsErrorResponse(res.GetError()))
+	}
+}

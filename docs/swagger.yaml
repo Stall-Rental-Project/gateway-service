@@ -895,6 +895,51 @@ definitions:
       clazz:
         type: integer
     type: object
+  rental.ConfirmApplicationRequest:
+    properties:
+      application_id:
+        type: string
+      comment:
+        type: string
+      is_approved:
+        type: boolean
+    type: object
+  rental.CreateLeaseTerminationRequest:
+    properties:
+      accepted:
+        type: boolean
+      application_id:
+        type: string
+      end_date:
+        description: in form of yyyy-MM-ddTHH:mm:ssXXX
+        type: string
+      reason:
+        type: string
+    type: object
+  rental.GetLeaseTerminationResponse_Data:
+    properties:
+      exist:
+        type: boolean
+      termination:
+        $ref: '#/definitions/rental.LeaseTermination'
+    type: object
+  rental.LeaseTermination:
+    properties:
+      accepted:
+        type: boolean
+      application_id:
+        type: string
+      created_by:
+        type: string
+      end_date:
+        type: string
+      reason:
+        type: string
+      status:
+        type: integer
+      termination_id:
+        type: string
+    type: object
   rental.Member:
     properties:
       age:
@@ -910,6 +955,13 @@ definitions:
         type: number
       detail:
         type: integer
+    type: object
+  rental.ProceedLeaseTerminationRequest:
+    properties:
+      accepted:
+        type: boolean
+      termination_id:
+        type: string
     type: object
   rental.Rate:
     properties:
@@ -965,6 +1017,17 @@ definitions:
       picture:
         type: string
       proof_of_residencies:
+        type: string
+    type: object
+  rental.SubmitApplicationPaymentRequest:
+    properties:
+      application_id:
+        type: string
+      draft:
+        type: boolean
+      payment_method:
+        type: integer
+      proof_of_transfer:
         type: string
     type: object
   rental.SubmitApplicationRequest:
@@ -1210,6 +1273,43 @@ paths:
       summary: Update Application
       tags:
       - Application
+  /api/v2/applications/{id}/confirm:
+    put:
+      consumes:
+      - application/json
+      description: Confirm the Application to finish the application process
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Confirm Application Information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/rental.ConfirmApplicationRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Confirm Application
+      tags:
+      - Application
   /api/v2/applications/{id}/docs:
     put:
       consumes:
@@ -1247,6 +1347,241 @@ paths:
       summary: Submit Application Documents
       tags:
       - Application
+  /api/v2/applications/{id}/payment:
+    put:
+      consumes:
+      - application/json
+      description: Submit new application payment or update the application payment
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Application Payment Information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/rental.SubmitApplicationPaymentRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Submit Application Payment
+      tags:
+      - Application
+  /api/v2/applications/{id}/termination:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rental.GetLeaseTerminationResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get Application Lease Termination
+      tags:
+      - Lease Termination
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Termination information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/rental.CreateLeaseTerminationRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NoContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Submit Application Lease Termination
+      tags:
+      - Lease Termination
+  /api/v2/applications/{id}/termination/{tid}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Termination ID
+        in: path
+        name: tid
+        required: true
+        type: string
+      - description: Termination information
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/rental.ProceedLeaseTerminationRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NoContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Cancel Lease Termination
+      tags:
+      - Lease Termination
+  /api/v2/applications/in-lease:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Page size. Default to 20
+        in: query
+        name: size
+        type: integer
+      - description: Page number. Default to 1
+        in: query
+        name: page
+        type: integer
+      - description: Sort field. Accepts [firstName, lastName]. Default to firstName
+          if not given
+        in: query
+        name: sort
+        type: string
+      - description: Sort direction. Accepts [asc, desc]. Default to asc if not given
+        in: query
+        name: direction
+        type: string
+      - description: Filter By Lease Code/ID
+        in: query
+        name: lease_code
+        type: string
+      - description: Filter By Owner Firstname
+        in: query
+        name: first_name
+        type: string
+      - description: Filter By Owner Lastname
+        in: query
+        name: last_name
+        type: string
+      - description: Filter By market code. Accepts comma-separated market codes
+        in: query
+        name: market_codes
+        type: string
+      - description: Filter By lease status. Accepts comma-separated numeric string
+          of values [1,2,3,4,5]. Default to 1,2,3
+        in: query
+        name: lease_statuses
+        type: string
+      - description: Filter by payment status. Accepts comma-separated numeric string
+          of values [0,1,2,3]. Omit if not given
+        in: query
+        name: payment_statuses
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: List In-Lease Application
+      tags:
+      - Lease
+  /api/v2/applications/in-lease/{id}:
+    get:
+      consumes:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rental.Application'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get in-lease Application
+      tags:
+      - Lease
   /api/v2/files/upload:
     post:
       consumes:

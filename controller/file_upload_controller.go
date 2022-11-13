@@ -22,7 +22,7 @@ func NewFileController(
 // UploadAttachment
 // @Router   /api/v2/files/upload [POST]
 // @Summary  Upload attachment
-// @Param    _  body  model.RentalAttachmentRequest  true  "Body"
+// @Param    _  body model.RentalAttachmentRequest  true  "Body"
 // @Tags     File
 // @Accept   mpfd
 // @Produce  json

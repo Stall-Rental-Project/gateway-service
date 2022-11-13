@@ -10,10 +10,7 @@ import (
 	"github.com/cloudinary/cloudinary-go/api/uploader"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-playground/validator/v10"
-	"github.com/google/uuid"
 	"log"
-	"path/filepath"
-	"strings"
 )
 
 type CloudinaryClient struct {
@@ -48,18 +45,14 @@ func (service *CloudinaryClient) UploadFile(ctx *gin.Context, formKey string) (r
 	defer file.Close()
 
 	fileName := header.Filename
-	fileExtension := strings.ToLower(filepath.Ext(fileName)[1:])
-
-	s3uuid := uuid.New().String()
-	s3Filename := s3uuid + "." + fileExtension
 
 	uploadParam, err := service.cloudinary.Upload.Upload(ctx, file, uploader.UploadParams{Folder: config.Config.CloudinaryUploadFolder})
 	if err != nil {
 		return nil, err
 	}
 	return &model.FileResponse{
-		Content:      s3Filename,
-		PreSignedUrl: uploadParam.SecureURL,
+		Content:      fileName,
+		PreSignedUrl: uploadParam.URL,
 		AccessId:     uploadParam.AssetID,
 	}, nil
 }

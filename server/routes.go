@@ -34,6 +34,8 @@ func (server *Server) InitializeRoutes() {
 	roleClient := client.NewRoleClient(accountCC)
 	permissionClient := client.NewPermissionClient(accountCC)
 	userClient := client.NewUserClient(accountCC)
+	terminationClient := client.NewTerminationClient(rentalCC)
+	leaseClient := client.NewLeaseClient(rentalCC)
 
 	cloudinaryClient := client.NewCloudinaryClient()
 	nsaClient := client.NewNSAClient(rentalCC)
@@ -59,6 +61,8 @@ func (server *Server) InitializeRoutes() {
 	nsaController := controller.NewNSAController(nsaClient, stallClient,
 		marketClient, userClient, rateClient)
 	applicationController := controller.NewApplicationController(applicationClient, stallClient)
+	terminationController := controller.NewTerminationController(terminationClient)
+	leaseController := controller.NewLeaseController(leaseClient, stallClient, marketClient, userClient, rateClient)
 
 	fileController := controller.NewFileController(cloudinaryClient)
 
@@ -245,6 +249,34 @@ func (server *Server) InitializeRoutes() {
 		application.PUT("/:id", common.HasAnyPermission([]string{
 			constants.ApplicationSubmit,
 		}), nsaController.UpdateApplication)
+		application.PUT("/:id/payment", common.HasAnyPermission([]string{
+			constants.ApplicationSubmit,
+		}), nsaController.SubmitPayment)
+		application.PUT("/:id/confirm", common.HasAnyPermission([]string{
+			constants.ApplicationSubmit,
+		}), nsaController.ConfirmApplication)
+
+	}
+
+	termination := server.router.Group("/api/v2/applications/:id/termination")
+	termination.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
+	{
+		termination.GET("", terminationController.GetLeaseTermination)
+		termination.POST("", common.HasAnyPermission([]string{
+			constants.RequestTerminateLease,
+			constants.TerminateLease,
+		}), terminationController.SubmitLeaseTermination)
+		termination.PUT("/:tid", common.HasAnyPermission([]string{
+			constants.TerminateLease,
+			constants.CancelTerminationRequest,
+		}), terminationController.CancelLeaseTermination)
+	}
+
+	lease := server.router.Group("/api/v2/applications/in-lease")
+	lease.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
+	{
+		lease.GET("", leaseController.ListLeases)
+		lease.GET("/:id", leaseController.GetLease)
 	}
 
 	file := server.router.Group("/api/v2/files")
