@@ -2719,7 +2719,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/market.UpdateStallPositionRequest"
+                            "$ref": "#/definitions/market.CreateStallRequest"
                         }
                     }
                 ],
@@ -3606,55 +3606,25 @@ const docTemplate = `{
         "market.CreateStallRequest": {
             "type": "object",
             "properties": {
-                "area": {
-                    "type": "number"
-                },
-                "clazz": {
-                    "description": "Default to Regular",
-                    "type": "integer"
-                },
                 "floorplan_id": {
                     "type": "string"
                 },
-                "font_size": {
+                "height": {
                     "type": "number"
                 },
-                "h_axis": {
-                    "type": "number"
-                },
-                "label": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "points": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/market.Point"
-                    }
-                },
-                "rotate": {
+                "rotation": {
                     "type": "integer"
                 },
-                "shape": {
+                "stall_id": {
                     "type": "string"
                 },
-                "status": {
-                    "description": "Default to Inactive",
-                    "type": "integer"
-                },
-                "type": {
-                    "description": "Default to Temporary",
-                    "type": "integer"
-                },
-                "w_axis": {
+                "width": {
                     "type": "number"
                 },
-                "x_axis": {
+                "x": {
                     "type": "number"
                 },
-                "y_axis": {
+                "y": {
                     "type": "number"
                 }
             }
@@ -3844,26 +3814,11 @@ const docTemplate = `{
                 }
             }
         },
-        "market.Point": {
-            "type": "object",
-            "properties": {
-                "x_axis": {
-                    "type": "number"
-                },
-                "y_axis": {
-                    "type": "number"
-                }
-            }
-        },
         "market.Stall": {
             "type": "object",
             "properties": {
                 "area": {
                     "type": "number"
-                },
-                "clazz": {
-                    "description": "Default to Regular",
-                    "type": "integer"
                 },
                 "code": {
                     "type": "string"
@@ -3871,14 +3826,8 @@ const docTemplate = `{
                 "floor_code": {
                     "type": "string"
                 },
-                "font_size": {
+                "height": {
                     "type": "number"
-                },
-                "h_axis": {
-                    "type": "number"
-                },
-                "label": {
-                    "type": "string"
                 },
                 "lease_status": {
                     "type": "integer"
@@ -3895,27 +3844,14 @@ const docTemplate = `{
                 "monthly_fee": {
                     "type": "number"
                 },
-                "name": {
-                    "type": "string"
-                },
                 "occupied_by": {
                     "type": "string"
                 },
-                "points": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/market.Point"
-                    }
-                },
-                "previous_version": {
-                    "type": "string"
-                },
-                "rotate": {
+                "rotation": {
                     "type": "integer"
                 },
-                "shape": {
-                    "description": "Position data",
-                    "type": "string"
+                "stall_class": {
+                    "type": "integer"
                 },
                 "stall_holder_name": {
                     "description": "Fetch from rental service",
@@ -3924,24 +3860,26 @@ const docTemplate = `{
                 "stall_id": {
                     "type": "string"
                 },
-                "state": {
+                "stall_name": {
+                    "type": "string"
+                },
+                "stall_state": {
                     "type": "integer"
                 },
-                "status": {
-                    "description": "Default to Inactive",
+                "stall_status": {
                     "type": "integer"
                 },
-                "type": {
-                    "description": "Default to Temporary",
+                "stall_type": {
                     "type": "integer"
                 },
-                "w_axis": {
+                "width": {
                     "type": "number"
                 },
-                "x_axis": {
+                "x": {
+                    "description": "Position data",
                     "type": "number"
                 },
-                "y_axis": {
+                "y": {
                     "type": "number"
                 }
             }
@@ -3989,61 +3927,20 @@ const docTemplate = `{
                 "area": {
                     "type": "number"
                 },
-                "clazz": {
-                    "description": "Default to Regular",
+                "stall_class": {
                     "type": "integer"
-                },
-                "name": {
-                    "type": "string"
                 },
                 "stall_id": {
                     "type": "string"
                 },
-                "status": {
-                    "description": "Default to Inactive",
-                    "type": "integer"
-                },
-                "type": {
-                    "description": "Default to Temporary",
-                    "type": "integer"
-                }
-            }
-        },
-        "market.UpdateStallPositionRequest": {
-            "type": "object",
-            "properties": {
-                "font_size": {
-                    "type": "number"
-                },
-                "h_axis": {
-                    "type": "number"
-                },
-                "label": {
+                "stall_name": {
                     "type": "string"
                 },
-                "points": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/market.Point"
-                    }
-                },
-                "rotate": {
+                "stall_status": {
                     "type": "integer"
                 },
-                "shape": {
-                    "type": "string"
-                },
-                "stall_id": {
-                    "type": "string"
-                },
-                "w_axis": {
-                    "type": "number"
-                },
-                "x_axis": {
-                    "type": "number"
-                },
-                "y_axis": {
-                    "type": "number"
+                "stall_type": {
+                    "type": "integer"
                 }
             }
         },
@@ -4408,7 +4305,6 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "stall_class": {
-                    "description": "Default to Regular",
                     "type": "integer"
                 },
                 "stall_code": {
@@ -4419,7 +4315,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "stall_type": {
-                    "description": "Default to Temporary",
                     "type": "integer"
                 },
                 "status": {
@@ -4789,14 +4684,12 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "stall_class": {
-                    "description": "Default to Regular",
                     "type": "integer"
                 },
                 "stall_code": {
                     "type": "string"
                 },
                 "stall_type": {
-                    "description": "Default to Temporary",
                     "type": "integer"
                 }
             }

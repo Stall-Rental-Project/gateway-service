@@ -588,119 +588,6 @@ func (StallLeaseStatus) EnumDescriptor() ([]byte, []int) {
 	return file_market_constant_proto_rawDescGZIP(), []int{10}
 }
 
-type HawkerSiteType int32
-
-const (
-	HawkerSiteType_NOT_HAWKER   HawkerSiteType = 0
-	HawkerSiteType_VENDING_SITE HawkerSiteType = 1
-	HawkerSiteType_AMBULANT     HawkerSiteType = 2
-)
-
-// Enum value maps for HawkerSiteType.
-var (
-	HawkerSiteType_name = map[int32]string{
-		0: "NOT_HAWKER",
-		1: "VENDING_SITE",
-		2: "AMBULANT",
-	}
-	HawkerSiteType_value = map[string]int32{
-		"NOT_HAWKER":   0,
-		"VENDING_SITE": 1,
-		"AMBULANT":     2,
-	}
-)
-
-func (x HawkerSiteType) Enum() *HawkerSiteType {
-	p := new(HawkerSiteType)
-	*p = x
-	return p
-}
-
-func (x HawkerSiteType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (HawkerSiteType) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_constant_proto_enumTypes[11].Descriptor()
-}
-
-func (HawkerSiteType) Type() protoreflect.EnumType {
-	return &file_market_constant_proto_enumTypes[11]
-}
-
-func (x HawkerSiteType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use HawkerSiteType.Descriptor instead.
-func (HawkerSiteType) EnumDescriptor() ([]byte, []int) {
-	return file_market_constant_proto_rawDescGZIP(), []int{11}
-}
-
-type DayOfWeek int32
-
-const (
-	DayOfWeek_INVALID_DAY DayOfWeek = 0
-	DayOfWeek_MONDAY      DayOfWeek = 1
-	DayOfWeek_TUESDAY     DayOfWeek = 2
-	DayOfWeek_WEDNESDAY   DayOfWeek = 3
-	DayOfWeek_THURSDAY    DayOfWeek = 4
-	DayOfWeek_FRIDAY      DayOfWeek = 5
-	DayOfWeek_SATURDAY    DayOfWeek = 6
-	DayOfWeek_SUNDAY      DayOfWeek = 7
-)
-
-// Enum value maps for DayOfWeek.
-var (
-	DayOfWeek_name = map[int32]string{
-		0: "INVALID_DAY",
-		1: "MONDAY",
-		2: "TUESDAY",
-		3: "WEDNESDAY",
-		4: "THURSDAY",
-		5: "FRIDAY",
-		6: "SATURDAY",
-		7: "SUNDAY",
-	}
-	DayOfWeek_value = map[string]int32{
-		"INVALID_DAY": 0,
-		"MONDAY":      1,
-		"TUESDAY":     2,
-		"WEDNESDAY":   3,
-		"THURSDAY":    4,
-		"FRIDAY":      5,
-		"SATURDAY":    6,
-		"SUNDAY":      7,
-	}
-)
-
-func (x DayOfWeek) Enum() *DayOfWeek {
-	p := new(DayOfWeek)
-	*p = x
-	return p
-}
-
-func (x DayOfWeek) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (DayOfWeek) Descriptor() protoreflect.EnumDescriptor {
-	return file_market_constant_proto_enumTypes[12].Descriptor()
-}
-
-func (DayOfWeek) Type() protoreflect.EnumType {
-	return &file_market_constant_proto_enumTypes[12]
-}
-
-func (x DayOfWeek) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use DayOfWeek.Descriptor instead.
-func (DayOfWeek) EnumDescriptor() ([]byte, []int) {
-	return file_market_constant_proto_rawDescGZIP(), []int{12}
-}
-
 type CountStallsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1090,22 +977,10 @@ var file_market_constant_proto_rawDesc = []byte{
 	0x5f, 0x41, 0x56, 0x41, 0x49, 0x4c, 0x41, 0x42, 0x4c, 0x45, 0x10, 0x00, 0x12, 0x12, 0x0a, 0x0e,
 	0x53, 0x54, 0x41, 0x4c, 0x4c, 0x5f, 0x52, 0x45, 0x53, 0x45, 0x52, 0x56, 0x45, 0x44, 0x10, 0x01,
 	0x12, 0x12, 0x0a, 0x0e, 0x53, 0x54, 0x41, 0x4c, 0x4c, 0x5f, 0x4f, 0x43, 0x43, 0x55, 0x50, 0x49,
-	0x45, 0x44, 0x10, 0x02, 0x2a, 0x40, 0x0a, 0x0e, 0x48, 0x61, 0x77, 0x6b, 0x65, 0x72, 0x53, 0x69,
-	0x74, 0x65, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0e, 0x0a, 0x0a, 0x4e, 0x4f, 0x54, 0x5f, 0x48, 0x41,
-	0x57, 0x4b, 0x45, 0x52, 0x10, 0x00, 0x12, 0x10, 0x0a, 0x0c, 0x56, 0x45, 0x4e, 0x44, 0x49, 0x4e,
-	0x47, 0x5f, 0x53, 0x49, 0x54, 0x45, 0x10, 0x01, 0x12, 0x0c, 0x0a, 0x08, 0x41, 0x4d, 0x42, 0x55,
-	0x4c, 0x41, 0x4e, 0x54, 0x10, 0x02, 0x2a, 0x78, 0x0a, 0x09, 0x44, 0x61, 0x79, 0x4f, 0x66, 0x57,
-	0x65, 0x65, 0x6b, 0x12, 0x0f, 0x0a, 0x0b, 0x49, 0x4e, 0x56, 0x41, 0x4c, 0x49, 0x44, 0x5f, 0x44,
-	0x41, 0x59, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x4d, 0x4f, 0x4e, 0x44, 0x41, 0x59, 0x10, 0x01,
-	0x12, 0x0b, 0x0a, 0x07, 0x54, 0x55, 0x45, 0x53, 0x44, 0x41, 0x59, 0x10, 0x02, 0x12, 0x0d, 0x0a,
-	0x09, 0x57, 0x45, 0x44, 0x4e, 0x45, 0x53, 0x44, 0x41, 0x59, 0x10, 0x03, 0x12, 0x0c, 0x0a, 0x08,
-	0x54, 0x48, 0x55, 0x52, 0x53, 0x44, 0x41, 0x59, 0x10, 0x04, 0x12, 0x0a, 0x0a, 0x06, 0x46, 0x52,
-	0x49, 0x44, 0x41, 0x59, 0x10, 0x05, 0x12, 0x0c, 0x0a, 0x08, 0x53, 0x41, 0x54, 0x55, 0x52, 0x44,
-	0x41, 0x59, 0x10, 0x06, 0x12, 0x0a, 0x0a, 0x06, 0x53, 0x55, 0x4e, 0x44, 0x41, 0x59, 0x10, 0x07,
-	0x42, 0x31, 0x0a, 0x0e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x72, 0x73, 0x2e, 0x6d, 0x61, 0x72, 0x6b,
-	0x65, 0x74, 0x50, 0x01, 0x5a, 0x1d, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2d, 0x73, 0x65,
-	0x72, 0x76, 0x69, 0x63, 0x65, 0x2f, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x2f, 0x6d, 0x61, 0x72,
-	0x6b, 0x65, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x45, 0x44, 0x10, 0x02, 0x42, 0x31, 0x0a, 0x0e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x72, 0x73, 0x2e,
+	0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x50, 0x01, 0x5a, 0x1d, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61,
+	0x79, 0x2d, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2f, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74,
+	0x2f, 0x6d, 0x61, 0x72, 0x6b, 0x65, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1120,7 +995,7 @@ func file_market_constant_proto_rawDescGZIP() []byte {
 	return file_market_constant_proto_rawDescData
 }
 
-var file_market_constant_proto_enumTypes = make([]protoimpl.EnumInfo, 13)
+var file_market_constant_proto_enumTypes = make([]protoimpl.EnumInfo, 11)
 var file_market_constant_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_market_constant_proto_goTypes = []interface{}{
 	(MarketState)(0),                 // 0: market.MarketState
@@ -1134,22 +1009,20 @@ var file_market_constant_proto_goTypes = []interface{}{
 	(StallType)(0),                   // 8: market.StallType
 	(Choice)(0),                      // 9: market.Choice
 	(StallLeaseStatus)(0),            // 10: market.StallLeaseStatus
-	(HawkerSiteType)(0),              // 11: market.HawkerSiteType
-	(DayOfWeek)(0),                   // 12: market.DayOfWeek
-	(*CountStallsResponse)(nil),      // 13: market.CountStallsResponse
-	(*ListMarketsRequest)(nil),       // 14: market.ListMarketsRequest
-	(*CountStallsResponse_Data)(nil), // 15: market.CountStallsResponse.Data
-	(*common.Error)(nil),             // 16: common.Error
-	(*common.PageRequest)(nil),       // 17: common.PageRequest
-	(*timestamppb.Timestamp)(nil),    // 18: google.protobuf.Timestamp
+	(*CountStallsResponse)(nil),      // 11: market.CountStallsResponse
+	(*ListMarketsRequest)(nil),       // 12: market.ListMarketsRequest
+	(*CountStallsResponse_Data)(nil), // 13: market.CountStallsResponse.Data
+	(*common.Error)(nil),             // 14: common.Error
+	(*common.PageRequest)(nil),       // 15: common.PageRequest
+	(*timestamppb.Timestamp)(nil),    // 16: google.protobuf.Timestamp
 }
 var file_market_constant_proto_depIdxs = []int32{
-	15, // 0: market.CountStallsResponse.data:type_name -> market.CountStallsResponse.Data
-	16, // 1: market.CountStallsResponse.error:type_name -> common.Error
-	17, // 2: market.ListMarketsRequest.page_request:type_name -> common.PageRequest
+	13, // 0: market.CountStallsResponse.data:type_name -> market.CountStallsResponse.Data
+	14, // 1: market.CountStallsResponse.error:type_name -> common.Error
+	15, // 2: market.ListMarketsRequest.page_request:type_name -> common.PageRequest
 	2,  // 3: market.ListMarketsRequest.types:type_name -> market.MarketType
 	1,  // 4: market.ListMarketsRequest.statuses:type_name -> market.MarketStatus
-	18, // 5: market.CountStallsResponse.Data.available_date:type_name -> google.protobuf.Timestamp
+	16, // 5: market.CountStallsResponse.Data.available_date:type_name -> google.protobuf.Timestamp
 	6,  // [6:6] is the sub-list for method output_type
 	6,  // [6:6] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name
@@ -1210,7 +1083,7 @@ func file_market_constant_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_market_constant_proto_rawDesc,
-			NumEnums:      13,
+			NumEnums:      11,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,

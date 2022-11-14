@@ -290,40 +290,19 @@ definitions:
     type: object
   market.CreateStallRequest:
     properties:
-      area:
-        type: number
-      clazz:
-        description: Default to Regular
-        type: integer
       floorplan_id:
         type: string
-      font_size:
+      height:
         type: number
-      h_axis:
-        type: number
-      label:
-        type: string
-      name:
-        type: string
-      points:
-        items:
-          $ref: '#/definitions/market.Point'
-        type: array
-      rotate:
+      rotation:
         type: integer
-      shape:
+      stall_id:
         type: string
-      status:
-        description: Default to Inactive
-        type: integer
-      type:
-        description: Default to Temporary
-        type: integer
-      w_axis:
+      width:
         type: number
-      x_axis:
+      x:
         type: number
-      y_axis:
+      "y":
         type: number
     type: object
   market.Floor:
@@ -446,30 +425,16 @@ definitions:
       ward:
         type: string
     type: object
-  market.Point:
-    properties:
-      x_axis:
-        type: number
-      y_axis:
-        type: number
-    type: object
   market.Stall:
     properties:
       area:
         type: number
-      clazz:
-        description: Default to Regular
-        type: integer
       code:
         type: string
       floor_code:
         type: string
-      font_size:
+      height:
         type: number
-      h_axis:
-        type: number
-      label:
-        type: string
       lease_status:
         type: integer
       market_class:
@@ -480,39 +445,31 @@ definitions:
         type: integer
       monthly_fee:
         type: number
-      name:
-        type: string
       occupied_by:
         type: string
-      points:
-        items:
-          $ref: '#/definitions/market.Point'
-        type: array
-      previous_version:
-        type: string
-      rotate:
+      rotation:
         type: integer
-      shape:
-        description: Position data
-        type: string
+      stall_class:
+        type: integer
       stall_holder_name:
         description: Fetch from rental service
         type: string
       stall_id:
         type: string
-      state:
+      stall_name:
+        type: string
+      stall_state:
         type: integer
-      status:
-        description: Default to Inactive
+      stall_status:
         type: integer
-      type:
-        description: Default to Temporary
+      stall_type:
         type: integer
-      w_axis:
+      width:
         type: number
-      x_axis:
+      x:
+        description: Position data
         type: number
-      y_axis:
+      "y":
         type: number
     type: object
   market.Supervisor:
@@ -543,44 +500,16 @@ definitions:
     properties:
       area:
         type: number
-      clazz:
-        description: Default to Regular
+      stall_class:
         type: integer
-      name:
-        type: string
       stall_id:
         type: string
-      status:
-        description: Default to Inactive
-        type: integer
-      type:
-        description: Default to Temporary
-        type: integer
-    type: object
-  market.UpdateStallPositionRequest:
-    properties:
-      font_size:
-        type: number
-      h_axis:
-        type: number
-      label:
+      stall_name:
         type: string
-      points:
-        items:
-          $ref: '#/definitions/market.Point'
-        type: array
-      rotate:
+      stall_status:
         type: integer
-      shape:
-        type: string
-      stall_id:
-        type: string
-      w_axis:
-        type: number
-      x_axis:
-        type: number
-      y_axis:
-        type: number
+      stall_type:
+        type: integer
     type: object
   market.UpsertFloorRequest:
     properties:
@@ -830,7 +759,6 @@ definitions:
       stall_area:
         type: number
       stall_class:
-        description: Default to Regular
         type: integer
       stall_code:
         type: string
@@ -838,7 +766,6 @@ definitions:
         description: fetched from Market service
         type: string
       stall_type:
-        description: Default to Temporary
         type: integer
       status:
         description: references to WorkflowStatus enum
@@ -1081,12 +1008,10 @@ definitions:
       stall_area:
         type: number
       stall_class:
-        description: Default to Regular
         type: integer
       stall_code:
         type: string
       stall_type:
-        description: Default to Temporary
         type: integer
     type: object
   rental.UpsertRateRequest:
@@ -2896,7 +2821,7 @@ paths:
         name: _
         required: true
         schema:
-          $ref: '#/definitions/market.UpdateStallPositionRequest'
+          $ref: '#/definitions/market.CreateStallRequest'
       produces:
       - application/json
       responses:

@@ -34,7 +34,7 @@ func (service *StallClient) UpdateStallMetadata(req *market.UpdateStallMetadataR
 	return
 }
 
-func (service *StallClient) UpdateStallPosition(req *market.UpdateStallPositionRequest, md metadata.MD) (res *market.GetStallResponse, err error) {
+func (service *StallClient) UpdateStallPosition(req *market.CreateStallRequest, md metadata.MD) (res *market.GetStallResponse, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
 	ctx = metadata.NewOutgoingContext(ctx, md)
 	defer cancel()

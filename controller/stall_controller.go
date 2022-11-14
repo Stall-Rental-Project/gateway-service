@@ -95,14 +95,14 @@ func (controller *StallController) UpdateStallMetadata(ctx *gin.Context) {
 // @Router /api/v2/stalls/{id}/position [PUT]
 // @Summary Update Stall Position (single)
 // @Param id path string true "Stall id"
-// @Param _ body market.UpdateStallPositionRequest true "request body"
+// @Param _ body market.CreateStallRequest true "request body"
 // @Tags Stall
 // @Accept json
 // @Produce json
 // @Success 200 {object} market.Stall
 // @Failure 400,401,500 {object} model.ErrorResponse
 func (controller *StallController) UpdateStallPosition(ctx *gin.Context) {
-	req := new(market.UpdateStallPositionRequest)
+	req := new(market.CreateStallRequest)
 	stallId := ctx.Param("id")
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		common.ReturnErrorResponse(ctx, http.StatusBadRequest, err.Error())
