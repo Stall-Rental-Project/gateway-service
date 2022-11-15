@@ -274,7 +274,14 @@ func (controller *StallController) GetPublishedStall(ctx *gin.Context) {
 func (controller *StallController) DeleteStall(ctx *gin.Context) {
 	stallId := ctx.Param("id")
 
-	stallResp, stallErr := controller.stallClient.GetPublishedStall(&common2.FindByIdRequest{Id: stallId}, common.GetMetadataFromContext(ctx))
+	draft := true
+
+	req := &market.GetStallRequest{
+		StallId: stallId,
+		Draft:   &draft,
+	}
+
+	stallResp, stallErr := controller.stallClient.GetStall(req, common.GetMetadataFromContext(ctx))
 
 	if stallErr != nil {
 		common.ReturnErrorResponse(ctx, http.StatusBadRequest, stallErr.Error())
