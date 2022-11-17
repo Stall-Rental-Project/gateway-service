@@ -62,3 +62,11 @@ func (service *RateClient) DeleteRate(req *common.FindByIdRequest, md metadata.M
 	res, err = service.rateClient.DeleteRate(ctx, req)
 	return
 }
+
+func (service RateClient) CalculateApplicationRate(req *rental.CalculateRateRequest, md metadata.MD) (res *rental.CalculateRateResponse, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	defer cancel()
+	res, err = service.rateClient.CalculateRates(ctx, req)
+	return
+}

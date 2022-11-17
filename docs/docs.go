@@ -2539,6 +2539,69 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v2/stalls/info": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stall"
+                ],
+                "summary": "Get Stall Information for submitting application",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Market code",
+                        "name": "market_code",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Floor code",
+                        "name": "floor_code",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Stall code",
+                        "name": "stall_code",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/market.StallInfo"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v2/stalls/{id}": {
             "get": {
                 "consumes": [
@@ -3829,6 +3892,9 @@ const docTemplate = `{
                 "height": {
                     "type": "number"
                 },
+                "is_updated_detail": {
+                    "type": "boolean"
+                },
                 "lease_status": {
                     "type": "integer"
                 },
@@ -3881,6 +3947,56 @@ const docTemplate = `{
                 },
                 "y": {
                     "type": "number"
+                }
+            }
+        },
+        "market.StallInfo": {
+            "type": "object",
+            "properties": {
+                "area": {
+                    "type": "number"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "floor_code": {
+                    "type": "string"
+                },
+                "floor_name": {
+                    "type": "string"
+                },
+                "lease_status": {
+                    "type": "integer"
+                },
+                "market_address": {
+                    "type": "string"
+                },
+                "market_class": {
+                    "type": "integer"
+                },
+                "market_code": {
+                    "type": "string"
+                },
+                "market_id": {
+                    "type": "string"
+                },
+                "market_name": {
+                    "type": "string"
+                },
+                "market_type": {
+                    "type": "integer"
+                },
+                "stall_class": {
+                    "type": "integer"
+                },
+                "stall_id": {
+                    "type": "string"
+                },
+                "stall_name": {
+                    "type": "string"
+                },
+                "stall_type": {
+                    "type": "integer"
                 }
             }
         },
@@ -4229,7 +4345,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "lease_code": {
-                    "description": "double monthly_fee = 48; // Calculated dynamically from rate management module\n double security_fee = 49;\n double total_amount_due = 50;\n\nApplication in-lease only",
+                    "description": "Application in-lease only",
                     "type": "string"
                 },
                 "lease_end_date": {
@@ -4298,6 +4414,9 @@ const docTemplate = `{
                 "proof_of_transfer": {
                     "type": "string"
                 },
+                "reminded_payment_date": {
+                    "type": "string"
+                },
                 "source_of_capital": {
                     "type": "string"
                 },
@@ -4320,6 +4439,10 @@ const docTemplate = `{
                 "status": {
                     "description": "references to WorkflowStatus enum",
                     "type": "integer"
+                },
+                "total_amount_due": {
+                    "description": "double monthly_fee = 48; // Calculated dynamically from rate management module\n double security_fee = 49;",
+                    "type": "number"
                 },
                 "type": {
                     "type": "integer"
@@ -4351,6 +4474,9 @@ const docTemplate = `{
                 "first_name": {
                     "type": "string"
                 },
+                "full_name": {
+                    "type": "string"
+                },
                 "house_number": {
                     "type": "string"
                 },
@@ -4376,6 +4502,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "street": {
+                    "type": "string"
+                },
+                "telephone": {
                     "type": "string"
                 },
                 "user_id": {

@@ -1,12 +1,14 @@
 package controller
 
 import (
+	"errors"
 	"gateway-service/client"
 	common2 "gateway-service/client/common"
 	"gateway-service/client/market"
 	"gateway-service/client/rental"
 	"gateway-service/common"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 )
 
@@ -245,22 +247,50 @@ func (controller *StallController) GetPublishedStall(ctx *gin.Context) {
 		common.AsErrorResponse(res.GetError(), ctx)
 	}
 }
+func (controller *StallController) calculateMonthlyFee(stall *market.Stall, ctx *gin.Context) float64 {
+	if stall.GetMarketType() == market.MarketType_MARKET_TYPE_PUBLIC {
+		req := &rental.CalculateRateRequest{
+			MarketClass: stall.GetMarketClass(),
+			StallClass:  stall.GetStallClass(),
+			StallType:   stall.GetStallType(),
+			StallArea:   stall.GetArea(),
+			Includes:    []rental.FeeType{rental.FeeType_NSA_MONTHLY_FEE},
+		}
 
-//func (controller *StallController) obtainStallHolderName(stall *market.Stall, ctx *gin.Context) (string, error) {
-//	res, err := controller.applicationClient.GetApplication(&common2.FindByIdRequest{
-//		Id: stall.OccupiedBy,
-//	}, common.GetMetadataFromContext(ctx))
-//
-//	if err != nil {
-//		return "", err
-//	}
-//
-//	if !res.Success {
-//		return "", errors.New(res.GetError().GetMessage())
-//	}
-//
-//	return res.GetData().GetApplication().GetOwner().GetFirstName() + " " + res.GetData().GetApplication().GetOwner().GetLastName(), nil
-//}
+		resp, err := controller.rateClient.CalculateApplicationRate(req, common.GetMetadataFromContext(ctx))
+
+		if err != nil {
+			log.Println(err.Error())
+			return 0
+		}
+
+		if !resp.GetSuccess() {
+			log.Println(resp.GetError().GetMessage())
+			return 0
+		}
+
+		return resp.GetData().GetMonthlyFee()
+	} else {
+		return 0
+	}
+}
+
+func (controller *StallController) obtainStallHolderName(stall *market.Stall, ctx *gin.Context) (string, error) {
+	applicationId := stall.OccupiedBy
+
+	res, err := controller.nsaClient.GetApplication(
+		applicationId, common.GetMetadataFromContext(ctx))
+
+	if err != nil {
+		return "", err
+	}
+
+	if !res.Success {
+		return "", errors.New(res.GetError().GetMessage())
+	}
+
+	return res.GetData().GetApplication().GetOwner().GetFirstName() + " " + res.GetData().GetApplication().GetOwner().GetLastName(), nil
+}
 
 // DeleteStall
 // @Router /api/v2/stalls/{id} [DELETE]
@@ -323,6 +353,44 @@ func (controller *StallController) DeleteStall(ctx *gin.Context) {
 		common.AsSuccessResponse(gin.H{
 			"success": true,
 		}, ctx)
+	} else {
+		common.AsErrorResponse(res.GetError(), ctx)
+	}
+}
+
+// GetStallInfo
+// @Router /api/v2/stalls/info [GET]
+// @Summary Get Stall Information for submitting application
+// @Param market_code query string true "Market code"
+// @Param floor_code query string true "Floor code"
+// @Param stall_code query string true "Stall code"
+// @Tags Stall
+// @Accept json
+// @Produce json
+// @Success 200 {object} market.StallInfo
+// @Failure 400,401,500 {object} model.ErrorResponse
+func (controller *StallController) GetStallInfo(ctx *gin.Context) {
+	marketCode := ctx.Query("market_code")
+	floorCode := ctx.Query("floor_code")
+	stallCode := ctx.Query("stall_code")
+
+	req := &market.GetStallInfoRequest{
+		Searcher: &market.StallSearcher{
+			MarketCode: marketCode,
+			FloorCode:  floorCode,
+			StallCode:  stallCode,
+		},
+	}
+
+	res, err := controller.stallClient.GetStallInfo(req, common.GetMetadataFromContext(ctx))
+
+	if err != nil {
+		common.ReturnErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if res.Success {
+		common.AsSuccessResponse(res.GetData().GetStall(), ctx)
 	} else {
 		common.AsErrorResponse(res.GetError(), ctx)
 	}

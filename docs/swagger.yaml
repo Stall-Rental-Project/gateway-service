@@ -435,6 +435,8 @@ definitions:
         type: string
       height:
         type: number
+      is_updated_detail:
+        type: boolean
       lease_status:
         type: integer
       market_class:
@@ -471,6 +473,39 @@ definitions:
         type: number
       "y":
         type: number
+    type: object
+  market.StallInfo:
+    properties:
+      area:
+        type: number
+      code:
+        type: string
+      floor_code:
+        type: string
+      floor_name:
+        type: string
+      lease_status:
+        type: integer
+      market_address:
+        type: string
+      market_class:
+        type: integer
+      market_code:
+        type: string
+      market_id:
+        type: string
+      market_name:
+        type: string
+      market_type:
+        type: integer
+      stall_class:
+        type: integer
+      stall_id:
+        type: string
+      stall_name:
+        type: string
+      stall_type:
+        type: integer
     type: object
   market.Supervisor:
     properties:
@@ -701,12 +736,7 @@ definitions:
         description: what stallholder is going to sell
         type: string
       lease_code:
-        description: |-
-          double monthly_fee = 48; // Calculated dynamically from rate management module
-           double security_fee = 49;
-           double total_amount_due = 50;
-
-          Application in-lease only
+        description: Application in-lease only
         type: string
       lease_end_date:
         type: string
@@ -754,6 +784,8 @@ definitions:
         type: string
       proof_of_transfer:
         type: string
+      reminded_payment_date:
+        type: string
       source_of_capital:
         type: string
       stall_area:
@@ -770,6 +802,11 @@ definitions:
       status:
         description: references to WorkflowStatus enum
         type: integer
+      total_amount_due:
+        description: |-
+          double monthly_fee = 48; // Calculated dynamically from rate management module
+           double security_fee = 49;
+        type: number
       type:
         type: integer
     type: object
@@ -790,6 +827,8 @@ definitions:
         type: string
       first_name:
         type: string
+      full_name:
+        type: string
       house_number:
         type: string
       last_name:
@@ -807,6 +846,8 @@ definitions:
       sex:
         type: integer
       street:
+        type: string
+      telephone:
         type: string
       user_id:
         type: string
@@ -2874,6 +2915,48 @@ paths:
           schema:
             $ref: '#/definitions/model.ErrorResponse'
       summary: Get Published Stall
+      tags:
+      - Stall
+  /api/v2/stalls/info:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Market code
+        in: query
+        name: market_code
+        required: true
+        type: string
+      - description: Floor code
+        in: query
+        name: floor_code
+        required: true
+        type: string
+      - description: Stall code
+        in: query
+        name: stall_code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.StallInfo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get Stall Information for submitting application
       tags:
       - Stall
   /api/v2/users:

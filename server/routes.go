@@ -225,6 +225,7 @@ func (server *Server) InitializeRoutes() {
 			constants.MarketAddUpdate,
 		}), stallController.DeleteStall)
 		stall.GET("/:id/published", stallController.GetPublishedStall)
+		stall.GET("/info", stallController.GetStallInfo)
 	}
 
 	application := server.router.Group("/api/v2/applications")
