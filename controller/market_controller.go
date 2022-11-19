@@ -89,14 +89,14 @@ func (controller *MarketController) ListMarkets(ctx *gin.Context) {
 	marketStatusStr := ctx.Query("statuses")
 	if marketStatusStr != "" {
 		tmuStrList := strings.Split(marketStatusStr, ",")
-		tmuNumList := make([]market.MarketStatus, len(tmuStrList))
+		tmuNumList := make([]grpc.Status, len(tmuStrList))
 		for i := 0; i < len(tmuStrList); i++ {
 			tmuNum, err := strconv.ParseInt(tmuStrList[i], 10, 32)
 			if err != nil {
 				continue
 			}
 			result := int32(tmuNum)
-			tmuNumList[i] = market.MarketStatus(result)
+			tmuNumList[i] = grpc.Status(result)
 		}
 
 		grpcRequest.Statuses = tmuNumList
@@ -287,14 +287,14 @@ func (controller *MarketController) ListPublishedMarkets(ctx *gin.Context) {
 	marketStatusStr := ctx.Query("statuses")
 	if marketStatusStr != "" {
 		tmuStrList := strings.Split(marketStatusStr, ",")
-		tmuNumList := make([]market.MarketStatus, len(tmuStrList))
+		tmuNumList := make([]grpc.Status, len(tmuStrList))
 		for i := 0; i < len(tmuStrList); i++ {
 			tmuNum, err := strconv.ParseInt(tmuStrList[i], 10, 32)
 			if err != nil {
 				continue
 			}
 			result := int32(tmuNum)
-			tmuNumList[i] = market.MarketStatus(result)
+			tmuNumList[i] = grpc.Status(result)
 		}
 
 		req.Statuses = tmuNumList

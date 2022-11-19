@@ -541,6 +541,52 @@ func (PaymentMethod) EnumDescriptor() ([]byte, []int) {
 	return file_rental_constant_proto_rawDescGZIP(), []int{9}
 }
 
+type ScheduledTask int32
+
+const (
+	ScheduledTask_TASK_LEASE_TERMINATE ScheduledTask = 0
+	ScheduledTask_TASK_LEASE_EXPIRED   ScheduledTask = 1
+)
+
+// Enum value maps for ScheduledTask.
+var (
+	ScheduledTask_name = map[int32]string{
+		0: "TASK_LEASE_TERMINATE",
+		1: "TASK_LEASE_EXPIRED",
+	}
+	ScheduledTask_value = map[string]int32{
+		"TASK_LEASE_TERMINATE": 0,
+		"TASK_LEASE_EXPIRED":   1,
+	}
+)
+
+func (x ScheduledTask) Enum() *ScheduledTask {
+	p := new(ScheduledTask)
+	*p = x
+	return p
+}
+
+func (x ScheduledTask) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ScheduledTask) Descriptor() protoreflect.EnumDescriptor {
+	return file_rental_constant_proto_enumTypes[10].Descriptor()
+}
+
+func (ScheduledTask) Type() protoreflect.EnumType {
+	return &file_rental_constant_proto_enumTypes[10]
+}
+
+func (x ScheduledTask) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ScheduledTask.Descriptor instead.
+func (ScheduledTask) EnumDescriptor() ([]byte, []int) {
+	return file_rental_constant_proto_rawDescGZIP(), []int{10}
+}
+
 type Member struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1520,10 +1566,15 @@ var file_rental_constant_proto_rawDesc = []byte{
 	0x6e, 0x74, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x12, 0x12, 0x0a, 0x0e, 0x49, 0x4e, 0x56, 0x41,
 	0x4c, 0x49, 0x44, 0x5f, 0x4d, 0x45, 0x54, 0x48, 0x4f, 0x44, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06,
 	0x4d, 0x41, 0x4e, 0x55, 0x41, 0x4c, 0x10, 0x01, 0x12, 0x0a, 0x0a, 0x06, 0x4f, 0x4e, 0x4c, 0x49,
-	0x4e, 0x45, 0x10, 0x02, 0x42, 0x31, 0x0a, 0x0e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x72, 0x73, 0x2e,
-	0x72, 0x65, 0x6e, 0x74, 0x61, 0x6c, 0x50, 0x01, 0x5a, 0x1d, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61,
-	0x79, 0x2d, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2f, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74,
-	0x2f, 0x72, 0x65, 0x6e, 0x74, 0x61, 0x6c, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x4e, 0x45, 0x10, 0x02, 0x2a, 0x41, 0x0a, 0x0d, 0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65,
+	0x64, 0x54, 0x61, 0x73, 0x6b, 0x12, 0x18, 0x0a, 0x14, 0x54, 0x41, 0x53, 0x4b, 0x5f, 0x4c, 0x45,
+	0x41, 0x53, 0x45, 0x5f, 0x54, 0x45, 0x52, 0x4d, 0x49, 0x4e, 0x41, 0x54, 0x45, 0x10, 0x00, 0x12,
+	0x16, 0x0a, 0x12, 0x54, 0x41, 0x53, 0x4b, 0x5f, 0x4c, 0x45, 0x41, 0x53, 0x45, 0x5f, 0x45, 0x58,
+	0x50, 0x49, 0x52, 0x45, 0x44, 0x10, 0x01, 0x42, 0x31, 0x0a, 0x0e, 0x63, 0x6f, 0x6d, 0x2e, 0x73,
+	0x72, 0x73, 0x2e, 0x72, 0x65, 0x6e, 0x74, 0x61, 0x6c, 0x50, 0x01, 0x5a, 0x1d, 0x67, 0x61, 0x74,
+	0x65, 0x77, 0x61, 0x79, 0x2d, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2f, 0x63, 0x6c, 0x69,
+	0x65, 0x6e, 0x74, 0x2f, 0x72, 0x65, 0x6e, 0x74, 0x61, 0x6c, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x33,
 }
 
 var (
@@ -1538,7 +1589,7 @@ func file_rental_constant_proto_rawDescGZIP() []byte {
 	return file_rental_constant_proto_rawDescData
 }
 
-var file_rental_constant_proto_enumTypes = make([]protoimpl.EnumInfo, 10)
+var file_rental_constant_proto_enumTypes = make([]protoimpl.EnumInfo, 11)
 var file_rental_constant_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_rental_constant_proto_goTypes = []interface{}{
 	(RateType)(0),            // 0: rental.RateType
@@ -1551,23 +1602,24 @@ var file_rental_constant_proto_goTypes = []interface{}{
 	(ApplicationType)(0),     // 7: rental.ApplicationType
 	(WorkflowStatus)(0),      // 8: rental.WorkflowStatus
 	(PaymentMethod)(0),       // 9: rental.PaymentMethod
-	(*Member)(nil),           // 10: rental.Member
-	(*Application)(nil),      // 11: rental.Application
-	(*ApplicationOwner)(nil), // 12: rental.ApplicationOwner
-	(market.MarketType)(0),   // 13: market.MarketType
-	(market.MarketClass)(0),  // 14: market.MarketClass
-	(market.StallType)(0),    // 15: market.StallType
-	(market.StallClass)(0),   // 16: market.StallClass
+	(ScheduledTask)(0),       // 10: rental.ScheduledTask
+	(*Member)(nil),           // 11: rental.Member
+	(*Application)(nil),      // 12: rental.Application
+	(*ApplicationOwner)(nil), // 13: rental.ApplicationOwner
+	(market.MarketType)(0),   // 14: market.MarketType
+	(market.MarketClass)(0),  // 15: market.MarketClass
+	(market.StallType)(0),    // 16: market.StallType
+	(market.StallClass)(0),   // 17: market.StallClass
 }
 var file_rental_constant_proto_depIdxs = []int32{
-	12, // 0: rental.Application.owner:type_name -> rental.ApplicationOwner
-	13, // 1: rental.Application.market_type:type_name -> market.MarketType
-	14, // 2: rental.Application.market_class:type_name -> market.MarketClass
-	15, // 3: rental.Application.stall_type:type_name -> market.StallType
-	16, // 4: rental.Application.stall_class:type_name -> market.StallClass
+	13, // 0: rental.Application.owner:type_name -> rental.ApplicationOwner
+	14, // 1: rental.Application.market_type:type_name -> market.MarketType
+	15, // 2: rental.Application.market_class:type_name -> market.MarketClass
+	16, // 3: rental.Application.stall_type:type_name -> market.StallType
+	17, // 4: rental.Application.stall_class:type_name -> market.StallClass
 	7,  // 5: rental.Application.type:type_name -> rental.ApplicationType
 	8,  // 6: rental.Application.status:type_name -> rental.WorkflowStatus
-	10, // 7: rental.Application.members:type_name -> rental.Member
+	11, // 7: rental.Application.members:type_name -> rental.Member
 	9,  // 8: rental.Application.payment_method:type_name -> rental.PaymentMethod
 	6,  // 9: rental.Application.lease_status:type_name -> rental.LeaseStatus
 	5,  // 10: rental.Application.current_payment_status:type_name -> rental.PaymentStatus
@@ -1626,7 +1678,7 @@ func file_rental_constant_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_rental_constant_proto_rawDesc,
-			NumEnums:      10,
+			NumEnums:      11,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
