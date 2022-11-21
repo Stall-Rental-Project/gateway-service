@@ -1,25 +1,30 @@
 package controller
 
 import (
+	"errors"
 	"gateway-service/client"
 	common2 "gateway-service/client/common"
 	"gateway-service/client/market"
 	"gateway-service/client/rental"
 	"gateway-service/common"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 )
 
 type FloorController struct {
 	floorClient *client.FloorClient
 	nsaClient   *client.NSAClient
+	rateClient  *client.RateClient
 }
 
-func NewFloorController(floorClient *client.FloorClient, nsaClient *client.NSAClient,
+func NewFloorController(floorClient *client.FloorClient, nsaClient *client.NSAClient, rateClient *client.RateClient,
+
 ) FloorController {
 	return FloorController{
 		floorClient,
 		nsaClient,
+		rateClient,
 	}
 }
 
@@ -249,11 +254,60 @@ func (controller *FloorController) GetPublishedFloor(ctx *gin.Context) {
 		return
 	}
 
+	for _, m := range res.GetData().Floor.Stalls {
+		m.MonthlyFee = controller.calculateMonthlyFee(m, ctx)
+
+	}
 	if res.Success {
 		ctx.JSON(http.StatusOK, res.GetData().GetFloor())
 	} else {
 		common.AsErrorResponse(res.GetError(), ctx)
 	}
+}
+
+func (controller *FloorController) calculateMonthlyFee(stall *market.Stall, ctx *gin.Context) float64 {
+	if stall.GetMarketType() == market.MarketType_MARKET_TYPE_PUBLIC {
+		req := &rental.CalculateRateRequest{
+			MarketClass: stall.GetMarketClass(),
+			StallClass:  stall.GetStallClass(),
+			StallType:   stall.GetStallType(),
+			StallArea:   stall.GetArea(),
+			Includes:    []rental.FeeType{rental.FeeType_NSA_MONTHLY_FEE},
+		}
+
+		resp, err := controller.rateClient.CalculateApplicationRate(req, common.GetMetadataFromContext(ctx))
+
+		if err != nil {
+			log.Println(err.Error())
+			return 0
+		}
+
+		if !resp.GetSuccess() {
+			log.Println(resp.GetError().GetMessage())
+			return 0
+		}
+
+		return resp.GetData().GetMonthlyFee()
+	} else {
+		return 0
+	}
+}
+
+func (controller *FloorController) obtainStallHolderName(stall *market.Stall, ctx *gin.Context) (string, error) {
+	applicationId := stall.OccupiedBy
+
+	res, err := controller.nsaClient.GetApplication(
+		applicationId, common.GetMetadataFromContext(ctx))
+
+	if err != nil {
+		return "", err
+	}
+
+	if !res.Success {
+		return "", errors.New(res.GetError().GetMessage())
+	}
+
+	return res.GetData().GetApplication().GetOwner().GetFirstName() + " " + res.GetData().GetApplication().GetOwner().GetLastName(), nil
 }
 
 // ListPublishedFloors

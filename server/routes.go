@@ -54,7 +54,7 @@ func (server *Server) InitializeRoutes() {
 
 	locationController := controller.NewLocationController(locationClient)
 	marketController := controller.NewMarketController(marketClient, nsaClient)
-	floorController := controller.NewFloorController(floorClient, nsaClient)
+	floorController := controller.NewFloorController(floorClient, nsaClient, rateClient)
 	stallController := controller.NewStallController(stallClient, rateClient, nsaClient)
 
 	rateController := controller.NewRateController(rateClient)

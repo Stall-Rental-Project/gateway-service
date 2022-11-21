@@ -158,55 +158,12 @@ func (controller *StallController) GetStall(ctx *gin.Context) {
 
 	if res.Success {
 		stall := res.GetData().Stall
-		//stall.MonthlyFee = controller.calculateMonthlyFee(stall, ctx)
+		stall.MonthlyFee = controller.calculateMonthlyFee(stall, ctx)
 		common.AsSuccessResponse(stall, ctx)
 	} else {
 		common.AsErrorResponse(res.GetError(), ctx)
 	}
 }
-
-//func (controller *StallController) calculateMonthlyFee(stall *market.Stall, ctx *gin.Context) float64 {
-//	if stall.GetMarketType() == market.MarketType_MARKET_TYPE_PUBLIC {
-//		req := &rental.CalculateRateRequest{
-//			MarketClass:    stall.GetMarketClass(),
-//			StallClass:     stall.GetClazz(),
-//			StallType:      stall.GetType(),
-//			StallSectionId: stall.GetSection().GetSectionId(),
-//			StallArea:      stall.GetArea(),
-//			Includes:       []rental.FeeType{rental.FeeType_NSA_MONTHLY_FEE},
-//		}
-//
-//		resp, err := controller.rateClient.CalculateApplicationRate(req, common.GetMetadataFromContext(ctx))
-//
-//		if err != nil {
-//			log.Println(err.Error())
-//			return 0
-//		}
-//
-//		if !resp.GetSuccess() {
-//			log.Println(resp.GetError().GetMessage())
-//			return 0
-//		}
-//
-//		return resp.GetData().GetMonthlyFee()
-//	} else {
-//		return 0
-//	}
-//}
-
-//func (controller *StallController) getNewApplicationStallRate(ctx *gin.Context) float64 {
-//	res, err := controller.rateClient.GetNewApplicationRate(common.GetMetadataFromContext(ctx))
-//
-//	if err != nil {
-//		log.Println("Error when get new application stall rate", err)
-//		return 0
-//	} else if !res.GetSuccess() {
-//		log.Println("Error when get new application stall rate", res.GetError().GetMessage())
-//		return 0
-//	} else {
-//		return res.GetData().GetAmount()
-//	}
-//}
 
 // GetPublishedStall
 // @Router /api/v2/stalls/{id}/published [GET]
@@ -233,15 +190,15 @@ func (controller *StallController) GetPublishedStall(ctx *gin.Context) {
 
 	if res.Success {
 		stall := res.GetData().GetStall()
-		//stall.MonthlyFee = controller.calculateMonthlyFee(stall, ctx)
-		//if stall.OccupiedBy != "" {
-		//	stallholderName, appErr := controller.obtainStallHolderName(stall, ctx)
-		//	if appErr != nil {
-		//		log.Println("Error when obtaining stall holder name for stall " + stall.StallId + ": " + appErr.Error())
-		//	} else {
-		//		stall.StallHolderName = stallholderName
-		//	}
-		//}
+		stall.MonthlyFee = controller.calculateMonthlyFee(stall, ctx)
+		if stall.OccupiedBy != "" {
+			stallholderName, appErr := controller.obtainStallHolderName(stall, ctx)
+			if appErr != nil {
+				log.Println("Error when obtaining stall holder name for stall " + stall.StallId + ": " + appErr.Error())
+			} else {
+				stall.StallHolderName = stallholderName
+			}
+		}
 		common.AsSuccessResponse(stall, ctx)
 	} else {
 		common.AsErrorResponse(res.GetError(), ctx)
