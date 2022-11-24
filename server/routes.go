@@ -257,6 +257,8 @@ func (server *Server) InitializeRoutes() {
 			constants.ApplicationSubmit,
 		}), nsaController.ConfirmApplication)
 
+		application.PUT("/:id/cancel", applicationController.CancelApplication)
+
 	}
 
 	termination := server.router.Group("/api/v2/applications/:id/termination")

@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ApplicationServiceClient interface {
 	ListApplications(ctx context.Context, in *ListApplicationRequest, opts ...grpc.CallOption) (*common.PageResponse, error)
+	CancelApplication(ctx context.Context, in *CancelApplicationRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error)
 }
 
 type applicationServiceClient struct {
@@ -43,11 +44,21 @@ func (c *applicationServiceClient) ListApplications(ctx context.Context, in *Lis
 	return out, nil
 }
 
+func (c *applicationServiceClient) CancelApplication(ctx context.Context, in *CancelApplicationRequest, opts ...grpc.CallOption) (*common.NoContentResponse, error) {
+	out := new(common.NoContentResponse)
+	err := c.cc.Invoke(ctx, "/rental.ApplicationService/CancelApplication", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApplicationServiceServer is the server API for ApplicationService service.
 // All implementations must embed UnimplementedApplicationServiceServer
 // for forward compatibility
 type ApplicationServiceServer interface {
 	ListApplications(context.Context, *ListApplicationRequest) (*common.PageResponse, error)
+	CancelApplication(context.Context, *CancelApplicationRequest) (*common.NoContentResponse, error)
 	mustEmbedUnimplementedApplicationServiceServer()
 }
 
@@ -57,6 +68,9 @@ type UnimplementedApplicationServiceServer struct {
 
 func (UnimplementedApplicationServiceServer) ListApplications(context.Context, *ListApplicationRequest) (*common.PageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListApplications not implemented")
+}
+func (UnimplementedApplicationServiceServer) CancelApplication(context.Context, *CancelApplicationRequest) (*common.NoContentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CancelApplication not implemented")
 }
 func (UnimplementedApplicationServiceServer) mustEmbedUnimplementedApplicationServiceServer() {}
 
@@ -89,6 +103,24 @@ func _ApplicationService_ListApplications_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ApplicationService_CancelApplication_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CancelApplicationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).CancelApplication(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/rental.ApplicationService/CancelApplication",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).CancelApplication(ctx, req.(*CancelApplicationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ApplicationService_ServiceDesc is the grpc.ServiceDesc for ApplicationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -99,6 +131,10 @@ var ApplicationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListApplications",
 			Handler:    _ApplicationService_ListApplications_Handler,
+		},
+		{
+			MethodName: "CancelApplication",
+			Handler:    _ApplicationService_CancelApplication_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
