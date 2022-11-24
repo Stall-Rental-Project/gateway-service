@@ -223,7 +223,6 @@ func (controller *NSAController) GetApplication(ctx *gin.Context) {
 				application.MarketName = stall.MarketName
 				application.MarketAddress = stall.MarketAddress
 				application.FloorName = stall.FloorName
-				application.StallArea = stall.Area
 				application.StallName = stall.StallName
 			}
 		}
