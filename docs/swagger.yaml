@@ -856,13 +856,6 @@ definitions:
       zipcode:
         type: string
     type: object
-  rental.CancelApplicationRequest:
-    properties:
-      application_id:
-        type: string
-      cancel_reason:
-        type: string
-    type: object
   rental.ClassAmountRate:
     properties:
       amount:
@@ -1180,6 +1173,35 @@ paths:
       tags:
       - Application
   /api/v2/applications/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NoContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Cancel application
+      tags:
+      - Application
     get:
       consumes:
       - application/json
@@ -1244,42 +1266,6 @@ paths:
           schema:
             $ref: '#/definitions/model.ErrorResponse'
       summary: Update Application
-      tags:
-      - Application
-  /api/v2/applications/{id}/cancel:
-    put:
-      consumes:
-      - application/json
-      parameters:
-      - description: Application ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Cancel reason
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/rental.CancelApplicationRequest'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/common.NoContentResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.ErrorResponse'
-      summary: Cancel application
       tags:
       - Application
   /api/v2/applications/{id}/confirm:

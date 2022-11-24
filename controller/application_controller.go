@@ -2,6 +2,7 @@ package controller
 
 import (
 	"gateway-service/client"
+	grpc "gateway-service/client/common"
 	"gateway-service/client/market"
 	"gateway-service/client/rental"
 	"gateway-service/common"
@@ -127,21 +128,16 @@ func buildListApplicationsRequest(ctx *gin.Context) *rental.ListApplicationReque
 // @Tags Application
 // @Accept json
 // @Param id path string true "Application ID"
-// @Param data body rental.CancelApplicationRequest true "Cancel reason"
 // @Success 200 {object} common.NoContentResponse
 // @Failure 401,400,500 {object} model.ErrorResponse
-// @Router /api/v2/applications/{id}/cancel [PUT]
+// @Router /api/v2/applications/{id} [DELETE]
 func (controller *ApplicationController) CancelApplication(ctx *gin.Context) {
-	req := new(rental.CancelApplicationRequest)
 
-	if err := ctx.ShouldBindJSON(req); err != nil {
-		common.ReturnErrorResponse(ctx, http.StatusBadRequest, err.Error())
-		return
-	}
+	applicationId := ctx.Param("id")
 
-	req.ApplicationId = ctx.Param("id")
-
-	res, err := controller.applicationClient.CancelApplication(req, common.GetMetadataFromContext(ctx))
+	res, err := controller.applicationClient.CancelApplication(&grpc.FindByIdRequest{
+		Id: applicationId,
+	}, common.GetMetadataFromContext(ctx))
 
 	if err != nil {
 		common.ReturnErrorResponse(ctx, http.StatusInternalServerError, err.Error())

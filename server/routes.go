@@ -257,7 +257,7 @@ func (server *Server) InitializeRoutes() {
 			constants.ApplicationSubmit,
 		}), nsaController.ConfirmApplication)
 
-		application.PUT("/:id/cancel", applicationController.CancelApplication)
+		application.DELETE("/:id", applicationController.CancelApplication)
 
 	}
 

@@ -29,7 +29,7 @@ func (service *ApplicationClient) ListApplication(req *rental.ListApplicationReq
 	return
 }
 
-func (service *ApplicationClient) CancelApplication(req *rental.CancelApplicationRequest, md metadata.MD) (res *common.NoContentResponse, err error) {
+func (service *ApplicationClient) CancelApplication(req *common.FindByIdRequest, md metadata.MD) (res *common.NoContentResponse, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.GrpcTimeoutInSecs*time.Second)
 	ctx = metadata.NewOutgoingContext(ctx, md)
 	defer cancel()

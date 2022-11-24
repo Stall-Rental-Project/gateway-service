@@ -387,10 +387,8 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/api/v2/applications/{id}/cancel": {
-            "put": {
+            },
+            "delete": {
                 "consumes": [
                     "application/json"
                 ],
@@ -405,15 +403,6 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
-                    },
-                    {
-                        "description": "Cancel reason",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/rental.CancelApplicationRequest"
-                        }
                     }
                 ],
                 "responses": {
@@ -4569,17 +4558,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "zipcode": {
-                    "type": "string"
-                }
-            }
-        },
-        "rental.CancelApplicationRequest": {
-            "type": "object",
-            "properties": {
-                "application_id": {
-                    "type": "string"
-                },
-                "cancel_reason": {
                     "type": "string"
                 }
             }
