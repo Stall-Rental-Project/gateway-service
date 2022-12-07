@@ -17,7 +17,7 @@ func NewServer() Server {
 func (server *Server) Initialize() {
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://market-lwh0hd7um-mhmarket.vercel.app"},
+		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"PUT", "PATCH", "GET", "POST", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"*"},
 		ExposeHeaders:    []string{"Content-Length"},
@@ -25,7 +25,8 @@ func (server *Server) Initialize() {
 		AllowOriginFunc: func(origin string) bool {
 			return true
 		},
-		MaxAge: 12 * time.Hour,
+		AllowWildcard: true,
+		MaxAge:        12 * time.Hour,
 	}))
 	server.router = router
 }
