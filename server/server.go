@@ -17,7 +17,7 @@ func NewServer() Server {
 func (server *Server) Initialize() {
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
+		AllowOrigins:     []string{"https://market-lwh0hd7um-mhmarket.vercel.app", "http://localhost:3000"},
 		AllowMethods:     []string{"PUT", "PATCH", "GET", "POST", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"*"},
 		ExposeHeaders:    []string{"Content-Length"},
