@@ -343,6 +343,11 @@ definitions:
       market:
         $ref: '#/definitions/market.Market'
     type: object
+  market.GetMarketStallAnalyticsResponse_Data:
+    properties:
+      market_vendor_detail:
+        $ref: '#/definitions/market.MarketStall'
+    type: object
   market.ListCityResponse_Data:
     properties:
       cities:
@@ -424,6 +429,17 @@ definitions:
         type: string
       ward:
         type: string
+    type: object
+  market.MarketStall:
+    properties:
+      market_name:
+        type: string
+      total_stalls:
+        type: integer
+      total_stalls_available:
+        type: integer
+      total_stalls_occupied:
+        type: integer
     type: object
   market.Stall:
     properties:
@@ -1087,6 +1103,38 @@ info:
   title: MHMarket REST API
   version: "1.0"
 paths:
+  /api/v2/analytic/market/:code:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Market Name
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/market.GetMarketStallAnalyticsResponse_Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get Market Stall Analytic
+      tags:
+      - Analytic
   /api/v2/applications:
     get:
       consumes:

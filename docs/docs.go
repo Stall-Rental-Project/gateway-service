@@ -23,6 +23,55 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v2/analytic/market/:code": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Analytic"
+                ],
+                "summary": "Get Market Stall Analytic",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Market Name",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/market.GetMarketStallAnalyticsResponse_Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v2/applications": {
             "get": {
                 "description": "Get applications",
@@ -3795,6 +3844,14 @@ const docTemplate = `{
                 }
             }
         },
+        "market.GetMarketStallAnalyticsResponse_Data": {
+            "type": "object",
+            "properties": {
+                "market_vendor_detail": {
+                    "$ref": "#/definitions/market.MarketStall"
+                }
+            }
+        },
         "market.ListCityResponse_Data": {
             "type": "object",
             "properties": {
@@ -3918,6 +3975,23 @@ const docTemplate = `{
                 },
                 "ward": {
                     "type": "string"
+                }
+            }
+        },
+        "market.MarketStall": {
+            "type": "object",
+            "properties": {
+                "market_name": {
+                    "type": "string"
+                },
+                "total_stalls": {
+                    "type": "integer"
+                },
+                "total_stalls_available": {
+                    "type": "integer"
+                },
+                "total_stalls_occupied": {
+                    "type": "integer"
                 }
             }
         },

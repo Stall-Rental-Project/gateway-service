@@ -46,6 +46,8 @@ func (server *Server) InitializeRoutes() {
 	marketClient := client.NewMarketClient(marketCC)
 	floorClient := client.NewFloorClient(marketCC)
 	stallClient := client.NewStallClient(marketCC)
+	marketAnalyticClient := client.NewMarketAnalyticClient(marketCC)
+
 	//controller
 	authController := controller.NewAuthController(authClient)
 	roleController := controller.NewRoleController(roleClient)
@@ -63,7 +65,7 @@ func (server *Server) InitializeRoutes() {
 	applicationController := controller.NewApplicationController(applicationClient, stallClient)
 	terminationController := controller.NewTerminationController(terminationClient)
 	leaseController := controller.NewLeaseController(leaseClient, stallClient, marketClient, userClient, rateClient)
-
+	analyticController := controller.NewAnalyticController(marketAnalyticClient)
 	fileController := controller.NewFileController(cloudinaryClient)
 
 	middlewares := middleware.NewMiddleware(permissionClient)
@@ -280,6 +282,12 @@ func (server *Server) InitializeRoutes() {
 	{
 		lease.GET("", leaseController.ListLeases)
 		lease.GET("/:id", leaseController.GetLease)
+	}
+
+	analytic := server.router.Group("/api/v2/analytic")
+	analytic.Use(middlewares.GinMiddleware).Use(middlewares.AuthMiddleware)
+	{
+		analytic.GET("/market/:code", analyticController.GetMarketStallAnalytic)
 	}
 
 	file := server.router.Group("/api/v2/files")
