@@ -253,6 +253,39 @@ func (controller *NSAController) SubmitPayment(ctx *gin.Context) {
 		return
 	}
 
+	appResp, appErr := controller.nsaClient.GetApplication(applicationId, common.GetMetadataFromContext(ctx))
+
+	if appErr != nil {
+		common.ReturnErrorResponse(ctx, http.StatusBadRequest, appErr.Error())
+		return
+	} else if !appResp.GetSuccess() {
+		ctx.JSON(http.StatusBadRequest, model.AsErrorResponse(appResp.GetError()))
+		return
+	}
+
+	app := appResp.GetData().GetApplication()
+
+	stallResp, stallErr := controller.stallClient.GetStallInfo(&market.GetStallInfoRequest{Searcher: &market.StallSearcher{
+		MarketCode: app.MarketCode,
+		FloorCode:  app.FloorCode,
+		StallCode:  app.StallCode,
+	}}, common.GetMetadataFromContext(ctx))
+
+	if stallErr != nil {
+		common.ReturnErrorResponse(ctx, http.StatusBadRequest, stallErr.Error())
+		return
+	} else if !stallResp.GetSuccess() {
+		ctx.JSON(http.StatusBadRequest, model.AsErrorResponse(stallResp.GetError()))
+		return
+	}
+
+	stall := stallResp.GetData().GetStall()
+
+	if stall.GetLeaseStatus() != market.StallLeaseStatus_STALL_AVAILABLE {
+		common.ReturnErrorResponse(ctx, http.StatusBadRequest, "This stall has been occupied")
+		return
+	}
+
 	res, err := controller.nsaClient.SubmitApplicationPayment(applicationRequest, common.GetMetadataFromContext(ctx))
 
 	if err != nil {
