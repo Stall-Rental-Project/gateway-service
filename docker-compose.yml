@@ -1,14 +1,14 @@
 version: '3.8'
 services:
   gateway-service-dev:
-    image: mhmarket/gateway:latest
+    image: 211020/mhmarket-gateway:latest
     container_name: gateway-service-dev
     environment:
       PORT: 8000
-      HOST: http://103.162.20.141:8000
-      ACCOUNT_CLIENT_URL: 103.162.20.141:9565
-      MARKET_CLIENT_URL: 103.162.20.141:9566
-      RENTAL_CLIENT_URL: 103.162.20.141:9567
+      HOST: http://103.162.20.152:8000
+      ACCOUNT_CLIENT_URL: 103.162.20.152:9565
+      MARKET_CLIENT_URL: 103.162.20.152:9566
+      RENTAL_CLIENT_URL: 103.162.20.152:9567
       CLOUDINARY_CLOUD_NAME: ban-vien
       CLOUDINARY_API_KEY: 117784362653246
       CLOUDINARY_API_SECRET: XfcUsfz7LK7cdjj7Q5rf6BrxCEo
