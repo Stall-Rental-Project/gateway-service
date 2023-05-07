@@ -46,3 +46,20 @@ func (controller *FileUploadController) UploadAttachment(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, resp)
 	}
 }
+
+// GetStaticFile
+// @Summary Get static file
+// @Tags    File
+// @Accept  mpfd
+// @Param   name    query    string true "filename"
+// @Success 200     {object} object
+// @Failure 400,500 {object} model.ErrorResponse
+// @Router  /api/v2/files/static [GET]
+func (controller *FileUploadController) GetStaticFile(ctx *gin.Context) {
+	ctx.FileAttachment("assets/static", ctx.Query("name"))
+}
+
+func (controller *FileUploadController) GetFile(ctx *gin.Context) {
+	path := ctx.Param("path")
+	ctx.File("assets/images/" + path)
+}

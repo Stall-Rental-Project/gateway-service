@@ -295,6 +295,9 @@ func (server *Server) InitializeRoutes() {
 	{
 		file.POST("/upload", fileController.UploadAttachment)
 	}
+	server.router.GET("/static", fileController.GetStaticFile)
+	server.router.GET("/assets/images/:path", fileController.GetFile)
+
 	//server.router.GET("/static", fileController.GetStaticFile)
 	//server.router.GET("/assets/images/:path", fileController.GetFile)
 
